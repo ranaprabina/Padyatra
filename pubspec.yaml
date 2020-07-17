@@ -1,0 +1,44 @@
+name: padyatra
+description: A new Flutter project.
+
+
+publish_to: 'none' 
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  hexcolor: ^1.0.4
+  finite_coverflow: ^1.0.0
+
+
+  cupertino_icons: ^0.1.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+
+
+  uses-material-design: true
+
+
+  assets:
+    - images/
+
+
+  fonts:
+  - family: Noto Sans
+    fonts:
+    - asset: fonts/NotoSans-Regular.ttf
+  - family: Roboto
+    fonts:
+    - asset: fonts/Roboto-Regular.ttf
+        
