@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ExplorePage.dart';
+import 'package:padyatra/screen/ExplorePage.dart';
 
 void main() => runApp(MyApp());
 
