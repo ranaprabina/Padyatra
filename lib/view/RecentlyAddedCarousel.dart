@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:padyatra/models/TrekkingRoutes.dart';
 
-class RouteCarousel extends StatelessWidget {
+class RecentlyAdded extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<TrekkingRoutes> _allTrekkingRoutes =
@@ -14,7 +14,7 @@ class RouteCarousel extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'You might like this',
+                'Recently Added',
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontFamily: 'Roboto',

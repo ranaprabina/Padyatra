@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:padyatra/models/TrekkingRoutes.dart';
 
-class RouteCarousel extends StatelessWidget {
+class Nearby extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<TrekkingRoutes> _allTrekkingRoutes =
@@ -14,7 +14,7 @@ class RouteCarousel extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'You might like this',
+                'Nearby Routes',
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontFamily: 'Roboto',
@@ -32,7 +32,9 @@ class RouteCarousel extends StatelessWidget {
             itemCount: _allTrekkingRoutes.length,
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  print('you');
+                },
                 child: Container(
                   width: 210.0,
                   margin: EdgeInsets.all(10.0),
