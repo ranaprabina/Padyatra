@@ -32,9 +32,20 @@ class RouteCarousel extends StatelessWidget {
             itemCount: _allTrekkingRoutes.length,
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  print("Route number $index clicked");
+                },
                 child: Container(
                   width: 210.0,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(6.0, 1.0),
+                        blurRadius: 10.0,
+                      ),
+                    ],
+                  ),
                   margin: EdgeInsets.all(10.0),
                   child: Stack(
                     alignment: Alignment.topCenter,
@@ -43,7 +54,7 @@ class RouteCarousel extends StatelessWidget {
                         bottom: 10.0,
                         child: Container(
                           height: 150.0,
-                          width: 200.0,
+                          width: 210.0,
                           decoration: BoxDecoration(
                             color: Colors.grey.shade100,
                             borderRadius: BorderRadius.circular(10.0),
@@ -71,18 +82,21 @@ class RouteCarousel extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(0.0, 2.0),
-                              blurRadius: 6.0,
-                            ),
-                          ],
+                          // boxShadow: [
+                          //   BoxShadow(
+                          //     color: Colors.black26,
+                          //     offset: Offset(0.0, 2.0),
+                          //     blurRadius: 6.0,
+                          //   ),
+                          // ],
                         ),
                         child: Stack(
                           children: <Widget>[
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(20.0),
+                              // borderRadius: BorderRadius.circular(20.0),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10)),
                               child: Image(
                                   height: 150,
                                   fit: BoxFit.cover,
