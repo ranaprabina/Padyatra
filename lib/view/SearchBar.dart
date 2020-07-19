@@ -31,7 +31,16 @@ class _SearchBarState extends State<SearchBar> {
                   contentPadding: EdgeInsets.all(1),
                   labelText: "Enter Trekking Route or Trial",
                   hintText: "Search",
-                  suffixIcon: Icon(Icons.search),
+                  suffixIcon: Padding(
+                    padding: const EdgeInsetsDirectional.only(end: 0),
+                    child: IconButton(
+                      icon: Icon(Icons.search),
+                      color: Colors.black,
+                      onPressed: () {
+                        print("Search Button clicked");
+                      },
+                    ),
+                  ),
                   border: OutlineInputBorder(
                       borderSide: BorderSide.none,
                       borderRadius: BorderRadius.all(Radius.circular(10.0)))),
