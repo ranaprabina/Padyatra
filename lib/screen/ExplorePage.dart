@@ -57,10 +57,17 @@ class _ExploreBodyState extends State<ExploreBody> {
         SliverList(
           delegate: SliverChildListDelegate([
             SearchBar(),
+
             RouteCarousel(),
+            const Divider(
+              color: Colors.grey,
+              height: 20,
+//              thickness: 5,
+//              indent: 20,
+//              endIndent: 0,
+            ),
             Nearby(),
             RecentlyAdded(),
-            
 
             ///add more as you wish
           ]),
