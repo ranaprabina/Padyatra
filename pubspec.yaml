@@ -31,8 +31,7 @@ flutter:
 
 
   assets:
-    - images/AC1.jpg
-    - images/AC2.jpg
+    - images/
 
 
   fonts:
