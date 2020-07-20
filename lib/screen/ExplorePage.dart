@@ -60,7 +60,6 @@ class _ExploreBodyState extends State<ExploreBody> {
             RouteCarousel(),
             Nearby(),
             RecentlyAdded(),
-            
 
             ///add more as you wish
           ]),
