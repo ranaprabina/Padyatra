@@ -1,6 +1,9 @@
 import 'package:padyatra/models/recently_added_routes/recently_added_route_data.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_mock.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_prod.dart';
+import 'package:padyatra/models/search_route_model/search_route_data.dart';
+import 'package:padyatra/models/search_route_model/search_route_mock.dart';
+import 'package:padyatra/models/search_route_model/search_route_prod.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_data.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_mock.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_prod.dart';
@@ -36,6 +39,15 @@ class Injector {
         return new MockRecentlyAddedRoute();
       default:
         return new ProdRecentlyAddedRouteRepository();
+    }
+  }
+
+  SearchRouteRepository get searchRouteRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return new MockSearchRoute();
+      default:
+        return new ProdSearchRouteRepsitory();
     }
   }
 }
