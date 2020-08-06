@@ -15,12 +15,14 @@ var routes = <RecentlyAddedRoute>[
     image: "AC1.png",
     length: "112km",
     duration: "12 days",
+    difficulty: "Hard",
   ),
   new RecentlyAddedRoute(
     routeId: "Mardi",
     routeName: "Mardi Himal Trek",
     image: "AC2.png",
     length: "112km",
+    difficulty: "Hard",
     duration: "12 days",
   ),
   new RecentlyAddedRoute(
@@ -28,6 +30,7 @@ var routes = <RecentlyAddedRoute>[
     routeName: "Manaslu Circuit",
     image: "AC3.png",
     length: "112km",
+    difficulty: "Hard",
     duration: "12 days",
   ),
   new RecentlyAddedRoute(
@@ -35,6 +38,7 @@ var routes = <RecentlyAddedRoute>[
     routeName: "Annapurna Base Camp",
     image: "AC4.png",
     length: "112km",
+    difficulty: "Hard",
     duration: "12 days",
   ),
 ];
