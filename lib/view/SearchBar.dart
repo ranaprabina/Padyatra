@@ -7,7 +7,6 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
   // TextEditingController editingController = TextEditingController();
-
   Widget build(BuildContext context) {
     //list of items in the list view
     // final List<String> items = <String>['A', 'B', 'c', 'D', 'E'];
@@ -38,6 +37,7 @@ class _SearchBarState extends State<SearchBar> {
                       color: Colors.black,
                       onPressed: () {
                         print("Search Button clicked");
+                        showSearch(context: context, delegate: RouteSearch());
                       },
                     ),
                   ),
@@ -63,6 +63,96 @@ class _SearchBarState extends State<SearchBar> {
         //   ),
         // ),
       ],
+    );
+  }
+}
+
+class RouteSearch extends SearchDelegate<String> {
+  final routes = [
+    "Annapurna Base Camp Trek",
+    "Mardi Himal Trek",
+    "Poon Hill Trek",
+    "Manaslu Circuit",
+  ];
+  final recentRoutes = [
+    "Annapurna Base Camp Trek",
+    "Mardi Himal Trek",
+    "Poon Hill Trek",
+  ];
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // actions for app bar
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = "";
+        },
+      )
+    ];
+    // throw UnimplementedError();
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // Leading icon on the left of the app bar
+    // throw UnimplementedError();
+    return IconButton(
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // show some results base on the selection
+    // throw UnimplementedError();
+    return Card(
+      color: Colors.teal,
+      // shape: StadiumBorder(),
+      child: Center(
+        child: Text(query),
+      ),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // show when someone searches for something
+    // throw UnimplementedError();
+    final suggestionList = query.isEmpty
+        ? recentRoutes
+        : routes.where((r) => r.startsWith(query)).toList();
+
+    return ListView.builder(
+      itemCount: suggestionList.length,
+      itemBuilder: (context, index) => ListTile(
+        onTap: () {
+          showResults(context);
+        },
+        leading: Icon(Icons.directions_walk),
+        title: RichText(
+          text: TextSpan(
+              text: suggestionList[index].substring(0, query.length),
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+              children: [
+                TextSpan(
+                  text: suggestionList[index].substring(query.length),
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ]),
+        ),
+      ),
     );
   }
 }
