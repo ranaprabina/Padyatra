@@ -16,6 +16,7 @@ var routes = <UserInterestRoute>[
     image: "AC1.png",
     length: "112km",
     duration: "12 days",
+    difficulty: "Hard",
   ),
   new UserInterestRoute(
     routeId: "Mardi",
@@ -23,6 +24,7 @@ var routes = <UserInterestRoute>[
     image: "AC2.png",
     length: "112km",
     duration: "12 days",
+    difficulty: "Moderate",
   ),
   new UserInterestRoute(
     routeId: "ABC Trek",
@@ -30,6 +32,7 @@ var routes = <UserInterestRoute>[
     image: "AC3.png",
     length: "112km",
     duration: "12 days",
+    difficulty: "Hard",
   ),
   new UserInterestRoute(
     routeId: "ABC Trek",
@@ -37,5 +40,6 @@ var routes = <UserInterestRoute>[
     image: "AC4.png",
     length: "112km",
     duration: "12 days",
+    difficulty: "Hard",
   ),
 ];
