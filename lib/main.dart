@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:padyatra/dependency_injector/dependency_injection.dart';
-
 import 'package:padyatra/screen/ExplorePage.dart';
 
 void main() {
