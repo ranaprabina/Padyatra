@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Padyatra',
+      debugShowCheckedModeBanner: false,
       home: ExplorePage(),
       routes: {},
     );
