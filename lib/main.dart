@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:padyatra/dependency_injector/dependency_injection.dart';
-import 'package:padyatra/screen/ExplorePage.dart';
+import 'package:padyatra/screen/HomePage.dart';
 
 void main() {
   Injector.configure(Flavor.PROD);
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Padyatra',
       debugShowCheckedModeBanner: false,
-      home: ExplorePage(),
+      home: HomePage(),
       routes: {},
     );
   }
