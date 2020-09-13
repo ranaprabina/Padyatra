@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:padyatra/models/search_route_model/search_route_data.dart';
 import 'package:padyatra/presenter/search_route_presenter.dart';
+import 'package:padyatra/screen/RouteDetails.dart';
 
 class SearchBar extends StatefulWidget {
   @override
@@ -167,10 +168,12 @@ class RouteSearch extends SearchDelegate<String> {
           onTap: () {
             query = suggestionList[index].toString();
             // print("onTap Tapped");
-            // close(context, query);
+            close(context, query);
             print("final searched result is");
             print(query);
             //TODO: Navigate to Route information screen
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => RouteDetails()));
           },
           leading: Icon(Icons.directions_walk),
           title: RichText(
@@ -206,7 +209,10 @@ class RouteSearch extends SearchDelegate<String> {
         return ListTile(
           onTap: () {
             query = suggestionList[index].toString();
+            close(context, query);
             //TODO: Navigate to Route information screen
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => RouteDetails()));
             showResults(context);
             print("onTap Tapped");
             // close(context, query);
