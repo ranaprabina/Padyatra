@@ -63,15 +63,17 @@ class _SearchBarState extends State<SearchBar>
                 ),
               ),
               onTap: () {
-                setState(() {
-                  print("Search box tapped");
-                  showSearch(
-                    context: context,
-                    delegate: RouteSearch(
-                      recentRouteList: routeNameList,
-                    ),
-                  );
-                });
+                setState(
+                  () {
+                    print("Search box tapped");
+                    showSearch(
+                      context: context,
+                      delegate: RouteSearch(
+                        recentRouteList: routeNameList,
+                      ),
+                    );
+                  },
+                );
               },
               readOnly: true,
             ),
@@ -92,7 +94,7 @@ class _SearchBarState extends State<SearchBar>
         final SearchRoute routesName = _searchRoute[i];
         // print(_searchRoute[i]);
         print(routesName.routeName);
-        routeNameList.add(routesName.routeName.toLowerCase());
+        routeNameList.add(routesName.routeName);
       }
     });
   }
@@ -149,12 +151,40 @@ class RouteSearch extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     // show some results base on the selection
     // throw UnimplementedError();
-    return Card(
-      color: Colors.amber,
-      // shape: StadiumBorder(),
-      child: Center(
-        child: Text(query),
-      ),
+
+    final suggestionList = query.isEmpty
+        ? recentRoutes
+        : routes
+            .where(
+              (r) => r.toString().toLowerCase().contains(query),
+            )
+            .toList();
+
+    return ListView.builder(
+      itemCount: suggestionList.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          onTap: () {
+            query = suggestionList[index].toString();
+            // print("onTap Tapped");
+            // close(context, query);
+            print("final searched result is");
+            print(query);
+            //TODO: Navigate to Route information screen
+          },
+          leading: Icon(Icons.directions_walk),
+          title: RichText(
+            text: TextSpan(
+              text: suggestionList[index].toString(),
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -164,32 +194,40 @@ class RouteSearch extends SearchDelegate<String> {
     // throw UnimplementedError();
     final suggestionList = query.isEmpty
         ? recentRoutes
-        : routes.where((r) => r.startsWith(query)).toList();
+        : routes
+            .where(
+              (r) => r.toString().toLowerCase().contains(query),
+            )
+            .toList();
 
     return ListView.builder(
       itemCount: suggestionList.length,
       itemBuilder: (context, index) {
         return ListTile(
           onTap: () {
+            query = suggestionList[index].toString();
+            //TODO: Navigate to Route information screen
             showResults(context);
             print("onTap Tapped");
+            // close(context, query);
+            print(query);
           },
-          leading: Icon(Icons.directions_walk),
           title: RichText(
             text: TextSpan(
-                text: suggestionList[index].substring(0, query.length),
-                style: TextStyle(
+              text: suggestionList[index].substring(0, query.length),
+              style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
-                ),
-                children: [
-                  TextSpan(
-                    text: suggestionList[index].substring(query.length),
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
+                  fontSize: 16.0),
+              children: [
+                TextSpan(
+                  text: suggestionList[index].substring(query.length),
+                  style: TextStyle(
+                    color: Colors.grey,
                   ),
-                ]),
+                ),
+              ],
+            ),
           ),
         );
       },
