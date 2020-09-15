@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:padyatra/screen/CompletedRoutes.dart';
 import 'package:padyatra/screen/Explore.dart';
+import 'package:padyatra/screen/FavoriteRoutes.dart';
+import 'package:padyatra/screen/ProfilePage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,44 +11,46 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Widget> pages = [
+    Explore(),
+    CompletedRoutes(),
+    FavoriteRoutes(),
+    ProfilePage()
+  ];
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return DefaultTabController(
+      length: 4,
+      initialIndex: 0,
       child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: buildAppBar(),
-        body: Explore(),
-        // bottomNavigationBar: MyBottomNavBar(),
+        body: TabBarView(
+          children: pages,
+        ),
+        bottomNavigationBar: Container(
+          padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+          height: 40,
+          margin: EdgeInsets.only(bottom: 20),
+          child: new TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.explore),
+              ),
+              Tab(
+                icon: Icon(Icons.done),
+              ),
+              Tab(
+                icon: Icon(Icons.favorite),
+              ),
+              Tab(
+                icon: Icon(Icons.person),
+              ),
+            ],
+            unselectedLabelColor: Hexcolor('#4e718f'),
+            labelColor: Colors.green,
+            indicatorColor: Colors.transparent,
+          ),
+        ),
       ),
     );
   }
-}
-
-AppBar buildAppBar() {
-  return AppBar(
-    //The arrow_back icon in the appbar to return to
-    leading: Builder(
-      builder: (BuildContext context) {
-        return IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            print('Icon is pressed');
-          },
-        );
-      },
-    ),
-    centerTitle: true,
-    backgroundColor: Colors.white,
-    title: Text(
-      'पदयात्रा',
-      style: TextStyle(
-        color: Hexcolor('#4e718d'),
-        fontSize: 20.0,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  );
 }
