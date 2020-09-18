@@ -172,8 +172,9 @@ class RouteSearch extends SearchDelegate<String> {
             print("final searched result is");
             print(query);
             //TODO: Navigate to Route information screen
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => RouteDetails()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    RouteDetailsScreen(searchedRouteName: query)));
           },
           leading: Icon(Icons.directions_walk),
           title: RichText(
@@ -211,8 +212,9 @@ class RouteSearch extends SearchDelegate<String> {
             query = suggestionList[index].toString();
             close(context, query);
             //TODO: Navigate to Route information screen
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => RouteDetails()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    RouteDetailsScreen(searchedRouteName: query)));
             showResults(context);
             print("onTap Tapped");
             // close(context, query);
