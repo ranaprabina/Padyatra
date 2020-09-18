@@ -67,7 +67,7 @@ class _RecentlyAddedState extends State<RecentlyAdded>
                     0.40,
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: _allTrekkingRoutes.length,
+                    itemCount: _recentRoutes.length,
                     itemBuilder: (BuildContext context, int index) {
                       final RecentlyAddedRoute recentRoute =
                           _recentRoutes[index];
