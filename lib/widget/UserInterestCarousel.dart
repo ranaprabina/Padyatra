@@ -68,7 +68,7 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
                     0.40,
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: _allTrekkingRoutes.length,
+                    itemCount: _userRoutes.length,
                     itemBuilder: (BuildContext context, int index) {
                       final UserInterestRoute route = _userRoutes[index];
                       return GestureDetector(
