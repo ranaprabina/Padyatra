@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
                 icon: Icon(Icons.person),
               ),
             ],
-            unselectedLabelColor: Hexcolor('#4e718f'),
+            unselectedLabelColor: Colors.black,
             labelColor: Colors.green,
             indicatorColor: Colors.transparent,
           ),
