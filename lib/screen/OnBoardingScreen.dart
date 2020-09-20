@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:padyatra/screen/Explore.dart';
+import 'package:padyatra/screen/HomePage.dart';
+
+import 'package:padyatra/screen/MainPage.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   final pageDecoration = PageDecoration(
@@ -74,7 +77,7 @@ class OnBoardingScreen extends StatelessWidget {
         onDone: () {
           print("Done clicked");
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => Explore()));
+              .push(MaterialPageRoute(builder: (context) => GuestUser()));
         },
         showSkipButton: true,
         showNextButton: true,
