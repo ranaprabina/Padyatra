@@ -34,6 +34,8 @@ flutter:
 
   assets:
     - images/
+    - images/hike3.png
+    - images/hiker.png
 
 
   fonts:
@@ -43,4 +45,6 @@ flutter:
   - family: Roboto
     fonts:
     - asset: fonts/Roboto-Regular.ttf
-        
+  - family: Playfair Display
+    fonts:
+    - asset: fonts/PlayfairDisplay-Regular.ttf      
