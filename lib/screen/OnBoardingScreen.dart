@@ -60,6 +60,8 @@ class OnBoardingScreen extends StatelessWidget {
     return Scaffold(
       body: IntroductionScreen(
         // globalBackgroundColor: Colors.white,
+        dotsFlex: 2,
+        nextFlex: 1,
         dotsDecorator: DotsDecorator(
           activeSize: const Size(20.0, 10.0),
           activeColor: Colors.teal,
@@ -72,7 +74,11 @@ class OnBoardingScreen extends StatelessWidget {
         pages: getPages(),
         done: Text(
           "Done",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
         ),
         onDone: () {
           print("Done clicked");
@@ -84,12 +90,16 @@ class OnBoardingScreen extends StatelessWidget {
         skipFlex: 0,
         skip: Text(
           "Skip",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
         ),
         onSkip: () {
           print("Skip button clicked");
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => Explore()));
+              .push(MaterialPageRoute(builder: (context) => GuestUser()));
         },
         next: const Icon(Icons.arrow_forward),
       ),
