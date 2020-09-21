@@ -3,6 +3,7 @@ import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/TrekkingRoutes.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_data.dart';
 import 'package:padyatra/presenter/user_interest_route_presenter.dart';
+import 'package:padyatra/screen/RouteDetails.dart';
 
 class UserInterestCarousel extends StatefulWidget {
   @override
@@ -74,6 +75,13 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
                       return GestureDetector(
                         onTap: () {
                           print("Route number $index clicked");
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => RouteDetailsScreen(
+                                searchedRouteName: route.routeName,
+                              ),
+                            ),
+                          );
                         },
                         child: Container(
                           margin: EdgeInsets.all(10.0),
