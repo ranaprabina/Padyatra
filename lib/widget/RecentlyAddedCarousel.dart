@@ -3,6 +3,7 @@ import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/TrekkingRoutes.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_data.dart';
 import 'package:padyatra/presenter/recently_added_route_presenter.dart';
+import 'package:padyatra/screen/RouteDetails.dart';
 
 class RecentlyAdded extends StatefulWidget {
   @override
@@ -74,6 +75,13 @@ class _RecentlyAddedState extends State<RecentlyAdded>
                       return GestureDetector(
                         onTap: () {
                           print("Route number $index clicked");
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => RouteDetailsScreen(
+                                searchedRouteName: recentRoute.routeName,
+                              ),
+                            ),
+                          );
                         },
                         child: Container(
                           margin: EdgeInsets.all(10.0),
