@@ -36,6 +36,8 @@ class _SearchBarState extends State<SearchBar>
           height: 10.0,
         ),
         Container(
+          margin: EdgeInsets.symmetric(horizontal: 10),
+
           // Search Bar
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -43,7 +45,7 @@ class _SearchBarState extends State<SearchBar>
               decoration: InputDecoration(
                 fillColor: Colors.grey.shade200,
                 filled: true,
-                contentPadding: EdgeInsets.all(1),
+                contentPadding: EdgeInsets.symmetric(horizontal: 15),
                 // labelText: "Enter Trekking Route or Trial",
                 hintText: "Enter Trekking Route or Trial",
                 suffixIcon: Padding(
