@@ -66,149 +66,148 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
                 height: (displayHeight(context) -
                         MediaQuery.of(context).padding.top -
                         kToolbarHeight) *
-                    0.40,
+                    0.42,
                 child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _userRoutes.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final UserInterestRoute route = _userRoutes[index];
-                      return GestureDetector(
-                        onTap: () {
-                          print("Route number $index clicked");
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => RouteDetailsScreen(
-                                searchedRouteName: route.routeName,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _userRoutes.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final UserInterestRoute route = _userRoutes[index];
+                    return GestureDetector(
+                      onTap: () {
+                        print("Route number $index clicked");
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RouteDetailsScreen(
+                              searchedRouteName: route.routeName,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(10.0),
+                        width: displayWidth(context) * 0.52,
+                        child: Column(
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10)),
+                              child: Image(
+                                height: displayHeight(context) * 0.25,
+                                width: displayWidth(context) * 0.52,
+                                fit: BoxFit.cover,
+                                image: AssetImage("images/" +
+                                    _allTrekkingRoutes[index].image),
                               ),
                             ),
-                          );
-                        },
-                        child: Container(
-                          margin: EdgeInsets.all(10.0),
-                          width: displayWidth(context) * 0.52,
-                          child: Column(
-                            children: <Widget>[
-                              ClipRRect(
+                            Container(
+                              height: displayHeight(context) * 0.06,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black26,
+                                      offset: Offset(6.0, 1.0),
+                                      blurRadius: 10.0),
+                                ],
+                                color: Colors.white,
                                 borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10)),
-                                child: Image(
-                                  height: displayHeight(context) * 0.25,
-                                  width: displayWidth(context) * 0.52,
-                                  fit: BoxFit.cover,
-                                  image: AssetImage("images/" +
-                                      _allTrekkingRoutes[index].image),
-                                ),
+                                    bottomLeft: Radius.circular(10.0),
+                                    bottomRight: Radius.circular(10.0)),
                               ),
-                              Container(
-                                height: displayHeight(context) * 0.06,
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black26,
-                                        offset: Offset(6.0, 1.0),
-                                        blurRadius: 10.0),
-                                  ],
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(10.0),
-                                      bottomRight: Radius.circular(10.0)),
-                                ),
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      margin: EdgeInsets.only(left: 5),
-                                      width: displayWidth(context) * 0.18,
-                                      height: displayHeight(context) * 0.023,
-                                      decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Padding(
-                                        padding:
-                                            EdgeInsets.fromLTRB(0, 4.5, 0, 0),
-                                        child: Text(
-                                          // '${_allTrekkingRoutes[index].difficulty}',
-                                          route.difficulty,
-                                          style: TextStyle(
-                                            fontSize: 10.0,
-                                            color: Colors.white,
-                                            letterSpacing: 1.2,
-                                          ),
-                                          textAlign: TextAlign.center,
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.only(left: 5),
+                                    width: displayWidth(context) * 0.18,
+                                    height: displayHeight(context) * 0.023,
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(0, 4.5, 0, 0),
+                                      child: Text(
+                                        // '${_allTrekkingRoutes[index].difficulty}',
+                                        route.difficulty,
+                                        style: TextStyle(
+                                          fontSize: 10.0,
+                                          color: Colors.white,
+                                          letterSpacing: 1.2,
                                         ),
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
-                                    Container(
-                                      width: displayWidth(context) * 0.17,
-                                      child: Column(
-                                        children: <Widget>[
-                                          Container(
-                                            child: Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 10, 0, 0),
-                                              child: Text(
-                                                'Length',
-                                                style: TextStyle(
-                                                    fontSize: 11,
-                                                    fontWeight:
-                                                        FontWeight.w100),
-                                              ),
+                                  ),
+                                  Container(
+                                    width: displayWidth(context) * 0.17,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Container(
+                                          child: Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 10, 0, 0),
+                                            child: Text(
+                                              'Length',
+                                              style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w100),
                                             ),
                                           ),
-                                          Text(
-                                            // '${_allTrekkingRoutes[index].length}',
-                                            "${route.length} km",
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                            ),
+                                        ),
+                                        Text(
+                                          // '${_allTrekkingRoutes[index].length}',
+                                          "${route.length} km",
+                                          style: TextStyle(
+                                            fontSize: 11,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                    Container(
-                                      width: displayWidth(context) * 0.12,
-                                      child: Column(
-                                        children: <Widget>[
-                                          Container(
-                                            child: Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 10, 0, 0),
-                                              child: Text(
-                                                'Duration',
-                                                style: TextStyle(
-                                                    fontSize: 11,
-                                                    fontWeight:
-                                                        FontWeight.w100),
-                                              ),
+                                  ),
+                                  Container(
+                                    width: displayWidth(context) * 0.12,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Container(
+                                          child: Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 10, 0, 0),
+                                            child: Text(
+                                              'Duration',
+                                              style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w100),
                                             ),
                                           ),
-                                          Text(
-                                            // '${_allTrekkingRoutes[index].duration}',
-                                            "${route.duration} days",
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                            ),
+                                        ),
+                                        Text(
+                                          // '${_allTrekkingRoutes[index].duration}',
+                                          "${route.duration} days",
+                                          style: TextStyle(
+                                            fontSize: 11,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                child: Container(
-                                  child: Text(
-                                      // '${_allTrekkingRoutes[index].name}'
-                                      route.routeName),
-                                ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                              child: Container(
+                                child: Text(
+                                    // '${_allTrekkingRoutes[index].name}'
+                                    route.routeName),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      );
-                    }),
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           );
