@@ -30,7 +30,7 @@ class NearbyRoutesCarousel extends StatelessWidget {
           height: (displayHeight(context) -
                   MediaQuery.of(context).padding.top -
                   kToolbarHeight) *
-              0.39,
+              0.42,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: _allTrekkingRoutes.length,
