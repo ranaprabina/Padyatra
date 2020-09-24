@@ -16,6 +16,7 @@ dependencies:
   hexcolor: ^1.0.4
   finite_coverflow: ^1.0.0
   introduction_screen: ^1.0.9
+  simple_animations: ^2.2.1
 
 
   cupertino_icons: ^0.1.3
