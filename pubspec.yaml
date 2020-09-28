@@ -37,6 +37,11 @@ flutter:
     - images/
     - images/hike3.png
     - images/hiker.png
+    - images/login.jpg
+    - images/signup_top.png
+    - images/Interest1.jpg
+    - images/hike1.jpg
+    - images/journey-concept.jpg
 
 
   fonts:
