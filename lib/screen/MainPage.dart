@@ -2,7 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:padyatra/screen/Explore.dart';
+import 'package:padyatra/Login.dart';
+
 import 'package:padyatra/screen/HomePage.dart';
 
 class GuestUser extends StatelessWidget {
@@ -53,7 +54,8 @@ class GuestUser extends StatelessWidget {
                   padding: EdgeInsets.only(left: 40, top: 10),
                   child: GestureDetector(
                     onTap: () {
-                      print("logim");
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => Login()));
                     },
                     child: Text(
                       'login',
