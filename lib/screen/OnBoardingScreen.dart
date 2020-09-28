@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:padyatra/screen/Explore.dart';
-import 'package:padyatra/screen/HomePage.dart';
 
 import 'package:padyatra/screen/MainPage.dart';
 
@@ -43,7 +41,7 @@ class OnBoardingScreen extends StatelessWidget {
           decoration: pageDecoration,
         ),
         PageViewModel(
-          image: Image.asset("images/trekking-solo.png"),
+          image: Image.asset("images/journey-concept.jpg"),
           title: "Explore your desired trekking routes",
           body: "Let the Adventure Begin",
           footer: Text(
@@ -59,7 +57,7 @@ class OnBoardingScreen extends StatelessWidget {
 
     return Scaffold(
       body: IntroductionScreen(
-        // globalBackgroundColor: Colors.white,
+        globalBackgroundColor: Colors.white,
         dotsFlex: 2,
         nextFlex: 1,
         dotsDecorator: DotsDecorator(
