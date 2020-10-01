@@ -87,12 +87,12 @@ class _DetailsBodyState extends State<DetailsBody>
                       right: 15,
                       child: Container(
                           height: 40,
-                          width: 80,
+                          width: 100,
                           decoration: BoxDecoration(
                               color: Colors.green,
                               borderRadius: BorderRadius.circular(15)),
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(8, 10, 0, 0),
+                            padding: EdgeInsets.fromLTRB(7, 6, 0, 0),
                             child: FlatButton(
                               onPressed: () {
                                 Navigator.of(context).push(MaterialPageRoute(
