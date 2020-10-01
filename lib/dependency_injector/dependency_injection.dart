@@ -4,6 +4,9 @@ import 'package:padyatra/models/recently_added_routes/recently_added_route_prod.
 import 'package:padyatra/models/route_details_model/route_details_data.dart';
 import 'package:padyatra/models/route_details_model/route_details_mock.dart';
 import 'package:padyatra/models/route_details_model/route_details_prod.dart';
+import 'package:padyatra/models/routes_catefory_model/route_category_data.dart';
+import 'package:padyatra/models/routes_catefory_model/route_category_mock.dart';
+import 'package:padyatra/models/routes_catefory_model/route_category_prod.dart';
 import 'package:padyatra/models/search_route_model/search_route_data.dart';
 import 'package:padyatra/models/search_route_model/search_route_mock.dart';
 import 'package:padyatra/models/search_route_model/search_route_prod.dart';
@@ -60,6 +63,15 @@ class Injector {
         return new MockRouteDetails();
       default:
         return new ProdRouteDetailsRepository();
+    }
+  }
+
+  RouteCategoryRepository get routeCategoryRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return new MockRouteCategory();
+      default:
+        return new ProdRouteCategoryRepository();
     }
   }
 }

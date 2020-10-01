@@ -3,6 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/presenter/routes_details_presenter.dart';
 import 'package:padyatra/models/route_details_model/route_details_data.dart';
+import 'package:padyatra/screen/NavigationScreen.dart';
 
 class RouteDetailsScreen extends StatefulWidget {
   final searchedRouteName;
@@ -92,10 +93,16 @@ class _DetailsBodyState extends State<DetailsBody>
                               borderRadius: BorderRadius.circular(15)),
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(8, 10, 0, 0),
-                            child: Text(
-                              'navigate',
-                              style: TextStyle(
-                                color: Colors.white,
+                            child: FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => NavigationScreen()));
+                              },
+                              child: Text(
+                                'navigate',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           )),
