@@ -1,3 +1,6 @@
+import 'package:padyatra/models/insert_user_interest_routeCategory/insert_user_interest_routeCategory_data.dart';
+import 'package:padyatra/models/insert_user_interest_routeCategory/insert_user_interest_routeCategory_mock.dart';
+import 'package:padyatra/models/insert_user_interest_routeCategory/insert_user_interest_routeCategory_prod.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_data.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_mock.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_prod.dart';
@@ -72,6 +75,16 @@ class Injector {
         return new MockRouteCategory();
       default:
         return new ProdRouteCategoryRepository();
+    }
+  }
+
+  InsertUserInterestRouteCategoryRepository
+      get insertUserInterestRouteCategoryRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return new MockInsertUserInterestRouteCategory();
+      default:
+        return new ProdInsertUserInterestRouteCategoryRepository();
     }
   }
 }
