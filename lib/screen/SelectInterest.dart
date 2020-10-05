@@ -6,6 +6,7 @@ import 'package:padyatra/models/routes_catefory_model/route_category_data.dart';
 import 'package:padyatra/presenter/insert_user_interest_routeCategory_presenter.dart';
 import 'package:padyatra/presenter/route_category_presenter.dart';
 import 'package:padyatra/screen/HomePage.dart';
+import 'package:toast/toast.dart';
 
 class UserSelectInterest extends StatefulWidget {
   @override
@@ -24,9 +25,11 @@ class _UserSelectInterestState extends State<UserSelectInterest>
   RouteCategoryListPresenter _routeCategoryListPresenter;
   List<RouteCategory> _routeCategory;
 
-  bool _isInsertionComplete;
   bool _isCategorySelected;
-  bool _test;
+
+  bool finalResponse;
+  bool categoryAlreadyInDB;
+  InsertUserInterestRouteCategory insertUserInterestRouteCategory;
   InserUserInterestRouteCategoryListPresenter
       _inserUserInterestRouteCategoryListPresenter;
   List<InsertUserInterestRouteCategory> _userInteresInsertionServerResponse;
@@ -41,9 +44,10 @@ class _UserSelectInterestState extends State<UserSelectInterest>
     super.initState();
     _isLoading = true;
     _routeCategoryListPresenter.loadRouteCategoryName();
-    _isInsertionComplete = false;
     _isCategorySelected = false;
-    _test = false;
+    finalResponse = false;
+    // _test = false;
+    categoryAlreadyInDB = false;
     _filters = <String>[];
     // _interests = <Interest>[
     //   const Interest('Moderate'),
@@ -59,20 +63,199 @@ class _UserSelectInterestState extends State<UserSelectInterest>
     super.dispose();
   }
 
+  Widget _continueWithoutSelectionDialogueBox() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text(
+            "Category not selected",
+            style: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: new Text(
+            "continue without selection",
+            style: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            new MaterialButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              height: displayHeight(context) * 0.05,
+              minWidth: displayWidth(context) * 0.35,
+              color: Color.fromRGBO(49, 39, 79, 1),
+              // color: Hexcolor('#b0e57c'),
+              child: Text(
+                'cancel',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+            Divider(),
+            new MaterialButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => HomePage()));
+              },
+              height: displayHeight(context) * 0.05,
+              minWidth: displayWidth(context) * 0.35,
+              color: Color.fromRGBO(49, 39, 79, 1),
+              // color: Hexcolor('#b0e57c'),
+              child: Text(
+                'continue',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15.0,
+                ),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _finalConfirmationDialogueBox() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text(
+            "Final Confirmation",
+            style: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: new Text(
+            "Let the Adventure Begin....",
+            style: TextStyle(
+              fontFamily: 'Roboto',
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          actions: [
+            new MaterialButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              height: displayHeight(context) * 0.05,
+              minWidth: displayWidth(context) * 0.35,
+              color: Color.fromRGBO(49, 39, 79, 1),
+              // color: Hexcolor('#b0e57c'),
+              child: Text(
+                'cancel',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+            new MaterialButton(
+              onPressed: () {
+                finalResponse
+                    ? Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => HomePage()))
+                    : Navigator.of(context).pop(
+                        Toast.show(
+                          categoryAlreadyInDB
+                              ? "Categories already existed"
+                              : "Error occured during insertion process",
+                          context,
+                          backgroundColor: Colors.red[400],
+                          duration: 3,
+                          gravity: Toast.BOTTOM,
+                        ),
+                      );
+              },
+              height: displayHeight(context) * 0.05,
+              minWidth: displayWidth(context) * 0.35,
+              color: Color.fromRGBO(49, 39, 79, 1),
+              child: Text(
+                'Continue',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15.0,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void insertUserInterestCategories() {
+    if (!_isCategorySelected || _filters.length == 0) {
+      print("categories to be inserted is empty");
+      _continueWithoutSelectionDialogueBox();
+      setState(() {
+        finalResponse = false;
+      });
+    } else {
+      print("Calling for Loop now");
+      for (int index = 0; index < _filters.length; index++) {
+        print(_filters[index]);
+        _inserUserInterestRouteCategoryListPresenter
+            .loadServerResponse(_filters[index].toString());
+      }
+      _finalConfirmationDialogueBox();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? new Center(
-            child: new CircularProgressIndicator(),
-          )
-        : Scaffold(
-            backgroundColor: Colors.white,
-            body: Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: _isLoading
+          ? new Center(
+              child: new CircularProgressIndicator(),
+            )
+          : Column(
               children: <Widget>[
                 // Stack(
                 //   children: <Widget>[
-                Container(
-                  child: Image.asset('images/Interest1.jpg'),
+                Stack(
+                  children: [
+                    Container(
+                      child: Image.asset('images/Interest1.jpg'),
+                    ),
+                    Positioned(
+                      top: 40,
+                      // left: 10,
+                      right: 20,
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => HomePage()));
+                          },
+                          child: Text(
+                            "skip",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 25,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: "Playfair Daily",
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
                 Center(
                   // top: displayHeight(context) * 0.4,
@@ -92,7 +275,6 @@ class _UserSelectInterestState extends State<UserSelectInterest>
                           TextSpan(
                             text: "INTO?",
                             style: TextStyle(
-                                // color: Hexcolor('#b0e57c'),
                                 color: Colors.amber,
                                 fontSize: 50,
                                 fontFamily: 'Playfair Display',
@@ -119,121 +301,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
                 ),
                 MaterialButton(
                   onPressed: () {
-                    if (_filters.length == 0) {
-                      print("categories to be inserted is empty");
-                      setState(() {
-                        _isInsertionComplete = false;
-                      });
-                    } else {
-                      for (int index = 0; index < _filters.length; index++) {
-                        print(_filters[index]);
-                        _inserUserInterestRouteCategoryListPresenter
-                            .loadServerResponse(_filters[index].toString());
-                      }
-                      setState(() {
-                        _isInsertionComplete = true;
-                        _test = true;
-                      });
-                    }
-                    _isInsertionComplete
-                        ? showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: new Text(
-                                  _test
-                                      ? "Insertion Successful"
-                                      : "Insertion Error",
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                content: new Text(
-                                  _test
-                                      ? "Selected route category has been updated!!!"
-                                      : "There was an error during insertion",
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                actions: [
-                                  new MaterialButton(
-                                    onPressed: () {
-                                      // Navigator.of(context).pop();
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HomePage()));
-                                    },
-                                    height: displayHeight(context) * 0.05,
-                                    minWidth: displayWidth(context) * 0.35,
-                                    color: Color.fromRGBO(49, 39, 79, 1),
-                                    // color: Hexcolor('#b0e57c'),
-                                    child: Text(
-                                      'Continue',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15.0,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              );
-                            },
-                          )
-                        : showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: new Text(
-                                  _isCategorySelected
-                                      ? "Insertion Unsuccessful"
-                                      : "Are You Sure???",
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                content: new Text(
-                                  _isCategorySelected
-                                      ? "There was an error during insertion"
-                                      : "Continue without selection",
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                actions: [
-                                  new MaterialButton(
-                                    onPressed: () {
-                                      // Navigator.of(context).pop();
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  HomePage()));
-                                    },
-                                    height: displayHeight(context) * 0.05,
-                                    minWidth: displayWidth(context) * 0.35,
-                                    color: Color.fromRGBO(49, 39, 79, 1),
-                                    // color: Hexcolor('#b0e57c'),
-                                    child: Text(
-                                      'Continue',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15.0,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              );
-                            },
-                          );
+                    insertUserInterestCategories();
                   },
                   height: displayHeight(context) * 0.05,
                   minWidth: displayWidth(context) * 0.35,
@@ -252,7 +320,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
                 )
               ],
             ),
-          );
+    );
   }
 
   Iterable<Widget> get interestWidgets sync* {
@@ -279,8 +347,6 @@ class _UserSelectInterestState extends State<UserSelectInterest>
                   print(_isCategorySelected);
                   _filters.add(interest.categoryName);
                 } else {
-                  _isCategorySelected = selected;
-                  print(_isCategorySelected);
                   _filters.removeWhere(
                     (String name) {
                       return name == interest.categoryName;
@@ -321,7 +387,24 @@ class _UserSelectInterestState extends State<UserSelectInterest>
       List<InsertUserInterestRouteCategory> items) {
     setState(() {
       _userInteresInsertionServerResponse = items;
-      // _isInsertionComplete = true;
+      print(_userInteresInsertionServerResponse.length);
+      insertUserInterestRouteCategory = _userInteresInsertionServerResponse[0];
+
+      if (insertUserInterestRouteCategory.serverResponseMessage.isNotEmpty) {
+        insertUserInterestRouteCategory.serverResponseMessage ==
+                "New_Insertion_Success"
+            ? finalResponse = true
+            : finalResponse = false;
+
+        insertUserInterestRouteCategory.serverResponseMessage ==
+                "Category_Already_Inserted"
+            ? categoryAlreadyInDB = true
+            : categoryAlreadyInDB = false;
+      } else {
+        print("server response is empty or null");
+      }
+      print("Response From Server is");
+      print(insertUserInterestRouteCategory.serverResponseMessage);
     });
   }
 
