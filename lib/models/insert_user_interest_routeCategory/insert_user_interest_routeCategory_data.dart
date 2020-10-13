@@ -9,7 +9,8 @@ class InsertUserInterestRouteCategory {
   });
 
   InsertUserInterestRouteCategory.fromMap(Map<String, dynamic> map)
-      : serverResponseMessage = map['Response'];
+      : serverResponseMessage = map['Response'],
+        userId = map['userId'];
 }
 
 abstract class InsertUserInterestRouteCategoryRepository {
