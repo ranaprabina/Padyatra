@@ -1,3 +1,6 @@
+import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinate_prod.dart';
+import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_data.dart';
+import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_mock.dart';
 import 'package:padyatra/models/insert_user_interest_routeCategory/insert_user_interest_routeCategory_data.dart';
 import 'package:padyatra/models/insert_user_interest_routeCategory/insert_user_interest_routeCategory_mock.dart';
 import 'package:padyatra/models/insert_user_interest_routeCategory/insert_user_interest_routeCategory_prod.dart';
@@ -85,6 +88,16 @@ class Injector {
         return new MockInsertUserInterestRouteCategory();
       default:
         return new ProdInsertUserInterestRouteCategoryRepository();
+    }
+  }
+
+  GetRouteCoordinatesRepository get getRouteCoordinatesRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return new MockGetRouteCoordinates();
+
+      default:
+        return new ProdGetRouteCoordinatesRepository();
     }
   }
 }
