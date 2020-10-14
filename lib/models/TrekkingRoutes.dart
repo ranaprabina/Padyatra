@@ -35,6 +35,36 @@ class TrekkingRoutes {
         length: '112km',
         duration: '12 days',
         difficulty: 'Moderate'));
+    lstofTrekkingRoutes.add(TrekkingRoutes(
+        name: 'Upper Mustang Trek',
+        image: 'AC7.jpg',
+        length: '112km',
+        duration: '12 days',
+        difficulty: 'Moderate'));
+    lstofTrekkingRoutes.add(TrekkingRoutes(
+        name: 'Upper Mustang Trek',
+        image: 'AC7.jpg',
+        length: '112km',
+        duration: '12 days',
+        difficulty: 'Moderate'));
+    lstofTrekkingRoutes.add(TrekkingRoutes(
+        name: 'Upper Mustang Trek',
+        image: 'AC7.jpg',
+        length: '112km',
+        duration: '12 days',
+        difficulty: 'Moderate'));
+    lstofTrekkingRoutes.add(TrekkingRoutes(
+        name: 'Upper Mustang Trek',
+        image: 'AC7.jpg',
+        length: '112km',
+        duration: '12 days',
+        difficulty: 'Moderate'));
+    lstofTrekkingRoutes.add(TrekkingRoutes(
+        name: 'Upper Mustang Trek',
+        image: 'AC7.jpg',
+        length: '112km',
+        duration: '12 days',
+        difficulty: 'Moderate'));
     return lstofTrekkingRoutes;
   }
 }
