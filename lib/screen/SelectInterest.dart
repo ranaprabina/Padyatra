@@ -9,6 +9,9 @@ import 'package:padyatra/screen/HomePage.dart';
 import 'package:toast/toast.dart';
 
 class UserSelectInterest extends StatefulWidget {
+  final userId;
+
+  const UserSelectInterest({Key key, this.userId}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _UserSelectInterestState();
 }
@@ -19,7 +22,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
         InsertUserInterestRouteCategoryListViewContract {
   // List<Interest> _interests;
   List<String> _filters;
-
+  String userId;
   int userIdAfterSignUp;
   bool _isLoading;
   RouteCategoryListPresenter _routeCategoryListPresenter;
@@ -47,6 +50,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
     _isCategorySelected = false;
     finalResponse = false;
     // _test = false;
+    userId = widget.userId;
     categoryAlreadyInDB = false;
     _filters = <String>[];
     // _interests = <Interest>[
@@ -87,6 +91,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
           actions: [
             new MaterialButton(
               onPressed: () {
+                print(userId);
                 Navigator.of(context).pop();
               },
               height: displayHeight(context) * 0.05,
@@ -104,8 +109,10 @@ class _UserSelectInterestState extends State<UserSelectInterest>
             Divider(),
             new MaterialButton(
               onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => HomePage()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => HomePage(
+                          userId: userId,
+                        )));
               },
               height: displayHeight(context) * 0.05,
               minWidth: displayWidth(context) * 0.35,
@@ -166,8 +173,10 @@ class _UserSelectInterestState extends State<UserSelectInterest>
             new MaterialButton(
               onPressed: () {
                 finalResponse
-                    ? Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => HomePage()))
+                    ? Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              userId: userId,
+                            )))
                     : Navigator.of(context).pop(
                         Toast.show(
                           categoryAlreadyInDB
@@ -200,6 +209,8 @@ class _UserSelectInterestState extends State<UserSelectInterest>
   void insertUserInterestCategories() {
     if (!_isCategorySelected || _filters.length == 0) {
       print("categories to be inserted is empty");
+      print(userId);
+      print(widget.userId);
       _continueWithoutSelectionDialogueBox();
       setState(() {
         finalResponse = false;
@@ -208,8 +219,8 @@ class _UserSelectInterestState extends State<UserSelectInterest>
       print("Calling for Loop now");
       for (int index = 0; index < _filters.length; index++) {
         print(_filters[index]);
-        _inserUserInterestRouteCategoryListPresenter
-            .loadServerResponse(_filters[index].toString());
+        _inserUserInterestRouteCategoryListPresenter.loadServerResponse(
+            _filters[index].toString(), userId);
       }
       _finalConfirmationDialogueBox();
     }
@@ -343,7 +354,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
           ),
           label: Text(interest.categoryName),
           selected: _filters.contains(interest.categoryName),
-          selectedColor: Colors.purple,
+          selectedColor: Hexcolor('#93d8f8'),
           backgroundColor: Colors.grey[300],
           onSelected: (bool selected) {
             setState(
