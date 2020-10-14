@@ -19,6 +19,12 @@ import 'package:padyatra/models/search_route_model/search_route_prod.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_data.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_mock.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_prod.dart';
+import 'package:padyatra/models/user_login_model/user_login_data.dart';
+import 'package:padyatra/models/user_login_model/user_login_mock.dart';
+import 'package:padyatra/models/user_login_model/user_login_prod.dart';
+import 'package:padyatra/models/user_signUp_model/user_signUp_data.dart';
+import 'package:padyatra/models/user_signUp_model/user_signUp_mock.dart';
+import 'package:padyatra/models/user_signUp_model/user_signUp_prod.dart';
 import '../models/select_user_interet_routes/user_interest_route_data.dart';
 
 enum Flavor { MOCK, PROD }
@@ -98,6 +104,26 @@ class Injector {
 
       default:
         return new ProdGetRouteCoordinatesRepository();
+    }
+  }
+
+  UserLoginRepository get userLoginRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return new MockUserLogin();
+
+      default:
+        return new ProdUserLoginRepository();
+    }
+  }
+
+  UserSignUpRepository get userSignUpRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return new MockUserSignUp();
+
+      default:
+        return new ProdUserSignUpRepository();
     }
   }
 }
