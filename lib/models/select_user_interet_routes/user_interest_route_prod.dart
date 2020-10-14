@@ -6,12 +6,14 @@ import 'package:http/http.dart' as http;
 
 class ProdUserInterestRouteRepository implements UserInterestRouteRepository {
   String userInterestRouteUrl =
-      // "http://192.168.1.68:8888/Padyatra/PHP%20codes/Padyatra-ServerSide/API's/selectUserInterestTrekkingRoute.php";
-      "http://192.168.1.65/PHP%20codes/Padyatra/API's/selectUserInterestTrekkingRoute.php";
+      "http://192.168.1.68:8888/Padyatra/PHP%20codes/Padyatra-ServerSide/API's/selectUserInterestTrekkingRoute.php";
+  // "http://192.168.1.65/PHP%20codes/Padyatra/API's/selectUserInterestTrekkingRoute.php";
 
   @override
-  Future<List<UserInterestRoute>> fetchRoutes() async {
-    http.Response response = await http.get(userInterestRouteUrl);
+  Future<List<UserInterestRoute>> fetchRoutes(String userId) async {
+    http.Response response = await http.post(userInterestRouteUrl, body: {
+      "userId": userId,
+    });
     final responseBody = jsonDecode(response.body);
     print(responseBody);
     final List responseBody1 = responseBody['User_Interested_Selected_Routes'];
