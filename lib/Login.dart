@@ -1,11 +1,12 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:padyatra/control_sizes.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:padyatra/screen/ProfilePage.dart';
+import 'package:padyatra/models/user_login_model/user_login_data.dart';
+import 'package:padyatra/presenter/user_login_presenter.dart';
+import 'package:padyatra/screen/Explore.dart';
+import 'package:padyatra/screen/HomePage.dart';
+import 'package:padyatra/screen/SignUp.dart';
 
 class Login extends StatefulWidget {
   const Login({
@@ -16,52 +17,26 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
-  TextEditingController email = new TextEditingController();
-  TextEditingController password = new TextEditingController();
-  String u_id;
-  // TextEditingController u_id = TextEditingController();
-  // final _formKey = new GlobalKey<FormState>();
-  // String u_id = u_idController.text;
-  Future login() async {
-    final response = await http.post(
-        // "http://192.168.1.65/PHP%20codes/Padyatra/API's/inserUserData.php",
-        "http://192.168.1.65/PHP%20codes/Padyatra/API's/login.php",
-        body: {
-          "email": email.text,
-          "password": password.text,
-          // "u_id": u_id.text,
-        });
-    var data = json.decode(response.body);
+class _LoginState extends State<Login> implements UserLoginListViewContract {
+  final emailController = TextEditingController();
+  String email;
+  final passwordController = TextEditingController();
+  String password;
+  String userId;
+  bool _isLoginSucess;
+  UserLogin userLogin;
+  UserLoginListPresenter _userLoginListPresenter;
+  List<UserLogin> _userLoginServerResponse;
 
-    print(data);
-    print(data.length);
-    var data1 = json.decode(data['serverResponse']);
-    print(data1.length);
-    // print(data['User Id']);
-    // u_id = data['User Id'];
-    // if (data['Respone'] == "login_success") {
-    //   // await FlutterSession().set('token', email.text);
-    //   Fluttertoast.showToast(
-    //       msg: "Login Sucessful",
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.CENTER,
-    //       // timeInSecForIosWeb: 1,
-    //       backgroundColor: Colors.grey,
-    //       textColor: Colors.white,
-    //       fontSize: 16.0);
-    //   Navigator.of(context).push(
-    //       MaterialPageRoute(builder: (context) => ProfilePage(u_id: u_id)));
-    // } else {
-    //   Fluttertoast.showToast(
-    //       msg: "Username and password Incorrect",
-    //       toastLength: Toast.LENGTH_SHORT,
-    //       gravity: ToastGravity.CENTER,
-    //       // timeInSecForIosWeb: 1,
-    //       backgroundColor: Colors.grey,
-    //       textColor: Colors.white,
-    //       fontSize: 16.0);
-    // }
+  _LoginState() {
+    _userLoginListPresenter = new UserLoginListPresenter(this);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _isLoginSucess = false;
+    // _userLoginListPresenter.loadServerResponse();
   }
 
   @override
@@ -126,7 +101,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     child: TextFormField(
-                      controller: email,
+                      controller: emailController,
                       // validator: EmailValidator(
                       //     errorText: 'enter a valid email address'),
                       decoration: InputDecoration(
@@ -147,7 +122,7 @@ class _LoginState extends State<Login> {
                     ),
                     child: TextFormField(
                       obscureText: true,
-                      controller: password,
+                      controller: passwordController,
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Password",
@@ -176,7 +151,21 @@ class _LoginState extends State<Login> {
           ),
           GestureDetector(
             onTap: () {
-              login();
+              // login();
+              email = emailController.text.toString();
+              password = passwordController.text.toString();
+              if (email.isNotEmpty && password.isNotEmpty) {
+                _userLoginListPresenter.loadServerResponse(email, password);
+              } else {
+                Fluttertoast.showToast(
+                    msg: "Please fill all the fields",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    // timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0);
+              }
             },
             child: Container(
               height: displayHeight(context) * 0.06,
@@ -200,6 +189,8 @@ class _LoginState extends State<Login> {
           GestureDetector(
             onTap: () {
               print('doafgh');
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => SignUp()));
             },
             child: Container(
               child: Center(
@@ -219,4 +210,51 @@ class _LoginState extends State<Login> {
       ))),
     );
   }
+
+  @override
+  void onUserLoginComplete(List<UserLogin> items) {
+    setState(() {
+      _userLoginServerResponse = items;
+
+      userLogin = _userLoginServerResponse[0];
+      if (userLogin.serverResponseMessage.isNotEmpty) {
+        userLogin.serverResponseMessage == "login_success"
+            ? _isLoginSucess = true
+            : _isLoginSucess = false;
+
+        print(userLogin.email);
+        print(userLogin.firstName);
+        print(userLogin.lastName);
+        userId = userLogin.userId;
+
+        print(userId);
+        if (_isLoginSucess) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => HomePage(userId: userId)));
+          Fluttertoast.showToast(
+              msg: "Login Sucessful",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              // timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else {
+          Fluttertoast.showToast(
+              msg: "Username or password incorrect",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              // timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+        // Navigator.of(context).push(
+        //     MaterialPageRoute(builder: (context) => ProfilePage(u_id: u_id)));
+      }
+    });
+  }
+
+  @override
+  void onUserLoginError() {}
 }
