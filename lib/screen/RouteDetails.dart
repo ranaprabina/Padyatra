@@ -57,6 +57,8 @@ class _DetailsBodyState extends State<DetailsBody>
   String weatherIcon;
   double latitude;
   double longitude;
+  bool _isFetchingCurrent;
+  bool _isFetchingDestination;
 
   Future getDestinationWeather() async {
     http.Response response = await http.get(
@@ -65,6 +67,7 @@ class _DetailsBodyState extends State<DetailsBody>
     setState(() {
       this.temp = results['main']['temp'];
       this.condition = results['weather'][0]['icon'];
+      _isFetchingDestination = false;
     });
   }
 
@@ -88,6 +91,7 @@ class _DetailsBodyState extends State<DetailsBody>
     setState(() {
       this.weatherIcon = decodedData['weather'][0]['icon'];
       this.temperature = decodedData['main']['temp'];
+      _isFetchingCurrent = false;
     });
   }
 
@@ -103,6 +107,8 @@ class _DetailsBodyState extends State<DetailsBody>
     super.initState();
     _isLoading = true;
     _presenter.loadRouteDetails(widget.selectedRoute);
+    _isFetchingCurrent = true;
+    _isFetchingDestination = true;
     this.getDestinationWeather();
     this.getCurrentWeather();
   }
@@ -296,9 +302,14 @@ class _DetailsBodyState extends State<DetailsBody>
                               ),
                               Container(
                                   padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                  child: Image(
-                                      image: NetworkImage(
-                                          'http://openweathermap.org/img/w/$weatherIcon.png')))
+                                  child: _isFetchingCurrent
+                                      ? new Center(
+                                          child:
+                                              new CircularProgressIndicator(),
+                                        )
+                                      : Image(
+                                          image: NetworkImage(
+                                              'http://openweathermap.org/img/w/$weatherIcon.png')))
                             ],
                           ),
                         ),
@@ -313,9 +324,14 @@ class _DetailsBodyState extends State<DetailsBody>
                                 child: Text('Destination'),
                               ),
                               Container(
-                                  child: Image(
-                                      image: NetworkImage(
-                                          'http://openweathermap.org/img/w/$condition.png'))
+                                  child: _isFetchingDestination
+                                      ? new Center(
+                                          child:
+                                              new CircularProgressIndicator(),
+                                        )
+                                      : Image(
+                                          image: NetworkImage(
+                                              'http://openweathermap.org/img/w/$condition.png'))
                                   // Icon(
                                   //   Icons.wb_sunny,
                                   //   size: 60,

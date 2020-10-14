@@ -212,8 +212,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.0"
-<<<<<<< HEAD
-=======
   permission_handler:
     dependency: transitive
     description:
@@ -221,14 +219,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.0"
-  petitparser:
-    dependency: transitive
-    description:
-      name: petitparser
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.4.0"
->>>>>>> 68f30bea2ac858709b3876fb62f71cea90928a0a
   plugin_platform_interface:
     dependency: transitive
     description:
