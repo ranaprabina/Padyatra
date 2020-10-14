@@ -1,6 +1,7 @@
 import 'dart:async';
 
 class UserInterestRoute {
+  String serverResponse;
   String routeId;
   String routeName;
   String image;
@@ -8,15 +9,18 @@ class UserInterestRoute {
   String duration;
   String difficulty;
 
-  UserInterestRoute(
-      {this.routeId,
-      this.routeName,
-      this.image,
-      this.length,
-      this.duration,
-      this.difficulty});
+  UserInterestRoute({
+    this.serverResponse,
+    this.routeId,
+    this.routeName,
+    this.image,
+    this.length,
+    this.duration,
+    this.difficulty,
+  });
   UserInterestRoute.fromMap(Map<String, dynamic> map)
-      : routeId = map['route_id'],
+      : serverResponse = map['Response'],
+        routeId = map['route_id'],
         routeName = map['route_name'],
         length = map['route_length'],
         duration = map['duration'],
@@ -24,7 +28,7 @@ class UserInterestRoute {
 }
 
 abstract class UserInterestRouteRepository {
-  Future<List<UserInterestRoute>> fetchRoutes();
+  Future<List<UserInterestRoute>> fetchRoutes(String userId);
 }
 
 class FetchDataException implements Exception {
