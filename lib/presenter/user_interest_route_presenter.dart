@@ -14,9 +14,9 @@ class UserInterestRouteListPresenter {
     _repository = new Injector().userInterestRouteRepository;
   }
 
-  void loadUserRoutes() {
+  void loadUserRoutes(String userId) {
     _repository
-        .fetchRoutes()
+        .fetchRoutes(userId)
         .then((ur) => _viewContract.onLoadUserInterestRouteComplete(ur))
         .catchError((onError) => _viewContract.onLoadUserInterstRouteError());
   }
