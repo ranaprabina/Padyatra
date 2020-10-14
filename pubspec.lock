@@ -100,6 +100,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.1.1"
+  geolocator:
+    dependency: "direct main"
+    description:
+      name: geolocator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
+  google_api_availability:
+    dependency: transitive
+    description:
+      name: google_api_availability
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.4"
   google_maps_flutter:
     dependency: "direct main"
     description:
@@ -198,6 +212,23 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.9.0"
+<<<<<<< HEAD
+=======
+  permission_handler:
+    dependency: transitive
+    description:
+      name: permission_handler
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.3.0"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.4.0"
+>>>>>>> 68f30bea2ac858709b3876fb62f71cea90928a0a
   plugin_platform_interface:
     dependency: transitive
     description:
