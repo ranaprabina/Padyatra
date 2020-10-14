@@ -7,11 +7,21 @@ import 'package:padyatra/widget/SearchBar.dart';
 import 'package:padyatra/widget/UserInterestCarousel.dart';
 
 class Explore extends StatefulWidget {
+  final userId;
+
+  const Explore({Key key, this.userId}) : super(key: key);
   @override
   _ExploreState createState() => _ExploreState();
 }
 
 class _ExploreState extends State<Explore> {
+  @override
+  void initState() {
+    super.initState();
+    print("passed user id in explore page is \n");
+    print(widget.userId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,15 +38,39 @@ class _ExploreState extends State<Explore> {
         ),
         backgroundColor: Colors.white,
       ),
-      body: ExploreBody(),
+      body: ExploreBody(userId: widget.userId),
     );
   }
 }
 
-class ExploreBody extends StatelessWidget {
+class ExploreBody extends StatefulWidget {
+  final userId;
   const ExploreBody({
     Key key,
+    this.userId,
   }) : super(key: key);
+
+  @override
+  _ExploreBodyState createState() => _ExploreBodyState();
+}
+
+class _ExploreBodyState extends State<ExploreBody> {
+  String userId;
+  bool _isUserIdAvailable;
+  @override
+  void initState() {
+    super.initState();
+    userId = widget.userId;
+    print("user id passed is \n");
+    print(userId);
+    if (userId == null) {
+      print("user id is null");
+      _isUserIdAvailable = false;
+    } else {
+      print("user id is not null");
+      _isUserIdAvailable = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +80,9 @@ class ExploreBody extends StatelessWidget {
           delegate: SliverChildListDelegate([
             SearchBar(),
 
-            UserInterestCarousel(),
+            _isUserIdAvailable
+                ? UserInterestCarousel(userId: userId)
+                : Container(),
             const Divider(
               color: Colors.grey,
               height: 5,
