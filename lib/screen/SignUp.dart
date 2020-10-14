@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:padyatra/Login.dart';
 import 'package:padyatra/control_sizes.dart';
-import 'package:http/http.dart' as http;
+import 'package:padyatra/models/user_signUp_model/user_signUp_data.dart';
+import 'package:padyatra/presenter/user_signUp_presenter.dart';
+import 'package:padyatra/screen/Explore.dart';
+import 'package:padyatra/screen/SelectInterest.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({
@@ -11,23 +16,34 @@ class SignUp extends StatefulWidget {
   _SignUpState createState() => _SignUpState();
 }
 
-class _SignUpState extends State<SignUp> {
-  TextEditingController first_name = new TextEditingController();
-  TextEditingController last_name = new TextEditingController();
-  TextEditingController email = new TextEditingController();
-  TextEditingController password = new TextEditingController();
+class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
+  final firstNameController = TextEditingController();
+  String firstName;
+  final lastNameController = TextEditingController();
+  String lastName;
+  final emailController = TextEditingController();
+  String email;
+  final passwordController = TextEditingController();
+  String password;
+  final confirmPasswordController = TextEditingController();
+  String confirmPassword;
   final _formKey = new GlobalKey<FormState>();
 
-  Future<List> senddata() async {
-    final response = await http.post(
-        // "http://192.168.1.65/PHP%20codes/Padyatra/API's/inserUserData.php",
-        "http://192.168.1.65/PHP%20codes/Padyatra/API's/userSignUp.php",
-        body: {
-          "first_name": first_name.text,
-          "last_name": last_name.text,
-          "email": email.text,
-          "password": password.text,
-        });
+  String userId;
+  bool _isSignUpSuccess;
+  bool _isEmailTaken;
+  UserSignUp userSignUp;
+  UserSignUpListPresenter _userSignUpListPresenter;
+  List<UserSignUp> _userSignUpServerResponse;
+
+  _SignUpState() {
+    _userSignUpListPresenter = new UserSignUpListPresenter(this);
+  }
+  @override
+  void initState() {
+    super.initState();
+    _isSignUpSuccess = false;
+    _isEmailTaken = false;
   }
 
   @override
@@ -86,7 +102,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                         child: TextFormField(
-                          controller: first_name,
+                          controller: firstNameController,
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "First Name",
@@ -103,7 +119,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                         child: TextFormField(
-                          controller: last_name,
+                          controller: lastNameController,
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "Last Name",
@@ -120,7 +136,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                         child: TextFormField(
-                          controller: email,
+                          controller: emailController,
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "Email",
@@ -138,7 +154,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         child: TextFormField(
                           obscureText: true,
-                          controller: password,
+                          controller: passwordController,
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "Password",
@@ -155,6 +171,8 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                         child: TextFormField(
+                          controller: confirmPasswordController,
+                          obscureText: true,
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "Confirm Password",
@@ -166,8 +184,40 @@ class _SignUpState extends State<SignUp> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          if (_formKey.currentState.validate()) {
-                            senddata();
+                          // if (_formKey.currentState.validate()) {
+                          //   senddata();
+                          // }
+                          firstName = firstNameController.text.toString();
+                          lastName = lastNameController.text.toString();
+                          email = emailController.text.toString();
+                          password = passwordController.text.toString();
+                          confirmPassword =
+                              confirmPasswordController.text.toString();
+                          if (firstName.isNotEmpty &&
+                              lastName.isNotEmpty &&
+                              email.isNotEmpty &&
+                              password.isNotEmpty &&
+                              confirmPassword.isNotEmpty) {
+                            password == confirmPassword
+                                ? _userSignUpListPresenter.loadServerResponse(
+                                    firstName, lastName, email, password)
+                                : Fluttertoast.showToast(
+                                    msg: "passwords are different",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    // timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: "Please fill all the fields",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                // timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
                           }
                         },
                         child: Container(
@@ -179,7 +229,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                           child: Center(
                             child: Text(
-                              "Login",
+                              "sign up",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Playfair Display'),
@@ -192,7 +242,8 @@ class _SignUpState extends State<SignUp> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          print('skjgfk');
+                          Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => Login()));
                         },
                         child: Container(
                           child: Center(
@@ -218,4 +269,61 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
+
+  @override
+  void onUserSignUpComplete(List<UserSignUp> items) {
+    setState(() {
+      _userSignUpServerResponse = items;
+
+      userSignUp = _userSignUpServerResponse[0];
+
+      if (userSignUp.serverResponseMessage.isNotEmpty) {
+        userSignUp.serverResponseMessage == "new_user_inserted_successfully"
+            ? _isSignUpSuccess = true
+            : _isSignUpSuccess = false;
+        userSignUp.serverResponseMessage == "email_already_taken"
+            ? _isEmailTaken = true
+            : _isEmailTaken = false;
+
+        if (_isSignUpSuccess) {
+          userId = userSignUp.userId;
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => UserSelectInterest(
+                    userId: userId,
+                  )));
+          Fluttertoast.showToast(
+              msg: "Sign-Up Sucessful",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              // timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        } else {
+          Fluttertoast.showToast(
+              msg: "Error occured during signup process",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              // timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+
+        if (_isEmailTaken) {
+          Fluttertoast.showToast(
+              msg: "email already taken",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              // timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red[400],
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      }
+    });
+  }
+
+  @override
+  void onUserSignUpError() {}
 }
