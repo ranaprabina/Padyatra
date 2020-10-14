@@ -15,9 +15,9 @@ class InserUserInterestRouteCategoryListPresenter {
     _repository = new Injector().insertUserInterestRouteCategoryRepository;
   }
 
-  void loadServerResponse(String categoryName) {
+  void loadServerResponse(String categoryName, String userId) {
     _repository
-        .sendRouteCategory(categoryName)
+        .sendRouteCategory(categoryName, userId)
         .then(
             (sR) => _viewContract.onInsertUserInterestRouteCategoryComplete(sR))
         .catchError((onError) =>
