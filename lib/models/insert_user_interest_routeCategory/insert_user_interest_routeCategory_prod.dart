@@ -11,12 +11,12 @@ class ProdInsertUserInterestRouteCategoryRepository
 
   @override
   Future<List<InsertUserInterestRouteCategory>> sendRouteCategory(
-      String categoryName) async {
+      String categoryName, String userId) async {
     // throw UnimplementedError();
     http.Response response =
         await http.post(insertUserInterestRouteCategoryUrl, body: {
       "category_name": categoryName,
-      "user_id": "5",
+      "user_id": userId,
     });
     final responseBody = jsonDecode(response.body);
     final List responseBody1 = responseBody['serverResponse'];
