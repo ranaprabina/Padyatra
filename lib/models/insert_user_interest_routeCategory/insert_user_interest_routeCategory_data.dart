@@ -15,7 +15,7 @@ class InsertUserInterestRouteCategory {
 
 abstract class InsertUserInterestRouteCategoryRepository {
   Future<List<InsertUserInterestRouteCategory>> sendRouteCategory(
-      String categoryName);
+      String categoryName, String userId);
 }
 
 class FetchDataException1 implements Exception {
