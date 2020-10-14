@@ -217,109 +217,115 @@ class _UserSelectInterestState extends State<UserSelectInterest>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: _isLoading
-          ? new Center(
-              child: new CircularProgressIndicator(),
-            )
-          : Column(
-              children: <Widget>[
-                // Stack(
-                //   children: <Widget>[
-                Stack(
-                  children: [
-                    Container(
-                      child: Image.asset('images/Interest1.jpg'),
-                    ),
-                    Positioned(
-                      top: 40,
-                      // left: 10,
-                      right: 20,
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => HomePage()));
-                          },
-                          child: Text(
-                            "skip",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 25,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: "Playfair Daily",
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: _isLoading
+            ? new Center(
+                child: new CircularProgressIndicator(),
+              )
+            : SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: <Widget>[
+                    // Stack(
+                    //   children: <Widget>[
+                    Stack(
+                      children: [
+                        Container(
+                          child: Image.asset('images/Interest1.jpg'),
+                        ),
+                        Positioned(
+                          top: 20,
+                          // left: 10,
+                          right: 20,
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => HomePage()));
+                              },
+                              child: Text(
+                                "skip",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: "Playfair Daily",
+                                ),
+                              ),
                             ),
+                          ),
+                        )
+                      ],
+                    ),
+                    Center(
+                      // top: displayHeight(context) * 0.4,
+                      // left: displayWidth(context) * 0.35,
+                      child: Container(
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: "WHAT ARE YOU ",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                    fontFamily: 'Playfair Display',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text: "INTO?",
+                                style: TextStyle(
+                                    color: Colors.amber,
+                                    fontSize: 50,
+                                    fontFamily: 'Playfair Display',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    )
-                  ],
-                ),
-                Center(
-                  // top: displayHeight(context) * 0.4,
-                  // left: displayWidth(context) * 0.35,
-                  child: Container(
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "WHAT ARE YOU ",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontFamily: 'Playfair Display',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          TextSpan(
-                            text: "INTO?",
-                            style: TextStyle(
-                                color: Colors.amber,
-                                fontSize: 50,
-                                fontFamily: 'Playfair Display',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                    ),
+                    //   ],
+                    // ),
+                    Divider(
+                      color: Colors.grey,
+                      thickness: 1.5,
+                      indent: MediaQuery.of(context).size.width / 9,
+                      endIndent: MediaQuery.of(context).size.width / 9,
+                    ),
+                    Wrap(
+                      children: interestWidgets.toList(),
+                    ),
+                    SizedBox(
+                      height: displayHeight(context) * 0.03,
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        insertUserInterestCategories();
+                      },
+                      height: displayHeight(context) * 0.05,
+                      minWidth: displayWidth(context) * 0.35,
+                      color: Hexcolor('#b0e57c'),
+                      splashColor: Colors.white,
+                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(20.0))),
+                      child: Text(
+                        'Continue',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-                //   ],
-                // ),
-                Divider(
-                  color: Colors.grey,
-                  thickness: 1.5,
-                  indent: MediaQuery.of(context).size.width / 9,
-                  endIndent: MediaQuery.of(context).size.width / 9,
-                ),
-                Wrap(
-                  children: interestWidgets.toList(),
-                ),
-                SizedBox(
-                  height: displayHeight(context) * 0.03,
-                ),
-                MaterialButton(
-                  onPressed: () {
-                    insertUserInterestCategories();
-                  },
-                  height: displayHeight(context) * 0.05,
-                  minWidth: displayWidth(context) * 0.35,
-                  color: Hexcolor('#b0e57c'),
-                  splashColor: Colors.white,
-                  elevation: 5.0,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                  child: Text(
-                    'Continue',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 15.0,
-                    ),
-                  ),
-                )
-              ],
-            ),
+              ),
+      ),
     );
   }
 
@@ -405,6 +411,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
       }
       print("Response From Server is");
       print(insertUserInterestRouteCategory.serverResponseMessage);
+      print(insertUserInterestRouteCategory.userId);
     });
   }
 
