@@ -6,17 +6,28 @@ import 'package:padyatra/screen/FavoriteRoutes.dart';
 import 'package:padyatra/screen/ProfilePage.dart';
 
 class HomePage extends StatefulWidget {
+  final userId;
+
+  const HomePage({Key key, this.userId}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Widget> pages = [
-    Explore(),
-    CompletedRoutes(),
-    FavoriteRoutes(),
-    ProfilePage()
-  ];
+  String userId;
+  List<Widget> pages = [];
+  @override
+  void initState() {
+    super.initState();
+    userId = widget.userId;
+    pages = [
+      Explore(userId: userId),
+      CompletedRoutes(),
+      FavoriteRoutes(),
+      ProfilePage()
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
