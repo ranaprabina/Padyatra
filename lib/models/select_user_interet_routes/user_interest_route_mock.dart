@@ -3,13 +3,16 @@ import 'dart:async';
 
 class MockUserInterestRoute implements UserInterestRouteRepository {
   @override
-  Future<List<UserInterestRoute>> fetchRoutes() {
+  Future<List<UserInterestRoute>> fetchRoutes(String userId) {
     // throw UnimplementedError();
     return new Future.value(routes);
   }
 }
 
 var routes = <UserInterestRoute>[
+  new UserInterestRoute(
+    serverResponse: "categories_not_selected",
+  ),
   new UserInterestRoute(
     routeId: "ABC Trek",
     routeName: "Annapurna Base Camp",
