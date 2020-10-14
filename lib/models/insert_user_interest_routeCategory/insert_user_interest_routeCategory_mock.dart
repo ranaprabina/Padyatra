@@ -4,9 +4,7 @@ class MockInsertUserInterestRouteCategory
     implements InsertUserInterestRouteCategoryRepository {
   @override
   Future<List<InsertUserInterestRouteCategory>> sendRouteCategory(
-      String categoryName) {
-    // TODO: implement sendRouteCategory
-    // throw UnimplementedError();
+      String categoryName, String userId) {
     return new Future.value(serverResponse);
   }
 }
