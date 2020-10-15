@@ -350,7 +350,7 @@ class _DetailsBodyState extends State<DetailsBody>
                   Padding(
                     padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
                     child: Container(
-                      height: displayHeight(context) * 0.25,
+                      height: displayHeight(context) * 0.28,
                       width: displayWidth(context) * 1,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -480,7 +480,7 @@ class _DetailsBodyState extends State<DetailsBody>
                       child: Container(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
                             Padding(
                               padding:
@@ -564,7 +564,7 @@ class _DetailsBodyState extends State<DetailsBody>
                     ),
                   ),
                   SizedBox(
-                    height: displayHeight(context) * 0.01,
+                    height: displayHeight(context) * 0.04,
                   )
                 ],
               ),
