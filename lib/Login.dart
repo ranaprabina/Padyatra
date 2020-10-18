@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/control_sizes.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
@@ -23,6 +24,7 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
   final passwordController = TextEditingController();
   String password;
   String userId;
+  bool _hidePassword;
   bool _isLoginSucess;
   UserLogin userLogin;
   UserLoginListPresenter _userLoginListPresenter;
@@ -35,6 +37,7 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
   @override
   void initState() {
     super.initState();
+    _hidePassword = true;
     _isLoginSucess = false;
     // _userLoginListPresenter.loadServerResponse();
   }
@@ -55,9 +58,10 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
               child: Text(
                 'Welcome back!',
                 style: TextStyle(
-                    fontFamily: 'Playfair Display',
-                    fontSize: 30,
-                    color: Colors.black),
+                  fontFamily: 'Oswald',
+                  fontSize: 30,
+                  color: Colors.black,
+                ),
               )),
           SizedBox(
             height: displayHeight(context) * 0.01,
@@ -66,9 +70,9 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
             padding: EdgeInsets.only(left: displayWidth(context) * 0.06),
             child: Text('Login to continue',
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: Colors.black87,
                   fontSize: 20,
-                  fontFamily: 'Playfair Display',
+                  fontFamily: 'JosefinSans Regular',
                 )),
           ),
           SizedBox(
@@ -92,41 +96,82 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
               child: Column(
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                     decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Colors.grey[100],
-                        ),
-                      ),
+                      borderRadius: BorderRadius.circular(25.0),
+                      color: Colors.white,
                     ),
                     child: TextFormField(
                       controller: emailController,
-                      // validator: EmailValidator(
-                      //     errorText: 'enter a valid email address'),
                       decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Email",
-                        hintStyle: TextStyle(color: Colors.grey),
+                        labelText: "Email",
+                        hintText: "Enter email eg: jonh@email.com",
+                        hintStyle:
+                            TextStyle(color: Colors.black54, fontSize: 14),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.perm_identity,
+                          color: Hexcolor('#24695c'),
+                        ),
                       ),
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
                     decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: Colors.grey[100],
+                          color: Colors.teal,
                         ),
                       ),
                     ),
                     child: TextFormField(
-                      obscureText: true,
+                      obscureText: _hidePassword,
                       controller: passwordController,
                       decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "Password",
-                          hintStyle: TextStyle(color: Colors.grey)),
+                        hintText: "Enter Password",
+                        labelText: "Password",
+                        hintStyle:
+                            TextStyle(color: Colors.black54, fontSize: 14),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.lock_open_outlined,
+                          color: Hexcolor('#24695c'),
+                        ),
+                        suffixIcon: Padding(
+                          padding: const EdgeInsetsDirectional.only(end: 8),
+                          child: _hidePassword == true
+                              ? IconButton(
+                                  icon: Icon(
+                                    Icons.visibility_off,
+                                  ),
+                                  color: Hexcolor('#24695c'),
+                                  onPressed: () {
+                                    setState(() {
+                                      _hidePassword = false;
+                                      print("password is visible");
+                                    });
+                                  },
+                                )
+                              : IconButton(
+                                  icon: Icon(
+                                    Icons.visibility,
+                                  ),
+                                  color: Colors.blue,
+                                  onPressed: () {
+                                    setState(() {
+                                      _hidePassword = true;
+                                      print("password is hidden");
+                                    });
+                                  },
+                                ),
+                        ),
+                      ),
                     ),
                   )
                 ],
@@ -139,46 +184,50 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
           Padding(
               padding: EdgeInsets.only(left: displayWidth(context) * 0.03),
               child: Text(
-                'Forgot Password?',
+                'Forgot Password ??',
                 style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: Colors.greenAccent[200],
+                    color: Colors.black,
                     fontFamily: 'Roboto'),
               )),
           SizedBox(
             height: displayHeight(context) * 0.03,
           ),
-          GestureDetector(
-            onTap: () {
-              // login();
-              email = emailController.text.toString();
-              password = passwordController.text.toString();
-              if (email.isNotEmpty && password.isNotEmpty) {
-                _userLoginListPresenter.loadServerResponse(email, password);
-              } else {
-                Fluttertoast.showToast(
-                    msg: "Please fill all the fields",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    // timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0);
-              }
-            },
-            child: Container(
-              height: displayHeight(context) * 0.06,
-              margin: EdgeInsets.symmetric(horizontal: 60),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Color.fromRGBO(49, 39, 79, 1),
+          Container(
+            height: displayHeight(context) * 0.06,
+            width: displayWidth(context),
+            margin: EdgeInsets.symmetric(horizontal: 60),
+            child: RaisedButton(
+              elevation: 5.0,
+              onPressed: () {
+                email = emailController.text.toString();
+                password = passwordController.text.toString();
+                if (email.isNotEmpty && password.isNotEmpty) {
+                  _userLoginListPresenter.loadServerResponse(email, password);
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "Please fill all the fields",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      // timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
-              child: Center(
-                child: Text(
-                  "Login",
-                  style: TextStyle(
-                      color: Colors.white, fontFamily: 'Playfair Display'),
+              color: Color.fromRGBO(49, 39, 79, 1),
+              splashColor: Colors.green,
+              child: Text(
+                "login",
+                style: TextStyle(
+                  color: Colors.white,
+                  letterSpacing: 2.0,
+                  fontSize: 20.0,
+                  fontFamily: 'Lato',
                 ),
               ),
             ),
@@ -188,7 +237,6 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
           ),
           GestureDetector(
             onTap: () {
-              print('doafgh');
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) => SignUp()));
             },
@@ -197,10 +245,11 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
                 child: Text(
                   "OPS....I DON'T HAVE AN ACCOUNT YET.",
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black,
-                    fontFamily: 'Playfair Display',
-                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                    letterSpacing: 0.5,
+                    color: Colors.red[900],
+                    fontFamily: 'Oswald',
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),

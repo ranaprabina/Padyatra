@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/Login.dart';
 import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/user_signUp_model/user_signUp_data.dart';
@@ -30,6 +31,7 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
   final _formKey = new GlobalKey<FormState>();
 
   String userId;
+  bool _hidePassword;
   bool _isSignUpSuccess;
   bool _isEmailTaken;
   UserSignUp userSignUp;
@@ -42,6 +44,7 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
   @override
   void initState() {
     super.initState();
+    _hidePassword = true;
     _isSignUpSuccess = false;
     _isEmailTaken = false;
   }
@@ -70,19 +73,44 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Container(
-                      child: Text(
-                        'Welcome to पदयात्रा',
-                        style: TextStyle(
-                            fontSize: 30, fontFamily: 'Playfair Display'),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Welcome to ",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: "Oswald",
+                                fontSize: 30),
+                            children: [
+                              TextSpan(
+                                text: "पदयात्रा",
+                                style: TextStyle(
+                                    color: Hexcolor('#24695c'),
+                                    fontFamily: "Oswald",
+                                    fontSize: 30),
+                              )
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    Container(
-                      child: Text(
-                        'Let’s get you all set up so you can \naccess all our contents for free!',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
+                    RichText(
+                        text: TextSpan(
+                      text:
+                          "Let’s get you all set up so you can \naccess all our contents for free!",
+                      style: TextStyle(
+                          // color: Hexcolor('#24695c'),
+                          color: Colors.black54,
+                          fontFamily: "JosefinSans Regular",
+                          fontSize: 18),
+                    )),
+                    // Container(
+                    //   child: Text(
+                    //     'Let’s get you all set up so you can \naccess all our contents for free!',
+                    //     style: TextStyle(color: Colors.grey),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -93,171 +121,360 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        padding: EdgeInsets.all(10.0),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+                        // decoration: BoxDecoration(
+                        //   border: Border(
+                        //     bottom: BorderSide(
+                        //       color: Colors.grey[200],
+                        //     ),
+                        //   ),
+                        // ),
                         decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Colors.grey[200],
-                            ),
-                          ),
+                          borderRadius: BorderRadius.circular(25.0),
+                          color: Colors.white,
                         ),
                         child: TextFormField(
                           controller: firstNameController,
                           decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "First Name",
-                              hintStyle: TextStyle(color: Colors.grey)),
+                            // border: InputBorder.none,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            labelText: "First Name",
+                            hintText: "eg: John",
+                            hintStyle: TextStyle(
+                              color: Colors.black54,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.perm_identity,
+                              color: Hexcolor('#24695c'),
+                              // color: Hexcolor('#e1c5c1'),
+                              // color: Colors.teal,
+                            ),
+                          ),
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(10.0),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
                         decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Colors.grey[200],
-                            ),
-                          ),
+                          borderRadius: BorderRadius.circular(25.0),
+                          color: Colors.white,
                         ),
                         child: TextFormField(
                           controller: lastNameController,
                           decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Last Name",
-                              hintStyle: TextStyle(color: Colors.grey)),
+                            // border: InputBorder.none,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            labelText: "Last Name",
+                            hintText: "eg: Doe",
+                            hintStyle: TextStyle(color: Colors.grey),
+                            prefixIcon: Icon(
+                              Icons.perm_identity,
+                              // color: Colors.teal,
+                              color: Hexcolor('#24695c'),
+                            ),
+                          ),
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(10.0),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
                         decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Colors.grey[200],
-                            ),
-                          ),
+                          color: Colors.white,
                         ),
                         child: TextFormField(
                           controller: emailController,
                           decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Email",
-                              hintStyle: TextStyle(color: Colors.grey)),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(10.0),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Colors.grey[200],
+                            // border: InputBorder.none,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            labelText: "Email",
+                            hintText: "Email",
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.email_outlined,
+                              // color: Colors.teal,
+                              color: Hexcolor('#24695c'),
                             ),
                           ),
                         ),
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25.0),
+                          color: Colors.white,
+                        ),
                         child: TextFormField(
-                          obscureText: true,
+                          obscureText: _hidePassword,
                           controller: passwordController,
                           decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Password",
-                              hintStyle: TextStyle(color: Colors.grey)),
+                            // border: InputBorder.none,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            hintText: "Password",
+                            hintStyle: TextStyle(color: Colors.grey),
+                            prefixIcon: Icon(
+                              Icons.lock_open_outlined,
+                              // color: Colors.teal,
+                              color: Hexcolor('#24695c'),
+                            ),
+                            suffixIcon: Padding(
+                              padding: const EdgeInsetsDirectional.only(end: 8),
+                              child: _hidePassword == true
+                                  ? IconButton(
+                                      icon: Icon(
+                                        Icons.visibility_off,
+                                      ),
+                                      color: Hexcolor('#24695c'),
+                                      onPressed: () {
+                                        setState(() {
+                                          _hidePassword = false;
+                                          print("password is visible");
+                                        });
+                                      },
+                                    )
+                                  : IconButton(
+                                      icon: Icon(
+                                        Icons.visibility,
+                                      ),
+                                      color: Colors.blue,
+                                      onPressed: () {
+                                        setState(() {
+                                          _hidePassword = true;
+                                          print("password is hidden");
+                                        });
+                                      },
+                                    ),
+                            ),
+                          ),
                         ),
                       ),
                       Container(
                         padding: EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Colors.grey[200],
-                            ),
-                          ),
-                        ),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10)),
                         child: TextFormField(
                           controller: confirmPasswordController,
-                          obscureText: true,
+                          obscureText: _hidePassword,
                           decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Confirm Password",
-                              hintStyle: TextStyle(color: Colors.grey)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            labelText: "Confirm Password",
+                            hintText: "Confirm Password",
+                            hintStyle: TextStyle(color: Colors.grey),
+                            prefixIcon: Icon(
+                              Icons.lock_open_outlined,
+                              color: Hexcolor('#24695c'),
+                            ),
+                            suffixIcon: Padding(
+                              padding: const EdgeInsetsDirectional.only(end: 8),
+                              child: _hidePassword == true
+                                  ? IconButton(
+                                      icon: Icon(
+                                        Icons.visibility_off,
+                                      ),
+                                      color: Hexcolor('#24695c'),
+                                      onPressed: () {
+                                        setState(() {
+                                          _hidePassword = false;
+                                          print("password is visible");
+                                        });
+                                      },
+                                    )
+                                  : IconButton(
+                                      icon: Icon(
+                                        Icons.visibility,
+                                      ),
+                                      color: Colors.blue,
+                                      onPressed: () {
+                                        setState(() {
+                                          _hidePassword = true;
+                                          print("password is hidden");
+                                        });
+                                      },
+                                    ),
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(
                         height: displayHeight(context) * 0.05,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          // if (_formKey.currentState.validate()) {
-                          //   senddata();
-                          // }
-                          firstName = firstNameController.text.toString();
-                          lastName = lastNameController.text.toString();
-                          email = emailController.text.toString();
-                          password = passwordController.text.toString();
-                          confirmPassword =
-                              confirmPasswordController.text.toString();
-                          if (firstName.isNotEmpty &&
-                              lastName.isNotEmpty &&
-                              email.isNotEmpty &&
-                              password.isNotEmpty &&
-                              confirmPassword.isNotEmpty) {
-                            password == confirmPassword
-                                ? _userSignUpListPresenter.loadServerResponse(
-                                    firstName, lastName, email, password)
-                                : Fluttertoast.showToast(
-                                    msg: "passwords are different",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    // timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: "Please fill all the fields",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                // timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                                fontSize: 16.0);
-                          }
-                        },
-                        child: Container(
-                          height: displayHeight(context) * 0.06,
-                          margin: EdgeInsets.symmetric(horizontal: 60),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: Color.fromRGBO(49, 39, 79, 1),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     // if (_formKey.currentState.validate()) {
+                      //     //   senddata();
+                      //     // }
+                      //     firstName = firstNameController.text.toString();
+                      //     lastName = lastNameController.text.toString();
+                      //     email = emailController.text.toString();
+                      //     password = passwordController.text.toString();
+                      //     confirmPassword =
+                      //         confirmPasswordController.text.toString();
+                      //     if (firstName.isNotEmpty &&
+                      //         lastName.isNotEmpty &&
+                      //         email.isNotEmpty &&
+                      //         password.isNotEmpty &&
+                      //         confirmPassword.isNotEmpty) {
+                      //       password == confirmPassword
+                      //           ? _userSignUpListPresenter.loadServerResponse(
+                      //               firstName, lastName, email, password)
+                      //           : Fluttertoast.showToast(
+                      //               msg: "passwords are different",
+                      //               toastLength: Toast.LENGTH_SHORT,
+                      //               gravity: ToastGravity.BOTTOM,
+                      //               // timeInSecForIosWeb: 1,
+                      //               backgroundColor: Colors.red,
+                      //               textColor: Colors.white,
+                      //               fontSize: 16.0);
+                      //     } else {
+                      //       Fluttertoast.showToast(
+                      //           msg: "Please fill all the fields",
+                      //           toastLength: Toast.LENGTH_SHORT,
+                      //           gravity: ToastGravity.BOTTOM,
+                      //           // timeInSecForIosWeb: 1,
+                      //           backgroundColor: Colors.red,
+                      //           textColor: Colors.white,
+                      //           fontSize: 16.0);
+                      //     }
+                      //   },
+                      //   child: Container(
+                      //     height: displayHeight(context) * 0.06,
+                      //     margin: EdgeInsets.symmetric(horizontal: 60),
+                      //     decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(50),
+                      //       color: Color.fromRGBO(49, 39, 79, 1),
+                      //     ),
+                      //     child: Center(
+                      //       child: Text(
+                      //         "sign up",
+                      //         style: TextStyle(
+                      //             color: Colors.white,
+                      //             fontFamily: 'Playfair Display'),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // SizedBox(
+                      //   height: displayHeight(context) * 0.02,
+                      // ),
+                      Container(
+                        height: displayHeight(context) * 0.06,
+                        width: displayWidth(context),
+                        margin: EdgeInsets.symmetric(horizontal: 60),
+                        child: RaisedButton(
+                          elevation: 5.0,
+                          onPressed: () {
+                            firstName = firstNameController.text.toString();
+                            lastName = lastNameController.text.toString();
+                            email = emailController.text.toString();
+                            password = passwordController.text.toString();
+                            confirmPassword =
+                                confirmPasswordController.text.toString();
+                            if (firstName.isNotEmpty &&
+                                lastName.isNotEmpty &&
+                                email.isNotEmpty &&
+                                password.isNotEmpty &&
+                                confirmPassword.isNotEmpty) {
+                              password == confirmPassword
+                                  ? _userSignUpListPresenter.loadServerResponse(
+                                      firstName, lastName, email, password)
+                                  : Fluttertoast.showToast(
+                                      msg: "passwords are different",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      // timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Please fill all the fields",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  // timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            }
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
-                          child: Center(
-                            child: Text(
-                              "sign up",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Playfair Display'),
+                          color: Color.fromRGBO(49, 39, 79, 1),
+                          splashColor: Colors.green,
+                          child: Text(
+                            "sign up",
+                            style: TextStyle(
+                              color: Colors.white,
+                              letterSpacing: 2.0,
+                              fontSize: 20.0,
+                              fontFamily: 'Lato',
                             ),
                           ),
                         ),
                       ),
                       SizedBox(
-                        height: displayHeight(context) * 0.02,
+                        height: displayHeight(context) * 0.03,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => Login()));
-                        },
-                        child: Container(
-                          child: Center(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
                             child: Text(
-                              "Already have an account? Sign in",
+                              "Already have an account?",
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 14,
+                                letterSpacing: 0.5,
                                 color: Colors.black,
-                                fontFamily: 'Playfair Display',
-                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Oswald',
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
-                        ),
+                          SizedBox(
+                            width: displayHeight(context) * 0.01,
+                          ),
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                            width: MediaQuery.of(context).size.width * 0.22,
+                            child: RaisedButton(
+                              elevation: 5.0,
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Login()));
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              // color: Hexcolor('#9EABE4'),
+                              color: Hexcolor('#24695c'),
+
+                              splashColor: Colors.green,
+                              child: Text(
+                                "login",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  letterSpacing: 2.0,
+                                  fontSize: 15.0,
+                                  // fontWeight: FontWeight.w600,
+                                  fontFamily: 'Lato',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

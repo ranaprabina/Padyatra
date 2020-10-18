@@ -56,95 +56,162 @@ class _GuestUserState extends State<GuestUser>
         body: Container(
       color: Colors.white,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Container(
             color: Colors.white,
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 150, bottom: 20),
-            child: Container(
-              child: Image.asset('images/trekking-solo.png'),
-              height: height * 0.3,
+          Container(
+            child: Image.asset('images/trekking-solo.png'),
+            height: height * 0.5,
+          ),
+          Container(
+            width: width * 0.9,
+            margin: EdgeInsets.symmetric(horizontal: 20),
+            child: RichText(
+              text: TextSpan(children: [
+                TextSpan(
+                  text: 'Get ready for your lifetime journey!',
+
+                  style: TextStyle(
+                    fontFamily: 'Oswald',
+                    color: Colors.black,
+                    fontSize: 30,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                  //     Text(
+                  //   'Get ready for your lifetime journey!',
+                  //   style: TextStyle(
+                  //     fontFamily: 'Playfair Display',
+                  //     color: Colors.black,
+                  //     fontSize: 30,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: height * 0.02,
+                  // ),
+                  // Text(
+                  //   'Collection of the most beautiful \ntrails in Nepal for newbies \nas well as professional travellers.',
+                  //   style: TextStyle(
+                  //     fontFamily: 'Oswald',
+                  //     color: Colors.black54,
+                  //     fontSize: 18,
+                  //   ),
+                  // ),
+                ),
+                TextSpan(
+                  text:
+                      "\t\t\tCollection of the most beautiful trails in Nepal for newbies as well as professional travellers.",
+                  style: TextStyle(
+                    fontFamily: 'Oswald',
+                    color: Colors.black54,
+                    fontSize: 18,
+                  ),
+                )
+              ]),
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              // children: [],
             ),
           ),
-          Text(
-            'Get ready for your \nlifetime journey!',
-            style: TextStyle(
-                fontFamily: 'Playfair Display',
-                color: Colors.black,
-                fontSize: 24),
-          ),
-          SizedBox(
-            height: height * 0.01,
-          ),
-          Text(
-            'Collection of the most beautiful \ntrails in Nepal for newbies \nas well as professional travellers ',
-            style: TextStyle(
-                fontFamily: 'Playfair Display',
-                color: Colors.black,
-                fontSize: 14),
-          ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(left: 50, top: 50, right: 50),
+                padding: const EdgeInsets.only(left: 0.0, top: 50, right: 0),
                 child: Container(
+                  // padding: EdgeInsets.symmetric(horizontal: 30.0),
                   height: height * 0.05,
                   width: width * 0.3,
-                  color: Hexcolor('#9EABE4'),
-                  padding: EdgeInsets.only(left: 40, top: 10),
-                  child: GestureDetector(
-                    onTap: () {
+                  child: RaisedButton(
+                    elevation: 5.0,
+                    onPressed: () {
+                      print("login");
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => Login()));
                     },
+                    // padding: EdgeInsets.all(15.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    color: Hexcolor('#9EABE4'),
+                    splashColor: Colors.green,
                     child: Text(
-                      'login',
+                      "login",
                       style: TextStyle(
                         color: Colors.white,
-                        fontFamily: 'Playfair Display',
+                        letterSpacing: 2.0,
+                        fontSize: 15.0,
+                        // fontWeight: FontWeight.w600,
+                        fontFamily: 'Lato',
                       ),
                     ),
                   ),
                 ),
               ),
+              SizedBox(
+                width: width * 0.1,
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 0, top: 50),
-                child: GestureDetector(
-                  onTap: () {
-                    print('signup');
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => SignUp()));
-                    // showRouteId();
-                  },
-                  child: Container(
-                      height: height * 0.05,
-                      width: width * 0.3,
-                      color: Hexcolor('#9EABE4'),
-                      padding: EdgeInsets.only(left: 40, top: 10),
-                      child: Text(
-                        'Signup',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Playfair Display',
-                        ),
-                      )),
+                child: Container(
+                  height: height * 0.05,
+                  width: width * 0.3,
+                  child: RaisedButton(
+                    elevation: 5.0,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => SignUp()));
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    color: Hexcolor('#9EABE4'),
+                    splashColor: Colors.green,
+                    child: Text(
+                      "signup",
+                      style: TextStyle(
+                        color: Colors.white,
+                        letterSpacing: 2.0,
+                        fontSize: 15.0,
+                        // fontWeight: FontWeight.w600,
+                        fontFamily: 'Lato',
+                      ),
+                    ),
+                  ),
                 ),
               )
             ],
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => HomePage()));
-            },
-            child: Container(
-              padding: EdgeInsets.only(top: 15),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 30),
+            width: width,
+            child: RaisedButton(
+              elevation: 5.0,
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => HomePage()));
+              },
+              padding: EdgeInsets.all(15.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              // color: Color.fromRGBO(49, 39, 79, 1),
+              // color: Hexcolor('#cff2de'),
+              color: Hexcolor('#24695c'),
+
+              // color: Hexcolor('#efedff'),
+              // hoverElevation: 10.0,
+              splashColor: Colors.green,
               child: Text(
-                'Skip',
+                "skip",
                 style: TextStyle(
-                    fontFamily: 'Playfair Display',
-                    decoration: TextDecoration.underline),
+                  color: Colors.white,
+                  letterSpacing: 2.0,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Lato',
+                ),
               ),
             ),
           )
