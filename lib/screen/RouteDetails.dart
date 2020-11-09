@@ -136,10 +136,10 @@ class _DetailsBodyState extends State<DetailsBody>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    height: (displayHeight(context) -
-                            MediaQuery.of(context).padding.top -
-                            kToolbarHeight) *
-                        0.28,
+                    // height: (displayHeight(context) -
+                    //         MediaQuery.of(context).padding.top -
+                    //         kToolbarHeight) *
+                    //     0.28,
                     width: double.infinity,
                     child: Stack(children: <Widget>[
                       Image(
@@ -147,7 +147,7 @@ class _DetailsBodyState extends State<DetailsBody>
                         fit: BoxFit.fill,
                       ),
                       Positioned(
-                        bottom: 0,
+                        bottom: 15,
                         right: 15,
                         child: Container(
                             height: 40,
