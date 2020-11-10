@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 class ProdInsertUserInterestRouteCategoryRepository
     implements InsertUserInterestRouteCategoryRepository {
   String insertUserInterestRouteCategoryUrl =
-      "http://192.168.1.68:8888/Padyatra/PHP%20codes/Padyatra-ServerSide/API's/insertUserInterest.php";
-  // "http://192.168.1.65/PHP%20codes/Padyatra/API's/insertUserInterest.php";
+      // "http://192.168.1.68:8888/Padyatra/PHP%20codes/Padyatra-ServerSide/API's/insertUserInterest.php";
+      "http://192.168.1.65/PHP%20codes/Padyatra/API's/insertUserInterest.php";
 
   @override
   Future<List<InsertUserInterestRouteCategory>> sendRouteCategory(
