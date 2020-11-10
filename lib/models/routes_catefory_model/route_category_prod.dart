@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 
 class ProdRouteCategoryRepository implements RouteCategoryRepository {
   String fetchRouteCategory =
-      "http://192.168.1.68:8888/Padyatra/PHP%20codes/Padyatra-ServerSide/API's/selectCategoryName.php";
-  // "http://192.168.1.65/PHP%20codes/Padyatra/API's/selectCategoryName.php";
+      // "http://192.168.1.68:8888/Padyatra/PHP%20codes/Padyatra-ServerSide/API's/selectCategoryName.php";
+      "http://192.168.1.65/PHP%20codes/Padyatra/API's/selectCategoryName.php";
 
   @override
   Future<List<RouteCategory>> fetchRouteCategories() async {
