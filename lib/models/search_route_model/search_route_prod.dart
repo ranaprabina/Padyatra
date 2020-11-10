@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 
 class ProdSearchRouteRepsitory implements SearchRouteRepository {
   String fetchRouteUrl =
-      "http://192.168.1.68:8888/Padyatra/PHP%20codes/Padyatra-ServerSide/API's/selectAllRoutes.php";
-  // "http://192.168.1.65/PHP%20codes/Padyatra/API's/selectAllRoutes.php";
+      // "http://192.168.1.68:8888/Padyatra/PHP%20codes/Padyatra-ServerSide/API's/selectAllRoutes.php";
+      "http://192.168.1.65/PHP%20codes/Padyatra/API's/selectAllRoutes.php";
   @override
   Future<List<SearchRoute>> fetchRoutes() async {
     // TODO: implement fetchRoutes
