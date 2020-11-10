@@ -58,4 +58,19 @@ flutter:
     - asset: fonts/Roboto-Regular.ttf
   - family: Playfair Display
     fonts:
-    - asset: fonts/PlayfairDisplay-Regular.ttf      
+    - asset: fonts/PlayfairDisplay-Regular.ttf
+  - family: JosefinSans Regular
+    fonts:
+    - asset: fonts/JosefinSans-Regular.ttf
+  - family: Oswald
+    fonts:
+    - asset: fonts/Oswald-Regular.ttf
+  - family: JosefinSans Thin
+    fonts:
+    - asset: fonts/JosefinSans-thin.ttf
+  - family: Lato
+    fonts:
+    - asset: fonts/Lato-Regular.ttf
+  - family: Montserrat
+    fonts:
+    - asset: fonts/Montserrat-SemiBold.ttf
