@@ -19,7 +19,7 @@ class RecentlyAddedRoute {
   RecentlyAddedRoute.toMap(Map<String, dynamic> map)
       : routeId = map['route_id'],
         routeName = map['route_name'],
-        length = map['route_length'],
+        length = map['route_length'].toString(),
         duration = map['duration'],
         difficulty = map['difficulty'],
         dateTime = map['route_added_at'];

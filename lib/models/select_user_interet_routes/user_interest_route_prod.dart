@@ -1,22 +1,19 @@
 import 'dart:convert';
-
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_data.dart';
 import 'dart:async';
-import 'package:http/http.dart' as http;
+import 'package:padyatra/services/api.dart';
 
 class ProdUserInterestRouteRepository implements UserInterestRouteRepository {
-  String userInterestRouteUrl =
-      // "http://192.168.1.68:8888/Padyatra/PHP%20codes/Padyatra-ServerSide/API's/selectUserInterestTrekkingRoute.php";
-      "http://192.168.1.65/PHP%20codes/Padyatra/API's/selectUserInterestTrekkingRoute.php";
-
   @override
   Future<List<UserInterestRoute>> fetchRoutes(String userId) async {
-    http.Response response = await http.post(userInterestRouteUrl, body: {
-      "userId": userId,
-    });
+    var data = {
+      'userId': userId,
+    };
+    var response = await ApiCall()
+        .postData(data, 'trekkingRoutes/userInterestedTrekkingRoute');
     final responseBody = jsonDecode(response.body);
     print(responseBody);
-    final List responseBody1 = responseBody['User_Interested_Selected_Routes'];
+    final List responseBody1 = responseBody['User_Interested_Trekking_Routes'];
     // final List responseBody2 = responseBody['Category_Name'];
     print(responseBody1.length);
     print(responseBody1);
@@ -24,7 +21,7 @@ class ProdUserInterestRouteRepository implements UserInterestRouteRepository {
     final statusCode = response.statusCode;
     print(statusCode);
 
-    if (statusCode != 200 || responseBody == null) {
+    if (statusCode != 200 && responseBody == null) {
       throw new FetchDataException(
           "An error occured : [Status Code : $statusCode]");
     }

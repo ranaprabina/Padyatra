@@ -5,7 +5,7 @@ class UserInterestRoute {
   String routeId;
   String routeName;
   String image;
-  String length;
+  int length;
   String duration;
   String difficulty;
 

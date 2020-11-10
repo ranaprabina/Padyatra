@@ -5,13 +5,13 @@ class RouteDetails {
   String routeName;
   String image;
   String routeDescription;
-  String length;
+  int length;
   String duration;
   String difficulty;
-  String conservationalPermit;
-  String timsPermit;
-  String restrictedAreaPermit;
-  String altitude;
+  int conservationalPermit;
+  int timsPermit;
+  int restrictedAreaPermit;
+  int altitude;
   String documentsDetils;
 
   RouteDetails({

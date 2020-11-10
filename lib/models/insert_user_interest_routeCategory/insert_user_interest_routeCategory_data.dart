@@ -1,15 +1,15 @@
 class InsertUserInterestRouteCategory {
   String serverResponseMessage;
   String userId;
+  String messsage;
   // String routeCategoryName;
 
-  InsertUserInterestRouteCategory({
-    this.serverResponseMessage,
-    this.userId,
-  });
+  InsertUserInterestRouteCategory(
+      {this.serverResponseMessage, this.userId, this.messsage});
 
   InsertUserInterestRouteCategory.fromMap(Map<String, dynamic> map)
       : serverResponseMessage = map['Response'],
+        messsage = map['message'],
         userId = map['userId'];
 }
 
