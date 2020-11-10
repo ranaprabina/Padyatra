@@ -5,7 +5,6 @@ import 'package:padyatra/control_sizes.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:padyatra/models/user_login_model/user_login_data.dart';
 import 'package:padyatra/presenter/user_login_presenter.dart';
-import 'package:padyatra/screen/Explore.dart';
 import 'package:padyatra/screen/HomePage.dart';
 import 'package:padyatra/screen/SignUp.dart';
 
@@ -266,14 +265,15 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
       _userLoginServerResponse = items;
 
       userLogin = _userLoginServerResponse[0];
+      print(userLogin.serverResponseMessage);
       if (userLogin.serverResponseMessage.isNotEmpty) {
         userLogin.serverResponseMessage == "login_success"
             ? _isLoginSucess = true
             : _isLoginSucess = false;
 
         print(userLogin.email);
-        print(userLogin.firstName);
-        print(userLogin.lastName);
+        print(userLogin.name);
+        print(userLogin.token);
         userId = userLogin.userId;
 
         print(userId);
@@ -289,14 +289,23 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
               textColor: Colors.white,
               fontSize: 16.0);
         } else {
-          Fluttertoast.showToast(
-              msg: "Username or password incorrect",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              // timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
+          userLogin.serverResponseMessage == "incorrect_email"
+              ? Fluttertoast.showToast(
+                  msg: "email is incorrect",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  // timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0)
+              : Fluttertoast.showToast(
+                  msg: "password is incorrect",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  // timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
         }
         // Navigator.of(context).push(
         //     MaterialPageRoute(builder: (context) => ProfilePage(u_id: u_id)));
