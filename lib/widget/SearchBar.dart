@@ -206,41 +206,48 @@ class RouteSearch extends SearchDelegate<String> {
             )
             .toList();
 
-    return ListView.builder(
-      itemCount: suggestionList.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          onTap: () {
-            query = suggestionList[index].toString();
-            close(context, query);
-            //TODO: Navigate to Route information screen
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    RouteDetailsScreen(searchedRouteName: query)));
-            showResults(context);
-            print("onTap Tapped");
-            // close(context, query);
-            print(query);
-          },
-          title: RichText(
-            text: TextSpan(
-              text: suggestionList[index].substring(0, query.length),
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0),
-              children: [
-                TextSpan(
-                  text: suggestionList[index].substring(query.length),
-                  style: TextStyle(
-                    color: Colors.grey,
+    return suggestionList.isEmpty
+        ? Text(
+            'No results Found..',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          )
+        : ListView.builder(
+            itemCount: suggestionList.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                onTap: () {
+                  query = suggestionList[index].toString();
+                  close(context, query);
+                  //TODO: Navigate to Route information screen
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          RouteDetailsScreen(searchedRouteName: query)));
+                  showResults(context);
+                  print("onTap Tapped");
+                  // close(context, query);
+                  print(query);
+                },
+                title: RichText(
+                  text: TextSpan(
+                    text: suggestionList[index].substring(0, query.length),
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0),
+                    children: [
+                      TextSpan(
+                        text: suggestionList[index].substring(query.length),
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+              );
+            },
+          );
   }
 }
