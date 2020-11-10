@@ -4,8 +4,8 @@ import 'package:padyatra/models/user_login_model/user_login_data.dart';
 
 class ProdUserLoginRepository implements UserLoginRepository {
   String sendUserLoginDataUrl =
-      "http://192.168.1.68:8888/Padyatra/PHP%20codes/Padyatra-ServerSide/API's/userLogin.php";
-  // "http://192.168.1.65/PHP%20codes/Padyatra/API's/userLogin.php";
+      // "http://192.168.1.68:8888/Padyatra/PHP%20codes/Padyatra-ServerSide/API's/userLogin.php";
+      "http://192.168.1.65/PHP%20codes/Padyatra/API's/userLogin.php";
 
   @override
   Future<List<UserLogin>> sendUserData(String email, String password) async {
@@ -14,6 +14,7 @@ class ProdUserLoginRepository implements UserLoginRepository {
       "password": password,
     });
     final responseBody = jsonDecode(response.body);
+    print(responseBody);
     final List responseBody1 = responseBody['serverResponse'];
     final statusCode = response.statusCode;
 
