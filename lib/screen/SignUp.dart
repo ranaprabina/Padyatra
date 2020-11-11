@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -6,6 +7,7 @@ import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/user_signUp_model/user_signUp_data.dart';
 import 'package:padyatra/presenter/user_signUp_presenter.dart';
 import 'package:padyatra/screen/SelectInterest.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({
@@ -443,19 +445,20 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
             : _isEmailTaken = false;
 
         if (_isSignUpSuccess) {
-          userId = userSignUp.userId;
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => UserSelectInterest(
-                    userId: userId,
-                  )));
-          Fluttertoast.showToast(
-              msg: "Sign-Up Sucessful",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              // timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0);
+          _checkIfUserIsLoggedIn();
+          // userId = userSignUp.userId;
+          // Navigator.of(context).push(MaterialPageRoute(
+          //     builder: (context) => UserSelectInterest(
+          //           userId: userId,
+          //         )));
+          // Fluttertoast.showToast(
+          //     msg: "Sign-Up Sucessful",
+          //     toastLength: Toast.LENGTH_SHORT,
+          //     gravity: ToastGravity.BOTTOM,
+          //     // timeInSecForIosWeb: 1,
+          //     backgroundColor: Colors.green,
+          //     textColor: Colors.white,
+          //     fontSize: 16.0);
         }
         // else {
         //   Fluttertoast.showToast(
@@ -484,4 +487,29 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
 
   @override
   void onUserSignUpError() {}
+
+  void _checkIfUserIsLoggedIn() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var token = localStorage.getString('token');
+    if (token != null) {
+      setState(() {
+        var userJson = localStorage.getString('user');
+        var user = jsonDecode(userJson);
+        userId = user['userId'].toString();
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => UserSelectInterest(
+                  userId: userId,
+                )));
+        Fluttertoast.showToast(
+            msg: "Sign-Up Sucessful",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            // timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        // _isUserLoggedIn = true;
+      });
+    }
+  }
 }
