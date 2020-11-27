@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:padyatra/control_sizes.dart';
@@ -8,13 +9,18 @@ import 'package:geolocator/geolocator.dart';
 import 'package:padyatra/presenter/routes_details_presenter.dart';
 import 'package:padyatra/models/route_details_model/route_details_data.dart';
 import 'package:padyatra/screen/NavigationScreen.dart';
-
 import 'package:padyatra/screen/documents_required.dart';
+import 'package:padyatra/services/api.dart';
 
 class RouteDetailsScreen extends StatefulWidget {
   final searchedRouteName;
+  final id;
 
-  const RouteDetailsScreen({Key key, this.searchedRouteName}) : super(key: key);
+  const RouteDetailsScreen({
+    Key key,
+    this.searchedRouteName,
+    this.id,
+  }) : super(key: key);
   @override
   _RouteDetailsScreenState createState() => _RouteDetailsScreenState();
 }
@@ -32,7 +38,10 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
           ),
           backgroundColor: Hexcolor('#4e718d'),
         ),
-        body: DetailsBody(selectedRoute: widget.searchedRouteName),
+        body: DetailsBody(
+          selectedRoute: widget.searchedRouteName,
+          userId: widget.id,
+        ),
       ),
     );
   }
@@ -40,9 +49,11 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
 
 class DetailsBody extends StatefulWidget {
   final selectedRoute;
+  final userId;
   const DetailsBody({
     Key key,
     this.selectedRoute,
+    this.userId,
   }) : super(key: key);
 
   @override
@@ -51,6 +62,7 @@ class DetailsBody extends StatefulWidget {
 
 class _DetailsBodyState extends State<DetailsBody>
     implements RouteDetailsListViewContract {
+  bool _isRouteBookmarked;
   var temp;
   var temperature;
   String condition;
@@ -98,19 +110,21 @@ class _DetailsBodyState extends State<DetailsBody>
   RouteDetailsListPresenter _presenter;
   List<RouteDetails> _routeDetails;
   bool _isLoading;
+  bool _isBookmarkButtonClicked;
   _DetailsBodyState() {
     _presenter = new RouteDetailsListPresenter(this);
   }
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _isLoading = true;
-    _presenter.loadRouteDetails(widget.selectedRoute);
+    _isBookmarkButtonClicked = false;
+    _presenter.loadRouteDetails(widget.selectedRoute, widget.userId);
     _isFetchingCurrent = true;
     _isFetchingDestination = true;
     this.getDestinationWeather();
     this.getCurrentWeather();
+    // _isRouteBookmarked = widget.isBookmarked;
   }
 
   RouteDetails routeDetails;
@@ -146,32 +160,84 @@ class _DetailsBodyState extends State<DetailsBody>
                         image: AssetImage('images/AC2.png'),
                         fit: BoxFit.fill,
                       ),
+                      _isRouteBookmarked
+                          ? IconButton(
+                              icon: Icon(Icons.favorite),
+                              iconSize: 35,
+                              color: _isRouteBookmarked
+                                  ? Colors.amber
+                                  : Colors.white,
+                              onPressed: () async {
+                                var data = {
+                                  'route_id': routeDetails.routeId,
+                                  'id': widget.userId
+                                };
+                                setBookmarkStatus(data);
+                                setState(() {
+                                  _isRouteBookmarked = false;
+                                  Fluttertoast.showToast(
+                                      msg: "Removed from bookmark",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      // timeInSecForIosWeb: 1,
+                                      backgroundColor: Hexcolor('#24695c'),
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                });
+                              },
+                            )
+                          : IconButton(
+                              icon: Icon(Icons.favorite),
+                              iconSize: 35,
+                              color: _isRouteBookmarked
+                                  ? Colors.amber
+                                  : Colors.white,
+                              onPressed: () async {
+                                var data = {
+                                  'route_id': routeDetails.routeId,
+                                  'id': widget.userId
+                                };
+                                setBookmarkStatus(data);
+
+                                setState(() {
+                                  _isRouteBookmarked = true;
+                                  Fluttertoast.showToast(
+                                      msg: "Added to bookmark",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      // timeInSecForIosWeb: 1,
+                                      backgroundColor: Hexcolor('#24695c'),
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                });
+                              },
+                            ),
                       Positioned(
                         bottom: 15,
                         right: 15,
                         child: Container(
-                            height: 40,
-                            width: 100,
-                            decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(7, 0, 0, 0),
-                              child: FlatButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          NavigationScreen()));
-                                },
-                                child: Text(
-                                  'navigate',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
+                          height: 40,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(7, 0, 0, 0),
+                            child: FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => NavigationScreen()));
+                              },
+                              child: Text(
+                                'navigate',
+                                style: TextStyle(
+                                  color: Colors.white,
                                 ),
                               ),
-                            )),
-                      )
+                            ),
+                          ),
+                        ),
+                      ),
                     ]),
                   ),
                   Container(
@@ -572,10 +638,23 @@ class _DetailsBodyState extends State<DetailsBody>
           );
   }
 
-  @override
-  void onLoadRouteDetailsError() {
-    // TODO: implement onLoadRouteDetailsError
+  Future setBookmarkStatus(data) async {
+    var response = await ApiCall().postData(data, 'bookmark');
+    final responseBody = jsonDecode(response.body);
+    final List responseBody1 = responseBody['serverResponse'];
+    final responseBody2 = responseBody1[0]['Response'];
+    final statusCode = response.statusCode;
+
+    if (statusCode != 200 || responseBody == null) {
+      throw new FetchDataException(
+        "An Error Occured : [Status Code : $statusCode]",
+      );
+    }
+    return responseBody2;
   }
+
+  @override
+  void onLoadRouteDetailsError() {}
 
   @override
   void onLoadRouteDetailsComplete(List<RouteDetails> items) {
@@ -585,7 +664,9 @@ class _DetailsBodyState extends State<DetailsBody>
       print(_routeDetails.length);
       routeDetails = _routeDetails[0];
       _isLoading = false;
+      routeDetails.isBookmarked
+          ? _isRouteBookmarked = true
+          : _isRouteBookmarked = false;
     });
-    // TODO: implement onLoadRouteDetailsComplete
   }
 }
