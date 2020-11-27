@@ -87,7 +87,7 @@ class _ExploreBodyState extends State<ExploreBody> {
               color: Colors.grey,
               height: 5,
             ),
-            RecentlyAdded(),
+            RecentlyAdded(userId: userId),
             const Divider(
               color: Colors.grey,
               height: 5,
