@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
     pages = [
       Explore(userId: userId),
       CompletedRoutes(),
-      FavoriteRoutes(),
+      FavoriteRoutes(userId: userId),
       ProfilePage()
     ];
   }
