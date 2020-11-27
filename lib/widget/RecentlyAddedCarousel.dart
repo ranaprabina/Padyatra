@@ -6,6 +6,8 @@ import 'package:padyatra/presenter/recently_added_route_presenter.dart';
 import 'package:padyatra/screen/RouteDetails.dart';
 
 class RecentlyAdded extends StatefulWidget {
+  final userId;
+  const RecentlyAdded({Key key, this.userId}) : super(key: key);
   @override
   _RecentlyAddedState createState() => _RecentlyAddedState();
 }
@@ -79,6 +81,7 @@ class _RecentlyAddedState extends State<RecentlyAdded>
                             MaterialPageRoute(
                               builder: (context) => RouteDetailsScreen(
                                 searchedRouteName: recentRoute.routeName,
+                                id: widget.userId,
                               ),
                             ),
                           );
