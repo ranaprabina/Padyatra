@@ -1,3 +1,6 @@
+import 'package:padyatra/models/bookmarked_route_model/bookmarked_route_data.dart';
+import 'package:padyatra/models/bookmarked_route_model/bookmarked_route_mock.dart';
+import 'package:padyatra/models/bookmarked_route_model/bookmarked_route_prod.dart';
 import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinate_prod.dart';
 import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_data.dart';
 import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_mock.dart';
@@ -124,6 +127,16 @@ class Injector {
 
       default:
         return new ProdUserSignUpRepository();
+    }
+  }
+
+  BookmarkedRouteRepository get bookmarkedRouteRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return new MockBookmarkedRoute();
+
+      default:
+        return new ProdBookmarkedRouteRepository();
     }
   }
 }
