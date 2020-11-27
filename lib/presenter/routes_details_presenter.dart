@@ -13,9 +13,9 @@ class RouteDetailsListPresenter {
   RouteDetailsListPresenter(this._viewContract) {
     _repository = new Injector().routeDetailsRepository;
   }
-  void loadRouteDetails(selectedRouteName) {
+  void loadRouteDetails(selectedRouteName, userId) {
     _repository
-        .fetchRouteDetails(selectedRouteName)
+        .fetchRouteDetails(selectedRouteName, userId)
         .then((rd) => _viewContract.onLoadRouteDetailsComplete(rd))
         .catchError((onError) => _viewContract.onLoadRouteDetailsError());
   }
