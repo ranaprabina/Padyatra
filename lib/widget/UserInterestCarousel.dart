@@ -92,6 +92,7 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
                                   MaterialPageRoute(
                                     builder: (context) => RouteDetailsScreen(
                                       searchedRouteName: route.routeName,
+                                      id: userId,
                                     ),
                                   ),
                                 );
