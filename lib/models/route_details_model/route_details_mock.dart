@@ -3,9 +3,8 @@ import 'package:padyatra/models/route_details_model/route_details_data.dart';
 
 class MockRouteDetails implements RouteDetailsRepository {
   @override
-  Future<List<RouteDetails>> fetchRouteDetails(String selectedRouteName) {
-    // TODO: implement fetchRouteDetails
-    // throw UnimplementedError();
+  Future<List<RouteDetails>> fetchRouteDetails(
+      String selectedRouteName, String userId) {
     return new Future.value(routes);
   }
 }

@@ -5,9 +5,11 @@ import 'package:padyatra/services/api.dart';
 
 class ProdRouteDetailsRepository implements RouteDetailsRepository {
   @override
-  Future<List<RouteDetails>> fetchRouteDetails(String selectedRouteName) async {
+  Future<List<RouteDetails>> fetchRouteDetails(
+      String selectedRouteName, String userId) async {
     var data = {
       'routeName': selectedRouteName,
+      'id': userId,
     };
     var response =
         await ApiCall().postData(data, 'trekkingRoutes/routeDetails');
