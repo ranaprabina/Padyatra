@@ -78,8 +78,7 @@ class _ExploreBodyState extends State<ExploreBody> {
       slivers: <Widget>[
         SliverList(
           delegate: SliverChildListDelegate([
-            SearchBar(),
-
+            SearchBar(userId: userId),
             _isUserIdAvailable
                 ? UserInterestCarousel(userId: userId)
                 : Container(),
