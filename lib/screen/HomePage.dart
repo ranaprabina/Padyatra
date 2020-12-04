@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
     userId = widget.userId;
     pages = [
       Explore(userId: userId),
-      CompletedRoutes(),
+      CompletedRoutes(userId: userId),
       FavoriteRoutes(userId: userId),
       ProfilePage()
     ];
