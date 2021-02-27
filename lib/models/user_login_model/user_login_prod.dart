@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:padyatra/models/user_login_model/user_login_data.dart';
 import 'package:padyatra/services/api.dart';
 import 'package:padyatra/services/sharedPreferences.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProdUserLoginRepository implements UserLoginRepository {
   @override
