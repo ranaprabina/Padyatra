@@ -49,6 +49,7 @@ class _RoutesCompletedState extends State<RoutesCompleted>
   }
   @override
   void initState() {
+    super.initState();
     userId = widget.userId;
     _isLoading = true;
     _isRouteAvailable = false;
