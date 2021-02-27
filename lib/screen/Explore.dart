@@ -91,7 +91,7 @@ class _ExploreBodyState extends State<ExploreBody> {
               color: Colors.grey,
               height: 5,
             ),
-            NearbyRoutesCarousel()
+            NearbyRoutesCarousel(userId: userId)
 
             ///add more as you wish
           ]),
