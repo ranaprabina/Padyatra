@@ -14,10 +14,13 @@ class ProdRecentlyAddedRouteRepository implements RecentlyAddedRouteRepository {
     print(responseBody1.length);
     print(responseBody1);
     final statusCode = response.statusCode;
-
-    if (statusCode != 200 || responseBody == null) {
-      throw new FetchDataException(
-          "An error Occured : [Status Code : $statusCode]");
+    try {
+      if (statusCode != 200 || responseBody == null) {
+        throw new FetchDataException(
+            "An error Occured : [Status Code : $statusCode]");
+      }
+    } catch (e) {
+      print(e);
     }
     return responseBody1.map((rr) => new RecentlyAddedRoute.toMap(rr)).toList();
   }
