@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:padyatra/models/user_signUp_model/user_signUp_data.dart';
-import 'package:http/http.dart' as http;
 import 'package:padyatra/services/api.dart';
 import 'package:padyatra/services/sharedPreferences.dart';
 
