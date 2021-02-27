@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/screen/CompletedRoutes.dart';
 import 'package:padyatra/screen/Explore.dart';
 import 'package:padyatra/screen/FavoriteRoutes.dart';
