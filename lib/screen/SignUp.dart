@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -5,8 +6,8 @@ import 'package:padyatra/Login.dart';
 import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/user_signUp_model/user_signUp_data.dart';
 import 'package:padyatra/presenter/user_signUp_presenter.dart';
-import 'package:padyatra/screen/Explore.dart';
 import 'package:padyatra/screen/SelectInterest.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({
@@ -18,10 +19,10 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
-  final firstNameController = TextEditingController();
-  String firstName;
-  final lastNameController = TextEditingController();
-  String lastName;
+  final nameController = TextEditingController();
+  String name;
+  // final lastNameController = TextEditingController();
+  // String lastName;
   final emailController = TextEditingController();
   String email;
   final passwordController = TextEditingController();
@@ -135,7 +136,7 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                           color: Colors.white,
                         ),
                         child: TextFormField(
-                          controller: firstNameController,
+                          controller: nameController,
                           decoration: InputDecoration(
                             // border: InputBorder.none,
                             border: OutlineInputBorder(
@@ -155,31 +156,31 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                           ),
                         ),
                       ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25.0),
-                          color: Colors.white,
-                        ),
-                        child: TextFormField(
-                          controller: lastNameController,
-                          decoration: InputDecoration(
-                            // border: InputBorder.none,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            labelText: "Last Name",
-                            hintText: "eg: Doe",
-                            hintStyle: TextStyle(color: Colors.grey),
-                            prefixIcon: Icon(
-                              Icons.perm_identity,
-                              // color: Colors.teal,
-                              color: Hexcolor('#24695c'),
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Container(
+                      //   padding:
+                      //       EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(25.0),
+                      //     color: Colors.white,
+                      //   ),
+                      //   child: TextFormField(
+                      //     controller: lastNameController,
+                      //     decoration: InputDecoration(
+                      //       // border: InputBorder.none,
+                      //       border: OutlineInputBorder(
+                      //         borderRadius: BorderRadius.circular(10.0),
+                      //       ),
+                      //       labelText: "Last Name",
+                      //       hintText: "eg: Doe",
+                      //       hintStyle: TextStyle(color: Colors.grey),
+                      //       prefixIcon: Icon(
+                      //         Icons.perm_identity,
+                      //         // color: Colors.teal,
+                      //         color: Hexcolor('#24695c'),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Container(
                         padding:
                             EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
@@ -311,64 +312,6 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                       SizedBox(
                         height: displayHeight(context) * 0.05,
                       ),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     // if (_formKey.currentState.validate()) {
-                      //     //   senddata();
-                      //     // }
-                      //     firstName = firstNameController.text.toString();
-                      //     lastName = lastNameController.text.toString();
-                      //     email = emailController.text.toString();
-                      //     password = passwordController.text.toString();
-                      //     confirmPassword =
-                      //         confirmPasswordController.text.toString();
-                      //     if (firstName.isNotEmpty &&
-                      //         lastName.isNotEmpty &&
-                      //         email.isNotEmpty &&
-                      //         password.isNotEmpty &&
-                      //         confirmPassword.isNotEmpty) {
-                      //       password == confirmPassword
-                      //           ? _userSignUpListPresenter.loadServerResponse(
-                      //               firstName, lastName, email, password)
-                      //           : Fluttertoast.showToast(
-                      //               msg: "passwords are different",
-                      //               toastLength: Toast.LENGTH_SHORT,
-                      //               gravity: ToastGravity.BOTTOM,
-                      //               // timeInSecForIosWeb: 1,
-                      //               backgroundColor: Colors.red,
-                      //               textColor: Colors.white,
-                      //               fontSize: 16.0);
-                      //     } else {
-                      //       Fluttertoast.showToast(
-                      //           msg: "Please fill all the fields",
-                      //           toastLength: Toast.LENGTH_SHORT,
-                      //           gravity: ToastGravity.BOTTOM,
-                      //           // timeInSecForIosWeb: 1,
-                      //           backgroundColor: Colors.red,
-                      //           textColor: Colors.white,
-                      //           fontSize: 16.0);
-                      //     }
-                      //   },
-                      //   child: Container(
-                      //     height: displayHeight(context) * 0.06,
-                      //     margin: EdgeInsets.symmetric(horizontal: 60),
-                      //     decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(50),
-                      //       color: Color.fromRGBO(49, 39, 79, 1),
-                      //     ),
-                      //     child: Center(
-                      //       child: Text(
-                      //         "sign up",
-                      //         style: TextStyle(
-                      //             color: Colors.white,
-                      //             fontFamily: 'Playfair Display'),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // SizedBox(
-                      //   height: displayHeight(context) * 0.02,
-                      // ),
                       Container(
                         height: displayHeight(context) * 0.06,
                         width: displayWidth(context),
@@ -376,20 +319,19 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                         child: RaisedButton(
                           elevation: 5.0,
                           onPressed: () {
-                            firstName = firstNameController.text.toString();
-                            lastName = lastNameController.text.toString();
+                            name = nameController.text.toString();
+                            // lastName = lastNameController.text.toString();
                             email = emailController.text.toString();
                             password = passwordController.text.toString();
                             confirmPassword =
                                 confirmPasswordController.text.toString();
-                            if (firstName.isNotEmpty &&
-                                lastName.isNotEmpty &&
+                            if (name.isNotEmpty &&
                                 email.isNotEmpty &&
                                 password.isNotEmpty &&
                                 confirmPassword.isNotEmpty) {
                               password == confirmPassword
                                   ? _userSignUpListPresenter.loadServerResponse(
-                                      firstName, lastName, email, password)
+                                      name, email, password)
                                   : Fluttertoast.showToast(
                                       msg: "passwords are different",
                                       toastLength: Toast.LENGTH_SHORT,
@@ -503,33 +445,35 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
             : _isEmailTaken = false;
 
         if (_isSignUpSuccess) {
-          userId = userSignUp.userId;
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => UserSelectInterest(
-                    userId: userId,
-                  )));
-          Fluttertoast.showToast(
-              msg: "Sign-Up Sucessful",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              // timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0);
-        } else {
-          Fluttertoast.showToast(
-              msg: "Error occured during signup process",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              // timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
+          _checkIfUserIsLoggedIn();
+          // userId = userSignUp.userId;
+          // Navigator.of(context).push(MaterialPageRoute(
+          //     builder: (context) => UserSelectInterest(
+          //           userId: userId,
+          //         )));
+          // Fluttertoast.showToast(
+          //     msg: "Sign-Up Sucessful",
+          //     toastLength: Toast.LENGTH_SHORT,
+          //     gravity: ToastGravity.BOTTOM,
+          //     // timeInSecForIosWeb: 1,
+          //     backgroundColor: Colors.green,
+          //     textColor: Colors.white,
+          //     fontSize: 16.0);
         }
+        // else {
+        //   Fluttertoast.showToast(
+        //       msg: "Error occured during signup process",
+        //       toastLength: Toast.LENGTH_SHORT,
+        //       gravity: ToastGravity.BOTTOM,
+        //       // timeInSecForIosWeb: 1,
+        //       backgroundColor: Colors.red,
+        //       textColor: Colors.white,
+        //       fontSize: 16.0);
+        // }
 
         if (_isEmailTaken) {
           Fluttertoast.showToast(
-              msg: "email already taken",
+              msg: userSignUp.message,
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
               // timeInSecForIosWeb: 1,
@@ -543,4 +487,29 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
 
   @override
   void onUserSignUpError() {}
+
+  void _checkIfUserIsLoggedIn() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var token = localStorage.getString('token');
+    if (token != null) {
+      setState(() {
+        var userJson = localStorage.getString('user');
+        var user = jsonDecode(userJson);
+        userId = user['userId'].toString();
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => UserSelectInterest(
+                  userId: userId,
+                )));
+        Fluttertoast.showToast(
+            msg: "Sign-Up Sucessful",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            // timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        // _isUserLoggedIn = true;
+      });
+    }
+  }
 }
