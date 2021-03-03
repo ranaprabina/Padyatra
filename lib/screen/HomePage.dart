@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/screen/CompletedRoutes.dart';
 import 'package:padyatra/screen/Explore.dart';
 import 'package:padyatra/screen/FavoriteRoutes.dart';
@@ -22,8 +21,8 @@ class _HomePageState extends State<HomePage> {
     userId = widget.userId;
     pages = [
       Explore(userId: userId),
-      CompletedRoutes(),
-      FavoriteRoutes(),
+      CompletedRoutes(userId: userId),
+      FavoriteRoutes(userId: userId),
       ProfilePage()
     ];
   }

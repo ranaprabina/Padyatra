@@ -92,6 +92,7 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
                                   MaterialPageRoute(
                                     builder: (context) => RouteDetailsScreen(
                                       searchedRouteName: route.routeName,
+                                      id: userId,
                                     ),
                                   ),
                                 );
@@ -240,11 +241,11 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
       _userRoutes = items;
       _isLoading = false;
       UserInterestRoute noRoute;
-      print("user Interester routes are \n");
+      print("user Interested routes are \n");
       noRoute = _userRoutes[0];
       print(noRoute.serverResponse);
 
-      noRoute.serverResponse == "categories_not_selected"
+      noRoute.serverResponse == "routes_not_available"
           ? _isRouteAvailable = false
           : _isRouteAvailable = true;
     });

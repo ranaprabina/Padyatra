@@ -12,6 +12,7 @@ class MockInsertUserInterestRouteCategory
 var serverResponse = <InsertUserInterestRouteCategory>[
   new InsertUserInterestRouteCategory(
     serverResponseMessage: "New_Insertion_success",
+    messsage: "selected category was inserted successfully",
     userId: '16',
   )
 ];

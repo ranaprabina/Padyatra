@@ -180,7 +180,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
                     : Navigator.of(context).pop(
                         Toast.show(
                           categoryAlreadyInDB
-                              ? "Categories already existed"
+                              ? insertUserInterestRouteCategory.messsage
                               : "Error occured during insertion process",
                           context,
                           backgroundColor: Colors.red[400],

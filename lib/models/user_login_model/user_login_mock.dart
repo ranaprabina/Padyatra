@@ -12,7 +12,7 @@ var serverResponse = <UserLogin>[
     serverResponseMessage: "login_success",
     userId: '5',
     email: "hari@gmail.com",
-    firstName: "Hari",
-    lastName: 'Bahadur',
+    name: "Hari",
+    token: 'asdasgdfg34456sdgdr6r67regdr56e56',
   )
 ];

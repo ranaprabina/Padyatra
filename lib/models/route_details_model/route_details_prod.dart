@@ -1,20 +1,18 @@
 import 'dart:convert';
 
 import 'package:padyatra/models/route_details_model/route_details_data.dart';
-import 'package:http/http.dart' as http;
+import 'package:padyatra/services/api.dart';
 
 class ProdRouteDetailsRepository implements RouteDetailsRepository {
-  String routeDetailsURL =
-      // "http://192.168.1.68:8888/Padyatra/PHP%20codes/Padyatra-ServerSide/API's/selectedRoute.php";
-      "http://192.168.1.65/PHP%20codes/Padyatra/API's/selectedRoute.php";
-
   @override
-  Future<List<RouteDetails>> fetchRouteDetails(String selectedRouteName) async {
-    // TODO: implement fetchRouteDetails
-    // throw UnimplementedError();
-    http.Response response = await http.post(routeDetailsURL, body: {
+  Future<List<RouteDetails>> fetchRouteDetails(
+      String selectedRouteName, String userId) async {
+    var data = {
       'routeName': selectedRouteName,
-    });
+      'id': userId,
+    };
+    var response =
+        await ApiCall().postData(data, 'trekkingRoutes/routeDetails');
     final responseBody = jsonDecode(response.body);
     print(response);
     final List respnseBody1 = responseBody['selectedRoute'];

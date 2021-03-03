@@ -4,6 +4,8 @@ import 'package:padyatra/presenter/search_route_presenter.dart';
 import 'package:padyatra/screen/RouteDetails.dart';
 
 class SearchBar extends StatefulWidget {
+  final userId;
+  const SearchBar({Key key, this.userId}) : super(key: key);
   @override
   _SearchBarState createState() => _SearchBarState();
 }
@@ -73,6 +75,7 @@ class _SearchBarState extends State<SearchBar>
                       context: context,
                       delegate: RouteSearch(
                         recentRouteList: routeNameList,
+                        userId: widget.userId,
                       ),
                     );
                   },
@@ -88,14 +91,12 @@ class _SearchBarState extends State<SearchBar>
 
   @override
   void onLoadSearchRouteComplete(List<SearchRoute> items) {
-    // TODO: implement onLoadSearchRouteComplete
     setState(() {
       _searchRoute = items;
       _isLoading = false;
       print("Routes to be searched are");
       for (int i = 0; i < _searchRoute.length; i++) {
         final SearchRoute routesName = _searchRoute[i];
-        // print(_searchRoute[i]);
         print(routesName.routeName);
         routeNameList.add(routesName.routeName);
       }
@@ -103,9 +104,7 @@ class _SearchBarState extends State<SearchBar>
   }
 
   @override
-  void onLoadSeachRouteError() {
-    // TODO: implement onLoadSeachRouteError
-  }
+  void onLoadSeachRouteError() {}
 }
 
 class RouteSearch extends SearchDelegate<String> {
@@ -117,8 +116,10 @@ class RouteSearch extends SearchDelegate<String> {
   ];
 
   String searchingRoute;
-  RouteSearch({List recentRouteList}) {
+  String id;
+  RouteSearch({List recentRouteList, userId}) {
     routes = recentRouteList;
+    id = userId;
   }
 
   @override
@@ -152,7 +153,7 @@ class RouteSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // show some results base on the selection
+    // show some results based on the selection
     // throw UnimplementedError();
 
     final suggestionList = query.isEmpty
@@ -173,10 +174,11 @@ class RouteSearch extends SearchDelegate<String> {
             close(context, query);
             print("final searched result is");
             print(query);
-            //TODO: Navigate to Route information screen
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    RouteDetailsScreen(searchedRouteName: query)));
+                builder: (context) => RouteDetailsScreen(
+                      searchedRouteName: query,
+                      id: id,
+                    )));
           },
           leading: Icon(Icons.directions_walk),
           title: RichText(
@@ -220,10 +222,11 @@ class RouteSearch extends SearchDelegate<String> {
                 onTap: () {
                   query = suggestionList[index].toString();
                   close(context, query);
-                  //TODO: Navigate to Route information screen
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          RouteDetailsScreen(searchedRouteName: query)));
+                      builder: (context) => RouteDetailsScreen(
+                            searchedRouteName: query,
+                            id: id,
+                          )));
                   showResults(context);
                   print("onTap Tapped");
                   // close(context, query);

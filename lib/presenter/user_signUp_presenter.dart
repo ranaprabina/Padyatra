@@ -14,10 +14,9 @@ class UserSignUpListPresenter {
     _repository = new Injector().userSignUpRepository;
   }
 
-  void loadServerResponse(
-      String firstName, String lastName, String email, String password) {
+  void loadServerResponse(String name, String email, String password) {
     _repository
-        .sendNewUserData(firstName, lastName, email, password)
+        .sendNewUserData(name, email, password)
         .then((sR) => _viewContract.onUserSignUpComplete(sR))
         .catchError((onError) => _viewContract.onUserSignUpError());
   }

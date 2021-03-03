@@ -78,8 +78,7 @@ class _ExploreBodyState extends State<ExploreBody> {
       slivers: <Widget>[
         SliverList(
           delegate: SliverChildListDelegate([
-            SearchBar(),
-
+            SearchBar(userId: userId),
             _isUserIdAvailable
                 ? UserInterestCarousel(userId: userId)
                 : Container(),
@@ -87,12 +86,12 @@ class _ExploreBodyState extends State<ExploreBody> {
               color: Colors.grey,
               height: 5,
             ),
-            RecentlyAdded(),
+            RecentlyAdded(userId: userId),
             const Divider(
               color: Colors.grey,
               height: 5,
             ),
-            NearbyRoutesCarousel()
+            NearbyRoutesCarousel(userId: userId)
 
             ///add more as you wish
           ]),

@@ -2,31 +2,31 @@ class UserSignUp {
   String serverResponseMessage;
   String userId;
   String email;
-  String firstName;
-  String middleName;
-  String lastName;
+  String name;
+  String message;
+  String token;
 
   UserSignUp({
     this.serverResponseMessage,
     this.userId,
     this.email,
-    this.firstName,
-    this.middleName,
-    this.lastName,
+    this.name,
+    this.message,
+    this.token,
   });
 
   UserSignUp.fromMap(Map<String, dynamic> map)
       : serverResponseMessage = map['Response'],
-        userId = map['userId'],
+        userId = map['userId'].toString(),
         email = map['email'],
-        firstName = map['firstName'],
-        middleName = map['middleName'],
-        lastName = map['lastName'];
+        name = map['name'],
+        message = map['message'],
+        token = map['token'];
 }
 
 abstract class UserSignUpRepository {
   Future<List<UserSignUp>> sendNewUserData(
-      String firstName, String lastName, String email, String password);
+      String name, String email, String password);
 }
 
 class FetchDataException1 implements Exception {

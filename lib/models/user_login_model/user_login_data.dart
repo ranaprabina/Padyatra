@@ -1,24 +1,24 @@
 class UserLogin {
   String serverResponseMessage;
   String userId;
-  String firstName;
+  String name;
   String email;
-  String lastName;
+  String token;
 
   UserLogin({
     this.serverResponseMessage,
     this.userId,
-    this.firstName,
+    this.name,
     this.email,
-    this.lastName,
+    this.token,
   });
 
   UserLogin.fromMap(Map<String, dynamic> map)
       : serverResponseMessage = map['Response'],
-        userId = map['userId'],
+        userId = map['userId'].toString(),
         email = map['email'],
-        firstName = map['firstName'],
-        lastName = map['lastName'];
+        name = map['name'],
+        token = map['token'];
 }
 
 abstract class UserLoginRepository {

@@ -5,29 +5,30 @@ class RouteDetails {
   String routeName;
   String image;
   String routeDescription;
-  String length;
+  int length;
   String duration;
   String difficulty;
-  String conservationalPermit;
-  String timsPermit;
-  String restrictedAreaPermit;
-  String altitude;
+  int conservationalPermit;
+  int timsPermit;
+  int restrictedAreaPermit;
+  int altitude;
   String documentsDetils;
+  bool isBookmarked;
 
-  RouteDetails({
-    this.routeId,
-    this.routeName,
-    this.image,
-    this.routeDescription,
-    this.length,
-    this.duration,
-    this.difficulty,
-    this.conservationalPermit,
-    this.timsPermit,
-    this.restrictedAreaPermit,
-    this.altitude,
-    this.documentsDetils,
-  });
+  RouteDetails(
+      {this.routeId,
+      this.routeName,
+      this.image,
+      this.routeDescription,
+      this.length,
+      this.duration,
+      this.difficulty,
+      this.conservationalPermit,
+      this.timsPermit,
+      this.restrictedAreaPermit,
+      this.altitude,
+      this.documentsDetils,
+      this.isBookmarked});
 
   RouteDetails.toMap(Map<String, dynamic> map)
       : routeId = map['route_id'],
@@ -41,11 +42,13 @@ class RouteDetails {
         timsPermit = map['tims_permit'],
         restrictedAreaPermit = map['r_a_permit'],
         altitude = map['route_altitude'],
-        documentsDetils = map['documents_info'];
+        documentsDetils = map['documents_info'],
+        isBookmarked = map['isBookmarked'];
 }
 
 abstract class RouteDetailsRepository {
-  Future<List<RouteDetails>> fetchRouteDetails(String selectedRouteName);
+  Future<List<RouteDetails>> fetchRouteDetails(
+      String selectedRouteName, String userId);
 }
 
 class FetchDataException implements Exception {

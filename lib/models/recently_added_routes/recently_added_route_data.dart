@@ -1,6 +1,7 @@
 import 'dart:async';
 
 class RecentlyAddedRoute {
+  String serverResponse;
   String routeId;
   String routeName;
   String image;
@@ -17,9 +18,10 @@ class RecentlyAddedRoute {
       this.difficulty,
       this.dateTime});
   RecentlyAddedRoute.toMap(Map<String, dynamic> map)
-      : routeId = map['route_id'],
+      : serverResponse = map['Response'],
+        routeId = map['route_id'],
         routeName = map['route_name'],
-        length = map['route_length'],
+        length = map['route_length'].toString(),
         duration = map['duration'],
         difficulty = map['difficulty'],
         dateTime = map['route_added_at'];
