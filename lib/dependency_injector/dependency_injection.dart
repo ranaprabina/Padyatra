@@ -10,6 +10,9 @@ import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinate
 import 'package:padyatra/models/insert_user_interest_routeCategory/insert_user_interest_routeCategory_data.dart';
 import 'package:padyatra/models/insert_user_interest_routeCategory/insert_user_interest_routeCategory_mock.dart';
 import 'package:padyatra/models/insert_user_interest_routeCategory/insert_user_interest_routeCategory_prod.dart';
+import 'package:padyatra/models/nearBy_route_model/nearBy_route_data.dart';
+import 'package:padyatra/models/nearBy_route_model/nearBy_route_mock.dart';
+import 'package:padyatra/models/nearBy_route_model/nearBy_route_prod.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_data.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_mock.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_prod.dart';
@@ -150,6 +153,16 @@ class Injector {
 
       default:
         return new ProdCompletedRouteRepository();
+    }
+  }
+
+  NearByRouteRepository get nearByRouteRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return new MockNearByRoute();
+
+      default:
+        return new ProdNearByRouteRepository();
     }
   }
 }
