@@ -512,8 +512,4 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
       });
     }
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 9724488c0df55bec6d3c68b13ddec03adb375c78
