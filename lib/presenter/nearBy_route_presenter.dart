@@ -14,9 +14,9 @@ class NearByRouteListPresenter {
     _nearByRouteRepository = new Injector().nearByRouteRepository;
   }
 
-  void loadNearByRoutes() {
+  void loadNearByRoutes(double latitude, double longitude) {
     _nearByRouteRepository
-        .fetchNearByRoutes()
+        .fetchNearByRoutes(latitude, longitude)
         .then((nr) => _viewContract.onLoadNearByRouteComplete(nr))
         .catchError((onError) => _viewContract.onLoadNearByRouteError());
   }
