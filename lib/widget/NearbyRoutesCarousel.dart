@@ -4,6 +4,7 @@ import 'package:padyatra/models/TrekkingRoutes.dart';
 import 'package:padyatra/models/nearBy_route_model/nearBy_route_data.dart';
 import 'package:padyatra/presenter/nearBy_route_presenter.dart';
 import 'package:padyatra/screen/RouteDetails.dart';
+import 'package:padyatra/services/currentLocation.dart';
 
 class NearbyRoutesCarousel extends StatefulWidget {
   final userId;
@@ -21,6 +22,10 @@ class _NearbyRoutesCarouselState extends State<NearbyRoutesCarousel>
   NearByRouteListPresenter _presenter;
   List<NearByRoute> _nearByRoutes;
   bool _isLoading;
+  bool _isLocationAvailable;
+  double latitude;
+  double longitude;
+
   _NearbyRoutesCarouselState() {
     _presenter = new NearByRouteListPresenter(this);
   }
@@ -29,7 +34,27 @@ class _NearbyRoutesCarouselState extends State<NearbyRoutesCarousel>
   void initState() {
     super.initState();
     _isLoading = true;
-    _presenter.loadNearByRoutes();
+    _isLocationAvailable = false;
+    this.location();
+  }
+
+  Future<dynamic> location() async {
+    try {
+      var coordinate = await CurrentLocation().getLocation();
+      if (coordinate != null) {
+        latitude = coordinate.latitude;
+        longitude = coordinate.longitude;
+        _isLocationAvailable = true;
+      } else {
+        _isLocationAvailable = false;
+        throw new Exception();
+      }
+      _isLocationAvailable
+          ? _presenter.loadNearByRoutes(latitude, longitude)
+          : location();
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   @override
