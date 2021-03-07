@@ -5,17 +5,17 @@ import 'package:padyatra/services/api.dart';
 
 class ProdNearByRouteRepository implements NearByRouteRepository {
   @override
-  Future<List<NearByRoute>> fetchNearByRoutes() async {
+  Future<List<NearByRoute>> fetchNearByRoutes(
+      double latitude, double longitude) async {
     var data = {
-      'latitude': '28.4565',
-      'longitude': '83.32343',
+      'latitude': latitude,
+      'longitude': longitude,
     };
     var response =
         await ApiCall().postData(data, 'trekkingRoutes/getNearByRoutes');
     print(response);
     final responseBody = jsonDecode(response.body);
     final List responseBody1 = responseBody['serverResponse'];
-    print(responseBody1.length);
     final statusCode = response.statusCode;
 
     if (statusCode != 200 && responseBody == null) {

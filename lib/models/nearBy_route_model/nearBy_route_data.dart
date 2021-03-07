@@ -23,7 +23,8 @@ class NearByRoute {
 }
 
 abstract class NearByRouteRepository {
-  Future<List<NearByRoute>> fetchNearByRoutes();
+  Future<List<NearByRoute>> fetchNearByRoutes(
+      double latitude, double longitude);
 }
 
 class FetchDataException implements Exception {

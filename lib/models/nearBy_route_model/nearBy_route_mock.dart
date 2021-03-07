@@ -3,7 +3,8 @@ import 'dart:async';
 
 class MockNearByRoute implements NearByRouteRepository {
   @override
-  Future<List<NearByRoute>> fetchNearByRoutes() {
+  Future<List<NearByRoute>> fetchNearByRoutes(
+      double latitude, double longitude) {
     return new Future.value(routes);
   }
 }
