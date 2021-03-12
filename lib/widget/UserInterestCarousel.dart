@@ -24,6 +24,7 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
   List<UserInterestRoute> _userRoutes;
   bool _isLoading;
   bool _isRouteAvailable;
+  bool _isImageLoading;
   _UserInterestCarouselState() {
     _presenter = new UserInterestRouteListPresenter(this);
   }
@@ -34,6 +35,7 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
     _pageController = PageController(initialPage: 0, viewportFraction: 0.65)
       ..addListener(_onScroll);
     _isRouteAvailable = false;
+    _isImageLoading = true;
     userId = widget.userId;
     if (userId == null) {
       _isLoading = false;
@@ -106,12 +108,26 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
                                       borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(10),
                                           topRight: Radius.circular(10)),
-                                      child: Image(
-                                        height: displayHeight(context) * 0.25,
-                                        width: displayWidth(context) * 0.52,
-                                        fit: BoxFit.cover,
-                                        image: AssetImage("images/" +
-                                            _allTrekkingRoutes[index].image),
+                                      child: Container(
+                                        // height:
+                                        //     displayHeight(context) * 0.25,
+                                        // width:
+                                        //     displayWidth(context) * 0.52,
+
+                                        child: _isImageLoading
+                                            ? new Center(
+                                                child:
+                                                    new CircularProgressIndicator(),
+                                              )
+                                            : Image.network(
+                                                "http://192.168.1.68:8000/images/${route.image}",
+                                                fit: BoxFit.cover,
+                                                height: displayHeight(context) *
+                                                    0.25,
+                                                width: displayWidth(context) *
+                                                    0.52,
+                                                gaplessPlayback: true,
+                                              ),
                                       ),
                                     ),
                                     Container(
@@ -244,6 +260,7 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
       print("user Interested routes are \n");
       noRoute = _userRoutes[0];
       print(noRoute.serverResponse);
+      _isImageLoading = false;
 
       noRoute.serverResponse == "routes_not_available"
           ? _isRouteAvailable = false

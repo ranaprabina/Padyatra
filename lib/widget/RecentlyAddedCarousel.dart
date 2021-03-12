@@ -22,6 +22,7 @@ class _RecentlyAddedState extends State<RecentlyAdded>
   List<RecentlyAddedRoute> _recentRoutes;
   bool _isLoading;
   bool _isRouteAvailable;
+  bool _isImageLoading;
   _RecentlyAddedState() {
     _presenter = new RecentlyAddedRouteListPresenter(this);
   }
@@ -32,6 +33,7 @@ class _RecentlyAddedState extends State<RecentlyAdded>
       ..addListener(_onScroll);
     _isRouteAvailable = false;
     _isLoading = true;
+    _isImageLoading = true;
     _presenter.loadRecentRoutes();
   }
 
@@ -100,13 +102,20 @@ class _RecentlyAddedState extends State<RecentlyAdded>
                                         borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(10),
                                             topRight: Radius.circular(10)),
-                                        child: Image(
-                                          height: displayHeight(context) * 0.25,
-                                          width: displayWidth(context) * 0.52,
-                                          fit: BoxFit.cover,
-                                          image: AssetImage("images/" +
-                                              _allTrekkingRoutes[index].image),
-                                        ),
+                                        child: _isImageLoading
+                                            ? new Center(
+                                                child:
+                                                    new CircularProgressIndicator(),
+                                              )
+                                            : Image.network(
+                                                "http://192.168.1.68:8000/images/${recentRoute.image}",
+                                                fit: BoxFit.cover,
+                                                height: displayHeight(context) *
+                                                    0.25,
+                                                width: displayWidth(context) *
+                                                    0.52,
+                                                gaplessPlayback: true,
+                                              ),
                                       ),
                                       Container(
                                         height: displayHeight(context) * 0.06,
@@ -243,6 +252,7 @@ class _RecentlyAddedState extends State<RecentlyAdded>
       _isLoading = false;
       RecentlyAddedRoute noRoute;
       noRoute = _recentRoutes[0];
+      _isImageLoading = false;
 
       noRoute.serverResponse == "No_Routes_Available"
           ? _isRouteAvailable = false
