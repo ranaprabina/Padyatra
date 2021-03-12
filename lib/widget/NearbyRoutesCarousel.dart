@@ -4,6 +4,8 @@ import 'package:padyatra/models/TrekkingRoutes.dart';
 import 'package:padyatra/models/nearBy_route_model/nearBy_route_data.dart';
 import 'package:padyatra/presenter/nearBy_route_presenter.dart';
 import 'package:padyatra/screen/RouteDetails.dart';
+import 'package:padyatra/services/api.dart';
+import 'package:padyatra/services/api_constants.dart';
 import 'package:padyatra/services/currentLocation.dart';
 
 class NearbyRoutesCarousel extends StatefulWidget {
@@ -126,7 +128,8 @@ class _NearbyRoutesCarouselState extends State<NearbyRoutesCarousel>
                                                   new CircularProgressIndicator(),
                                             )
                                           : Image.network(
-                                              "http://192.168.1.68:8000/images/${nearByRoute.image}",
+                                              ApiConstants().imageBaseUrl +
+                                                  "/${nearByRoute.image}",
                                               fit: BoxFit.cover,
                                               height:
                                                   displayHeight(context) * 0.25,

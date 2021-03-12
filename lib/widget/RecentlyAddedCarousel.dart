@@ -4,6 +4,7 @@ import 'package:padyatra/models/TrekkingRoutes.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_data.dart';
 import 'package:padyatra/presenter/recently_added_route_presenter.dart';
 import 'package:padyatra/screen/RouteDetails.dart';
+import 'package:padyatra/services/api_constants.dart';
 
 class RecentlyAdded extends StatefulWidget {
   final userId;
@@ -108,7 +109,8 @@ class _RecentlyAddedState extends State<RecentlyAdded>
                                                     new CircularProgressIndicator(),
                                               )
                                             : Image.network(
-                                                "http://192.168.1.68:8000/images/${recentRoute.image}",
+                                                ApiConstants().imageBaseUrl +
+                                                    "${recentRoute.image}",
                                                 fit: BoxFit.cover,
                                                 height: displayHeight(context) *
                                                     0.25,

@@ -4,6 +4,7 @@ import 'package:padyatra/models/TrekkingRoutes.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_data.dart';
 import 'package:padyatra/presenter/user_interest_route_presenter.dart';
 import 'package:padyatra/screen/RouteDetails.dart';
+import 'package:padyatra/services/api_constants.dart';
 
 class UserInterestCarousel extends StatefulWidget {
   final userId;
@@ -120,7 +121,8 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
                                                     new CircularProgressIndicator(),
                                               )
                                             : Image.network(
-                                                "http://192.168.1.68:8000/images/${route.image}",
+                                                ApiConstants().imageBaseUrl +
+                                                    "${route.image}",
                                                 fit: BoxFit.cover,
                                                 height: displayHeight(context) *
                                                     0.25,
