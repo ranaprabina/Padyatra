@@ -1,4 +1,5 @@
 class NearByRoute {
+  String response;
   String routeId;
   String routeName;
   String image;
@@ -6,6 +7,7 @@ class NearByRoute {
   String duration;
   String difficulty;
   NearByRoute({
+    this.response,
     this.routeId,
     this.routeName,
     this.image,
@@ -15,8 +17,10 @@ class NearByRoute {
   });
 
   NearByRoute.toMap(Map<String, dynamic> map)
-      : routeId = map['route_id'],
+      : response = map['Response'],
+        routeId = map['route_id'],
         routeName = map['route_name'],
+        image = map['image'],
         routeLength = map['route_length'].toString(),
         duration = map['duration'],
         difficulty = map['difficulty'];

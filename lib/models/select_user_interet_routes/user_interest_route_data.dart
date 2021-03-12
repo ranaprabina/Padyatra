@@ -20,6 +20,7 @@ class UserInterestRoute {
   });
   UserInterestRoute.fromMap(Map<String, dynamic> map)
       : serverResponse = map['Response'],
+        image = map['image'],
         routeId = map['route_id'],
         routeName = map['route_name'],
         length = map['route_length'],

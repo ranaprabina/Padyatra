@@ -23,6 +23,7 @@ class BookmarkedRoute {
         message = map['message'],
         routeId = map['route_id'],
         routeName = map['route_name'],
+        image = map['image'],
         length = map['route_length'].toString(),
         duration = map['duration'],
         difficulty = map['difficulty'];

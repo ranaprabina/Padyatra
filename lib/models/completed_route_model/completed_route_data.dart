@@ -3,6 +3,7 @@ class CompletedRoute {
   String message;
   String routeId;
   String routeName;
+  String image;
   String duration;
   String routeLength;
   String completedId;
@@ -14,6 +15,7 @@ class CompletedRoute {
     this.message,
     this.routeId,
     this.routeName,
+    this.image,
     this.duration,
     this.routeLength,
     this.completedId,
@@ -27,6 +29,7 @@ class CompletedRoute {
         message = map['message'],
         routeId = map['route_id'],
         routeName = map['route_name'],
+        image = map['image'],
         duration = map['duration'],
         routeLength = map['route_length'].toString(),
         completedId = map['completed_id'].toString(),
