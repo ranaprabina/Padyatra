@@ -10,6 +10,7 @@ import 'package:padyatra/models/route_details_model/route_details_data.dart';
 import 'package:padyatra/screen/NavigationScreen.dart';
 import 'package:padyatra/screen/documents_required.dart';
 import 'package:padyatra/services/api.dart';
+import 'package:padyatra/services/api_constants.dart';
 
 class RouteDetailsScreen extends StatefulWidget {
   final searchedRouteName;
@@ -169,7 +170,8 @@ class _DetailsBodyState extends State<DetailsBody>
                               // width: MediaQuery.of(context).size.width,
                               // height: 400,
                               child: Image.network(
-                                "http://192.168.1.68:8000/images/${routeDetails.image}",
+                                ApiConstants().imageBaseUrl +
+                                    "${routeDetails.image}",
                                 fit: BoxFit.fill,
                                 gaplessPlayback: true,
                               ),

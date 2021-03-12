@@ -6,6 +6,7 @@ import 'package:padyatra/models/TrekkingRoutes.dart';
 import 'package:padyatra/models/bookmarked_route_model/bookmarked_route_data.dart';
 import 'package:padyatra/presenter/bookmarked_route_presenter.dart';
 import 'package:padyatra/screen/RouteDetails.dart';
+import 'package:padyatra/services/api_constants.dart';
 
 class FavoriteRoutes extends StatelessWidget {
   final userId;
@@ -167,7 +168,9 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
                                                           new CircularProgressIndicator(),
                                                     )
                                                   : Image.network(
-                                                      "http://192.168.1.68:8000/images/${bookmarkedRoute.image}",
+                                                      ApiConstants()
+                                                              .imageBaseUrl +
+                                                          "${bookmarkedRoute.image}",
                                                       fit: BoxFit.cover,
                                                       height: displayHeight(
                                                               context) *

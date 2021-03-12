@@ -6,6 +6,7 @@ import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/ListCompletedRoutes.dart';
 import 'package:padyatra/models/completed_route_model/completed_route_data.dart';
 import 'package:padyatra/presenter/completed_route_presenter.dart';
+import 'package:padyatra/services/api_constants.dart';
 
 class CompletedRoutes extends StatelessWidget {
   final userId;
@@ -169,7 +170,9 @@ class _RoutesCompletedState extends State<RoutesCompleted>
                                                           new CircularProgressIndicator(),
                                                     )
                                                   : Image.network(
-                                                      "http://192.168.1.68:8000/images/${completedRoute.image}",
+                                                      ApiConstants()
+                                                              .imageBaseUrl +
+                                                          "${completedRoute.image}",
                                                       fit: BoxFit.cover,
                                                       height: displayHeight(
                                                               context) *
