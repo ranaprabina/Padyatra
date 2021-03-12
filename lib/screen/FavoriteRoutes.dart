@@ -35,6 +35,7 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
   bool _isLoading;
   bool _isRouteAvailable;
   bool _isBookmarked;
+  bool _isImageLoading;
 
   _RoutesFavoriteState() {
     _bookmarkedRouteListPresenter = new BookmarkedRouteListPresenter(this);
@@ -46,6 +47,7 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
     userId = widget.userId;
     _isLoading = true;
     _isBookmarked = true;
+    _isImageLoading = true;
     _isRouteAvailable = false;
     _bookmarkedRouteListPresenter.loadBookmarkedRoutes(userId);
   }
@@ -149,15 +151,33 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
                                             borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(5),
                                                 bottomLeft: Radius.circular(5)),
-                                            child: Image(
-                                                height: displayHeight(context) *
-                                                    0.18,
-                                                width:
-                                                    displayWidth(context) * 0.4,
-                                                fit: BoxFit.cover,
-                                                image: AssetImage("images/" +
-                                                    _allTrekkingRoutes[index]
-                                                        .image)),
+                                            child: Container(
+                                              //  Image(
+                                              //     height: displayHeight(context) *
+                                              //         0.18,
+                                              //     width:
+                                              //         displayWidth(context) * 0.4,
+                                              //     fit: BoxFit.cover,
+                                              //     image: AssetImage("images/" +
+                                              //         _allTrekkingRoutes[index]
+                                              //             .image)),
+                                              child: _isImageLoading
+                                                  ? new Center(
+                                                      child:
+                                                          new CircularProgressIndicator(),
+                                                    )
+                                                  : Image.network(
+                                                      "http://192.168.1.68:8000/images/${bookmarkedRoute.image}",
+                                                      fit: BoxFit.cover,
+                                                      height: displayHeight(
+                                                              context) *
+                                                          0.18,
+                                                      width: displayWidth(
+                                                              context) *
+                                                          0.4,
+                                                      gaplessPlayback: true,
+                                                    ),
+                                            ),
                                           ),
                                           Column(
                                             crossAxisAlignment:
@@ -346,6 +366,7 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
     setState(() {
       _bookmarkedRoute = items;
       _isLoading = false;
+      _isImageLoading = false;
       BookmarkedRoute noRoute;
       print('Bookmarked Routes are \n');
       noRoute = _bookmarkedRoute[0];

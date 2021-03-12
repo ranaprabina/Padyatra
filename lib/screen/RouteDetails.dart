@@ -70,6 +70,7 @@ class _DetailsBodyState extends State<DetailsBody>
   double longitude;
   bool _isFetchingCurrent;
   bool _isFetchingDestination;
+  bool _isImageLoading;
 
   Future getDestinationWeather() async {
     http.Response response = await http.get(
@@ -117,6 +118,7 @@ class _DetailsBodyState extends State<DetailsBody>
   void initState() {
     super.initState();
     _isLoading = true;
+    _isImageLoading = true;
     _isBookmarkButtonClicked = false;
     _presenter.loadRouteDetails(widget.selectedRoute, widget.userId);
     _isFetchingCurrent = true;
@@ -155,10 +157,23 @@ class _DetailsBodyState extends State<DetailsBody>
                     //     0.28,
                     width: double.infinity,
                     child: Stack(children: <Widget>[
-                      Image(
-                        image: AssetImage('images/AC2.png'),
-                        fit: BoxFit.fill,
-                      ),
+                      // Image(
+                      //   image: AssetImage('images/AC2.png'),
+                      //   fit: BoxFit.fill,
+                      // ),
+                      _isImageLoading
+                          ? new Center(
+                              child: new CircularProgressIndicator(),
+                            )
+                          : Container(
+                              // width: MediaQuery.of(context).size.width,
+                              // height: 400,
+                              child: Image.network(
+                                "http://192.168.1.68:8000/images/${routeDetails.image}",
+                                fit: BoxFit.fill,
+                                gaplessPlayback: true,
+                              ),
+                            ),
                       _isRouteBookmarked
                           ? IconButton(
                               icon: Icon(Icons.favorite),
@@ -663,6 +678,7 @@ class _DetailsBodyState extends State<DetailsBody>
       print(_routeDetails.length);
       routeDetails = _routeDetails[0];
       _isLoading = false;
+      _isImageLoading = false;
       routeDetails.isBookmarked
           ? _isRouteBookmarked = true
           : _isRouteBookmarked = false;

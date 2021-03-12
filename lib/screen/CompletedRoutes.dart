@@ -43,6 +43,7 @@ class _RoutesCompletedState extends State<RoutesCompleted>
   List<CompletedRoute> _completedRoute;
   bool _isLoading;
   bool _isRouteAvailable;
+  bool _isImageLoading;
 
   _RoutesCompletedState() {
     _completedRouteListPresenter = new CompletedRouteListPresenter(this);
@@ -52,6 +53,7 @@ class _RoutesCompletedState extends State<RoutesCompleted>
     super.initState();
     userId = widget.userId;
     _isLoading = true;
+    bool _isImageLoading = true;
     _isRouteAvailable = false;
     _completedRouteListPresenter.loadCompletedRoutes(userId);
   }
@@ -151,15 +153,33 @@ class _RoutesCompletedState extends State<RoutesCompleted>
                                             borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(5),
                                                 bottomLeft: Radius.circular(5)),
-                                            child: Image(
-                                                height: displayHeight(context) *
-                                                    0.18,
-                                                width:
-                                                    displayWidth(context) * 0.4,
-                                                fit: BoxFit.cover,
-                                                image: AssetImage("images/" +
-                                                    _allCompletedRoutes[index]
-                                                        .image)),
+                                            // child: Image(
+                                            //     height: displayHeight(context) *
+                                            //         0.18,
+                                            //     width:
+                                            //         displayWidth(context) * 0.4,
+                                            //     fit: BoxFit.cover,
+                                            //     image: AssetImage("images/" +
+                                            //         _allCompletedRoutes[index]
+                                            //             .image)),
+                                            child: Container(
+                                              child: _isImageLoading
+                                                  ? new Center(
+                                                      child:
+                                                          new CircularProgressIndicator(),
+                                                    )
+                                                  : Image.network(
+                                                      "http://192.168.1.68:8000/images/${completedRoute.image}",
+                                                      fit: BoxFit.cover,
+                                                      height: displayHeight(
+                                                              context) *
+                                                          0.18,
+                                                      width: displayWidth(
+                                                              context) *
+                                                          0.4,
+                                                      gaplessPlayback: true,
+                                                    ),
+                                            ),
                                           ),
                                           Column(
                                             crossAxisAlignment:
@@ -266,6 +286,7 @@ class _RoutesCompletedState extends State<RoutesCompleted>
     setState(() {
       _completedRoute = items;
       _isLoading = false;
+      _isImageLoading = false;
       CompletedRoute noCompletedRoute;
       noCompletedRoute = _completedRoute[0];
 

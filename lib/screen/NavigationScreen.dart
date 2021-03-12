@@ -124,7 +124,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                     child: GoogleMap(
                       onMapCreated: _onMapCreated,
                       initialCameraPosition: CameraPosition(
-                        target: LatLng(28.2, 83.98),
+                        target: LatLng(currentLatitude, currentLongitude),
                         zoom: 16.0,
                       ),
                       onTap: (coordinate) {
