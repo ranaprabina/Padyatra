@@ -72,6 +72,7 @@ class _DetailsBodyState extends State<DetailsBody>
   bool _isFetchingCurrent;
   bool _isFetchingDestination;
   bool _isImageLoading;
+  bool _isWayPointsAvailable;
 
   Future getDestinationWeather() async {
     http.Response response = await http.get(
@@ -120,6 +121,7 @@ class _DetailsBodyState extends State<DetailsBody>
     super.initState();
     _isLoading = true;
     _isImageLoading = true;
+    _isWayPointsAvailable = false;
     _isBookmarkButtonClicked = false;
     _presenter.loadRouteDetails(widget.selectedRoute, widget.userId);
     _isFetchingCurrent = true;
@@ -162,20 +164,22 @@ class _DetailsBodyState extends State<DetailsBody>
                       //   image: AssetImage('images/AC2.png'),
                       //   fit: BoxFit.fill,
                       // ),
-                      _isImageLoading
-                          ? new Center(
-                              child: new CircularProgressIndicator(),
-                            )
-                          : Container(
-                              // width: MediaQuery.of(context).size.width,
-                              // height: 400,
-                              child: Image.network(
+                      Container(
+                        // width: MediaQuery.of(context).size.width,
+                        // height: 400,
+                        child: _isImageLoading
+                            ? new Center(
+                                child: new CircularProgressIndicator(),
+                              )
+                            : Image.network(
                                 ApiConstants().imageBaseUrl +
                                     "${routeDetails.image}",
-                                fit: BoxFit.fill,
+                                fit: BoxFit.cover,
+                                height: displayHeight(context) * 0.35,
+                                width: displayWidth(context),
                                 gaplessPlayback: true,
                               ),
-                            ),
+                      ),
                       _isRouteBookmarked
                           ? IconButton(
                               icon: Icon(Icons.favorite),
@@ -259,13 +263,13 @@ class _DetailsBodyState extends State<DetailsBody>
                   Container(
                     alignment: Alignment.topLeft,
                     margin: EdgeInsets.symmetric(horizontal: 10),
-                    padding: EdgeInsets.fromLTRB(9, 0, 0, 0),
+                    padding: EdgeInsets.fromLTRB(9, 10, 0, 0),
                     child: Text(
                       'DESCRIPTION',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          fontFamily: 'Oswald'),
                       textAlign: TextAlign.left,
                     ),
                   ),
@@ -274,6 +278,7 @@ class _DetailsBodyState extends State<DetailsBody>
                     margin: EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       routeDetails.routeDescription,
+                      style: TextStyle(fontFamily: 'Noto Sans'),
                       // "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
                     ),
                   ),
@@ -307,11 +312,19 @@ class _DetailsBodyState extends State<DetailsBody>
                               children: <Widget>[
                                 Container(
                                   padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                  child: Text('Duration'),
+                                  child: Text(
+                                    'Duration',
+                                    style: TextStyle(fontFamily: 'Oswald'),
+                                  ),
                                 ),
                                 Container(
                                   padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                  child: Text("${routeDetails.duration} days"),
+                                  child: Text(
+                                    "${routeDetails.duration} days",
+                                    style: TextStyle(
+                                      fontFamily: 'Noto Sans',
+                                    ),
+                                  ),
                                 )
                               ],
                             ),
@@ -324,11 +337,17 @@ class _DetailsBodyState extends State<DetailsBody>
                               children: <Widget>[
                                 Container(
                                   padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                  child: Text('Length'),
+                                  child: Text(
+                                    'Length',
+                                    style: TextStyle(fontFamily: 'Oswald'),
+                                  ),
                                 ),
                                 Container(
                                   padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                  child: Text("${routeDetails.length} km"),
+                                  child: Text(
+                                    "${routeDetails.length} km",
+                                    style: TextStyle(fontFamily: 'Noto Sans'),
+                                  ),
                                 )
                               ],
                             ),
@@ -341,11 +360,17 @@ class _DetailsBodyState extends State<DetailsBody>
                               children: <Widget>[
                                 Container(
                                   padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                  child: Text('Altitude'),
+                                  child: Text(
+                                    'Altitude',
+                                    style: TextStyle(fontFamily: 'Oswald'),
+                                  ),
                                 ),
                                 Container(
                                   padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                  child: Text("${routeDetails.altitude} m"),
+                                  child: Text(
+                                    "${routeDetails.altitude} m",
+                                    style: TextStyle(fontFamily: 'Noto Sans'),
+                                  ),
                                 )
                               ],
                             ),
@@ -365,6 +390,7 @@ class _DetailsBodyState extends State<DetailsBody>
                       'Current Weather',
                       style: TextStyle(
                         fontSize: 18,
+                        fontFamily: 'Oswald',
                       ),
                     ),
                   ),
@@ -453,7 +479,10 @@ class _DetailsBodyState extends State<DetailsBody>
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               'paper works and permits',
-                              style: TextStyle(fontSize: 18),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontFamily: 'Oswald',
+                              ),
                             ),
                           ),
                           Padding(
@@ -463,13 +492,25 @@ class _DetailsBodyState extends State<DetailsBody>
                               text: TextSpan(
                                   text:
                                       'Conservational and National Park Permit: ',
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Noto Sans',
+                                  ),
                                   children: <TextSpan>[
                                     TextSpan(
-                                        text: 'required',
-                                        style: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold))
+                                      text:
+                                          routeDetails.conservationalPermit == 1
+                                              ? 'required'
+                                              : 'not required',
+                                      style: TextStyle(
+                                        color:
+                                            routeDetails.conservationalPermit ==
+                                                    1
+                                                ? Colors.red
+                                                : Colors.teal,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
                                   ]),
                             ),
                           ),
@@ -480,13 +521,22 @@ class _DetailsBodyState extends State<DetailsBody>
                               text: TextSpan(
                                   text:
                                       'Trekkers Information Management System(TIMS) Card: ',
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Noto Sans',
+                                  ),
                                   children: <TextSpan>[
                                     TextSpan(
-                                        text: 'required',
-                                        style: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold))
+                                      text: routeDetails.timsPermit == 1
+                                          ? 'required'
+                                          : 'not required',
+                                      style: TextStyle(
+                                        color: routeDetails.timsPermit == 1
+                                            ? Colors.red
+                                            : Colors.teal,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
                                   ]),
                             ),
                           ),
@@ -495,13 +545,25 @@ class _DetailsBodyState extends State<DetailsBody>
                             child: RichText(
                               text: TextSpan(
                                   text: 'Restricted area entry Permit: ',
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'Noto Sans',
+                                  ),
                                   children: <TextSpan>[
                                     TextSpan(
-                                        text: 'required',
-                                        style: TextStyle(
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.bold))
+                                      text:
+                                          routeDetails.restrictedAreaPermit == 1
+                                              ? 'required'
+                                              : 'not required',
+                                      style: TextStyle(
+                                        color:
+                                            routeDetails.restrictedAreaPermit ==
+                                                    1
+                                                ? Colors.red
+                                                : Colors.teal,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
                                   ]),
                             ),
                           ),
@@ -509,7 +571,10 @@ class _DetailsBodyState extends State<DetailsBody>
                             padding: const EdgeInsets.only(left: 8.0, top: 13),
                             child: Text(
                               'View more about required documents for permits.',
-                              style: TextStyle(fontSize: 15),
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Noto Sans',
+                              ),
                             ),
                           ),
                           Padding(
@@ -569,7 +634,10 @@ class _DetailsBodyState extends State<DetailsBody>
                                   const EdgeInsets.only(top: 20.0, left: 15),
                               child: Text(
                                 'WayPoints',
-                                style: TextStyle(fontSize: 16),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'Oswald',
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -592,29 +660,63 @@ class _DetailsBodyState extends State<DetailsBody>
                                                 BorderRadius.circular(16),
                                           ),
                                           elevation: 0.0,
-                                          title: Text('WayPoints'),
+                                          title: Text(
+                                            'WayPoints',
+                                            style: TextStyle(
+                                              fontFamily: 'Oswald',
+                                            ),
+                                          ),
                                           content: Container(
                                             height:
                                                 displayHeight(context) * 0.15,
                                             width: 400.0,
-                                            child: ListView.builder(
-                                                itemCount: wayItems.length,
-                                                itemBuilder: (BuildContext ctxt,
-                                                    int index) {
-                                                  return new RichText(
-                                                    text: TextSpan(
-                                                        text: '${index + 1}. ',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.black),
-                                                        children: <TextSpan>[
-                                                          TextSpan(
+                                            child: _isWayPointsAvailable
+                                                ? ListView.builder(
+                                                    itemCount: routeDetails
+                                                        .wayPoints.length,
+                                                    itemBuilder:
+                                                        (BuildContext ctxt,
+                                                            int index) {
+                                                      return new RichText(
+                                                        text: TextSpan(
                                                             text:
-                                                                '${wayItems[index]}',
-                                                          )
-                                                        ]),
-                                                  );
-                                                }),
+                                                                '${index + 1}. ',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 14,
+                                                              fontFamily:
+                                                                  'Noto Sans',
+                                                            ),
+                                                            children: <
+                                                                TextSpan>[
+                                                              TextSpan(
+                                                                  text: routeDetails
+                                                                      .wayPoints[
+                                                                          index]
+                                                                      .wayPointName,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'Noto Sans',
+                                                                  ))
+                                                            ]),
+                                                      );
+                                                    })
+                                                : Center(
+                                                    child: RichText(
+                                                        text: TextSpan(
+                                                      text:
+                                                          'Way points not available',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16,
+                                                        fontFamily: 'Oswald',
+                                                      ),
+                                                    )),
+                                                  ),
                                           ),
                                           actions: <Widget>[
                                             FlatButton(
@@ -676,9 +778,12 @@ class _DetailsBodyState extends State<DetailsBody>
   void onLoadRouteDetailsComplete(List<RouteDetails> items) {
     setState(() {
       _routeDetails = items;
-      print("length of _routeDetails is");
-      print(_routeDetails.length);
       routeDetails = _routeDetails[0];
+      if (routeDetails.wayPoints.length != 0) {
+        _isWayPointsAvailable = true;
+      } else {
+        _isWayPointsAvailable = false;
+      }
       _isLoading = false;
       _isImageLoading = false;
       routeDetails.isBookmarked
