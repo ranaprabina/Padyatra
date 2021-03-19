@@ -10,9 +10,9 @@ class MockUserLogin implements UserLoginRepository {
 var serverResponse = <UserLogin>[
   new UserLogin(
     serverResponseMessage: "login_success",
-    userId: '5',
-    email: "hari@gmail.com",
-    name: "Hari",
+    userId: '1',
+    email: "test@test.com",
+    name: "test",
     token: 'asdasgdfg34456sdgdr6r67regdr56e56',
   )
 ];
