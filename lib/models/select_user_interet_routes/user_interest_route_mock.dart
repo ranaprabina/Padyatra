@@ -10,39 +10,39 @@ class MockUserInterestRoute implements UserInterestRouteRepository {
 }
 
 var routes = <UserInterestRoute>[
-  new UserInterestRoute(
-    serverResponse: "categories_not_selected",
-  ),
+  // new UserInterestRoute(
+  //   serverResponse: "categories_not_selected",
+  // ),
   new UserInterestRoute(
     routeId: "ABC Trek",
-    routeName: "Annapurna Base Camp",
-    image: "AC1.png",
+    routeName: "Annapurna Base Camp Trek",
+    image: "Annapurna01.jpg",
     length: 112,
-    duration: "12 days",
+    duration: "12",
     difficulty: "Hard",
   ),
   new UserInterestRoute(
     routeId: "Mardi",
     routeName: "Mardi Himal Trek",
-    image: "AC2.png",
+    image: "Mardi03.jpg",
     length: 112,
-    duration: "12 days",
+    duration: "12",
     difficulty: "Moderate",
   ),
   new UserInterestRoute(
     routeId: "ABC Trek",
-    routeName: "Annapurna Base Camp",
-    image: "AC3.png",
+    routeName: "Annapurna Base Camp Trek",
+    image: "Annapurna01.jpg",
     length: 112,
-    duration: "12 days",
+    duration: "12",
     difficulty: "Hard",
   ),
   new UserInterestRoute(
     routeId: "ABC Trek",
-    routeName: "Annapurna Base Camp",
-    image: "AC4.png",
+    routeName: "Annapurna Base Camp Trek",
+    image: "Annapurna01.jpg",
     length: 112,
-    duration: "12 days",
+    duration: "12",
     difficulty: "Hard",
   ),
 ];
