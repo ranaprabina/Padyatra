@@ -37,14 +37,21 @@ class RequiredDocument extends StatelessWidget {
                 ),
                 Text(
                   'Documents Required',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Oswald',
+                  ),
                 ),
                 SizedBox(
                   height: displayHeight(context) * 0.02,
                 ),
                 Text(
                   'Authorised agencies can apply for trekking permits along with following documnets',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Noto Sans',
+                  ),
                 ),
                 Container(
                   height: displayHeight(context) * 0.41,
@@ -57,14 +64,19 @@ class RequiredDocument extends StatelessWidget {
                     text: TextSpan(
                         text: 'Note',
                         style: TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.bold),
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Oswald',
+                        ),
                         children: <TextSpan>[
                       TextSpan(
                           text:
                               ': Restricted area entry permits is only obtainable through local agencies and you are not allowed to travel alone in these areas, meaning you should have at least one guide or porter when trekking.',
                           style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal))
+                            color: Colors.black,
+                            fontWeight: FontWeight.normal,
+                            fontFamily: 'Noto Sans',
+                          ))
                     ])),
                 SizedBox(
                   height: displayHeight(context) * 0.04,
