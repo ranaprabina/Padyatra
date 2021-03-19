@@ -11,9 +11,9 @@ class MockUserSignUp implements UserSignUpRepository {
 var serverResponse = <UserSignUp>[
   new UserSignUp(
     serverResponseMessage: "new_user_inserted_successfully",
-    userId: '5',
-    email: "john@gmail.com",
-    name: "John",
+    userId: '2',
+    email: "test@test.com",
+    name: "test",
     message: "The email was already taken",
     token: "Doe",
   )
