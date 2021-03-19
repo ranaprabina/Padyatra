@@ -15,27 +15,29 @@ class GetRouteCoordinates {
 }
 
 class Coordinates {
-  List routeCoords;
+  List<RouteCoords> routeCoords;
 
   Coordinates({
     this.routeCoords,
   });
   Coordinates.toMap(Map<String, dynamic> map)
-      : routeCoords = map['route_coords'];
+      : routeCoords = List<RouteCoords>.from(
+                map['route_coords'].map((rC) => new RouteCoords.fromMap(rC)))
+            .toList();
 }
 
-// class RouteCoords {
-//   double latitude;
-//   double longitude;
+class RouteCoords {
+  double latitude;
+  double longitude;
 
-//   RouteCoords({
-//     this.latitude,
-//     this.longitude,
-//   });
-//   RouteCoords.forMap(Map<String, dynamic> map)
-//       : latitude = map['lat'].toDouble(),
-//         longitude = map['lng'].toDouble();
-// }
+  RouteCoords({
+    this.latitude,
+    this.longitude,
+  });
+  RouteCoords.fromMap(Map<String, dynamic> map)
+      : latitude = map['lat'].toDouble(),
+        longitude = map['lng'].toDouble();
+}
 
 abstract class GetRouteCoordinatesRepository {
   Future<List<GetRouteCoordinates>> getRouteCoordinates();
