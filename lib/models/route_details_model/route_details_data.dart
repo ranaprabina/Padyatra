@@ -14,6 +14,7 @@ class RouteDetails {
   int altitude;
   String documentsDetils;
   bool isBookmarked;
+  List<WayPoints> wayPoints;
 
   RouteDetails(
       {this.routeId,
@@ -28,7 +29,8 @@ class RouteDetails {
       this.restrictedAreaPermit,
       this.altitude,
       this.documentsDetils,
-      this.isBookmarked});
+      this.isBookmarked,
+      this.wayPoints});
 
   RouteDetails.toMap(Map<String, dynamic> map)
       : routeId = map['route_id'],
@@ -42,8 +44,34 @@ class RouteDetails {
         timsPermit = map['tims_permit'],
         restrictedAreaPermit = map['r_a_permit'],
         altitude = map['route_altitude'],
-        documentsDetils = map['documents_info'],
-        isBookmarked = map['isBookmarked'];
+        documentsDetils = map['documentInformation'],
+        isBookmarked = map['isBookmarked'],
+        wayPoints = List<WayPoints>.from(
+            map['wayPoints'].map((wP) => new WayPoints.fromMap(wP))).toList();
+}
+
+class WayPoints {
+  int wayId;
+  String routeId;
+  String wayPointName;
+  String wayPointDescription;
+  double wayLatitude;
+  double wayLongitude;
+  WayPoints({
+    this.wayId,
+    this.routeId,
+    this.wayPointName,
+    this.wayPointDescription,
+    this.wayLatitude,
+    this.wayLongitude,
+  });
+  WayPoints.fromMap(Map<String, dynamic> map)
+      : wayId = map['way_id'],
+        routeId = map['route_id'],
+        wayPointName = map['way_point_name'],
+        wayPointDescription = map["way_point_description"],
+        wayLatitude = map['way_latitude'].toDouble(),
+        wayLongitude = map['way_longitude'].toDouble();
 }
 
 abstract class RouteDetailsRepository {
