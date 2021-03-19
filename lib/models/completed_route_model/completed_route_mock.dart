@@ -11,7 +11,9 @@ var completedRoute = <CompletedRoute>[
   new CompletedRoute(
     routeId: "PoonHill",
     routeName: "Poon Hill Trek",
+    image: "PoonHill.jpg",
     duration: '4',
+    routeLength: "40",
     completedId: '2',
     totalTrekkedDays: '4',
     trekStartedAt: "2020-11-28 21:01:22",
@@ -20,7 +22,9 @@ var completedRoute = <CompletedRoute>[
   new CompletedRoute(
     routeId: "Langtang Trek",
     routeName: "Langtang Valley Trek",
+    image: "Langtang.jpg",
     duration: '11',
+    routeLength: "'100",
     completedId: '4',
     totalTrekkedDays: '11',
     trekStartedAt: "2020-11-20 17:40:13",
@@ -29,7 +33,9 @@ var completedRoute = <CompletedRoute>[
   new CompletedRoute(
     routeId: "Mardi",
     routeName: "Mardi Himal Trek",
+    image: "Mardi03.jpg",
     duration: '4',
+    routeLength: "40",
     completedId: '2',
     totalTrekkedDays: '4',
     trekStartedAt: "2020-11-28 21:01:22",
