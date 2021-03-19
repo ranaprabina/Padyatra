@@ -24,7 +24,11 @@ class Passport extends StatelessWidget {
           return new RichText(
             text: TextSpan(
                 text: '${index + 1}. ',
-                style: TextStyle(color: Colors.black, fontSize: 16),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontFamily: 'Noto Sans',
+                ),
                 children: <TextSpan>[
                   TextSpan(
                     text: '${litems[index]}',
