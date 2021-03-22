@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:padyatra/presenter/routes_details_presenter.dart';
 import 'package:padyatra/models/route_details_model/route_details_data.dart';
 import 'package:padyatra/screen/NavigationScreen.dart';
+import 'package:padyatra/screen/SignUp.dart';
 import 'package:padyatra/screen/documents_required.dart';
 import 'package:padyatra/services/api.dart';
 import 'package:padyatra/services/api_constants.dart';
@@ -132,6 +133,64 @@ class _DetailsBodyState extends State<DetailsBody>
   }
 
   RouteDetails routeDetails;
+  Widget _LoginCheckWidget() {
+    showDialog(
+        barrierColor: Colors.black54,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // backgroundColor: ,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            title: new Text(
+              "login required",
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: new Text(
+              "make sure that you've an account before navigating",
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            actions: [
+              new MaterialButton(
+                textColor: Theme.of(context).accentColor,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'cancel',
+                  style: TextStyle(
+                    fontSize: 15.0,
+                  ),
+                ),
+              ),
+              new MaterialButton(
+                textColor: Theme.of(context).accentColor,
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => SignUp(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'sign-up',
+                  style: TextStyle(
+                    fontSize: 15.0,
+                  ),
+                ),
+              )
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -243,10 +302,16 @@ class _DetailsBodyState extends State<DetailsBody>
                               borderRadius: BorderRadius.circular(15)),
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(7, 0, 0, 0),
-                            child: FlatButton(
+                            child: TextButton(
                               onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => NavigationScreen()));
+                                if (widget.userId != null) {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              NavigationScreen()));
+                                } else {
+                                  _LoginCheckWidget();
+                                }
                               },
                               child: Text(
                                 'navigate',
@@ -409,15 +474,17 @@ class _DetailsBodyState extends State<DetailsBody>
                                 child: Text('Current Location'),
                               ),
                               Container(
-                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                  child: _isFetchingCurrent
-                                      ? new Center(
-                                          child:
-                                              new CircularProgressIndicator(),
-                                        )
-                                      : Image(
-                                          image: NetworkImage(
-                                              'http://openweathermap.org/img/w/$weatherIcon.png')))
+                                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                child: _isFetchingCurrent
+                                    ? new Center(
+                                        child: new CircularProgressIndicator(),
+                                      )
+                                    : Image(
+                                        image: NetworkImage(
+                                          'http://openweathermap.org/img/w/$weatherIcon.png',
+                                        ),
+                                      ),
+                              ),
                             ],
                           ),
                         ),
@@ -432,20 +499,16 @@ class _DetailsBodyState extends State<DetailsBody>
                                 child: Text('Destination'),
                               ),
                               Container(
-                                  child: _isFetchingDestination
-                                      ? new Center(
-                                          child:
-                                              new CircularProgressIndicator(),
-                                        )
-                                      : Image(
-                                          image: NetworkImage(
-                                              'http://openweathermap.org/img/w/$condition.png'))
-                                  // Icon(
-                                  //   Icons.wb_sunny,
-                                  //   size: 60,
-                                  //   color: Colors.yellow,
-                                  // ),
-                                  )
+                                child: _isFetchingDestination
+                                    ? new Center(
+                                        child: new CircularProgressIndicator(),
+                                      )
+                                    : Image(
+                                        image: NetworkImage(
+                                          'http://openweathermap.org/img/w/$condition.png',
+                                        ),
+                                      ),
+                              )
                             ],
                           ),
                         )
