@@ -9,7 +9,7 @@ class ProdInsertUserInterestRouteCategoryRepository
       String categoryName, String userId) async {
     var data = {
       'categoryName': categoryName,
-      'userId': userId,
+      'u_id': userId,
     };
     var response =
         await ApiCall().postData(data, 'trekkingRoutes/insertUserInterest');

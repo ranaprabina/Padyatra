@@ -7,7 +7,7 @@ class ProdBookmarkedRouteRepository implements BookmarkedRouteRepository {
   @override
   Future<List<BookmarkedRoute>> fetchBookmarkedRoutes(String userId) async {
     var data = {
-      'id': userId,
+      'u_id': userId,
     };
     var response = await ApiCall().postData(data, 'bookmarkedRoute');
     final responseBody = jsonDecode(response.body);

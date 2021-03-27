@@ -47,8 +47,14 @@ class _RecentlyAddedState extends State<RecentlyAdded>
   @override
   Widget build(BuildContext context) {
     return _isLoading
-        ? new Center(
-            child: new CircularProgressIndicator(),
+        ? Container(
+            height: (displayHeight(context) -
+                    MediaQuery.of(context).padding.top -
+                    kToolbarHeight) *
+                0.42,
+            child: new Center(
+              child: new CircularProgressIndicator(),
+            ),
           )
         : Container(
             child: _isRouteAvailable

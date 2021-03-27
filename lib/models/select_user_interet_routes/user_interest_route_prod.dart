@@ -7,7 +7,7 @@ class ProdUserInterestRouteRepository implements UserInterestRouteRepository {
   @override
   Future<List<UserInterestRoute>> fetchRoutes(String userId) async {
     var data = {
-      'userId': userId,
+      'u_id': userId,
     };
     var response = await ApiCall()
         .postData(data, 'trekkingRoutes/userInterestedTrekkingRoute');
