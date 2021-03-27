@@ -7,7 +7,7 @@ class ProdCompletedRouteRepository implements CompletedRouteRepository {
   @override
   Future<List<CompletedRoute>> fetchCompletedRoutes(String userId) async {
     var data = {
-      'id': userId,
+      'u_id': userId,
     };
     var response = await ApiCall().postData(data, 'completedRoutes');
     final responseBody = jsonDecode(response.body);

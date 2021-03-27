@@ -5,7 +5,7 @@ class RouteDetails {
   String routeName;
   String image;
   String routeDescription;
-  int length;
+  var length;
   String duration;
   String difficulty;
   int conservationalPermit;

@@ -9,7 +9,7 @@ class ProdRouteDetailsRepository implements RouteDetailsRepository {
       String selectedRouteName, String userId) async {
     var data = {
       'routeName': selectedRouteName,
-      'id': userId,
+      'u_id': userId,
     };
     var response =
         await ApiCall().postData(data, 'trekkingRoutes/routeDetails');
