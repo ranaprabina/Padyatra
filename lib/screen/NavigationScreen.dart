@@ -3,10 +3,17 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:location/location.dart';
 import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_data.dart';
+import 'package:padyatra/models/route_details_model/route_details_data.dart';
 import 'package:padyatra/presenter/get_route_coordinates_presenter.dart';
 import '../control_sizes.dart';
 
 class NavigationScreen extends StatefulWidget {
+  final List<WayPoints> wayPoints;
+
+  const NavigationScreen({
+    Key key,
+    this.wayPoints,
+  }) : super(key: key);
   @override
   _NavigationScreenState createState() => _NavigationScreenState();
 }
@@ -18,7 +25,7 @@ class _NavigationScreenState extends State<NavigationScreen>
   List<GetRouteCoordinates> _getRouteCoordinatesServerResponse;
   List<LatLng> _routeCoordinates = [];
   Set<Polyline> polyline = {};
-
+  var listenLocationData;
   bool _isRoutePathAvailable;
   _NavigationScreenState() {
     _getRouteCoordinatesListPresenter =
@@ -32,8 +39,9 @@ class _NavigationScreenState extends State<NavigationScreen>
   LatLng _lastMapPosition = _centre;
   static double currentLatitude;
   static double currentLongitude;
-  bool _isLoading = true;
+  bool _isLoading;
   final List<Circle> circle = [];
+  Set<Marker> wayPointMarkers = {};
 
   void _createPolyLine(List<LatLng> routeCoordinates) {
     polyline.add(Polyline(
@@ -48,18 +56,19 @@ class _NavigationScreenState extends State<NavigationScreen>
   }
 
   Future getCurrentLocation() async {
-    location.onLocationChanged.listen(
+    listenLocationData = location.onLocationChanged.listen(
       (currentLocation) {
-        final latitude = currentLocation.latitude;
-        final longitude = currentLocation.longitude;
-
-        setState(
-          () {
-            currentLatitude = latitude;
-            currentLongitude = longitude;
+        currentLatitude = currentLocation.latitude;
+        currentLongitude = currentLocation.longitude;
+        if (currentLatitude != null && currentLongitude != null) {
+          setState(() {
             _isLoading = false;
-          },
-        );
+          });
+        } else {
+          setState(() {
+            _isLoading = true;
+          });
+        }
       },
     );
   }
@@ -67,9 +76,32 @@ class _NavigationScreenState extends State<NavigationScreen>
   @override
   void initState() {
     super.initState();
+    _isLoading = true;
     _isRoutePathAvailable = false;
     getCurrentLocation();
     _getRouteCoordinatesListPresenter.loadServerResponseCoordinates();
+  }
+
+  void _createWayPointsMarkers() {
+    if (widget.wayPoints.isEmpty) {
+      wayPointMarkers = {};
+    } else {
+      widget.wayPoints.forEach((element) {
+        LatLng wayPointsMarkerCoords =
+            LatLng(element.wayLatitude, element.wayLongitude);
+        print(element.wayPointName);
+        wayPointMarkers.add(Marker(
+          markerId: MarkerId(element.wayId.toString()),
+          position: wayPointsMarkerCoords,
+          draggable: false,
+          infoWindow: InfoWindow(
+            title: element.wayPointName,
+            snippet: element.wayPointDescription,
+          ),
+          icon: BitmapDescriptor.defaultMarker,
+        ));
+      });
+    }
   }
 
   static final CameraPosition _currentPostion = CameraPosition(
@@ -124,6 +156,7 @@ class _NavigationScreenState extends State<NavigationScreen>
 
   Widget currentLocationButton(Function function, IconData icon) {
     return FloatingActionButton(
+      heroTag: "currentLocationButton",
       onPressed: function,
       materialTapTargetSize: MaterialTapTargetSize.padded,
       backgroundColor: Colors.blue,
@@ -132,6 +165,12 @@ class _NavigationScreenState extends State<NavigationScreen>
         size: 36.0,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    listenLocationData.cancel();
+    super.dispose();
   }
 
   @override
@@ -153,8 +192,11 @@ class _NavigationScreenState extends State<NavigationScreen>
                     child: GoogleMap(
                       onMapCreated: _onMapCreated,
                       initialCameraPosition: CameraPosition(
-                        target: LatLng(currentLatitude, currentLongitude),
-                        zoom: 16.0,
+                        target: wayPointMarkers.isEmpty
+                            ? LatLng(currentLatitude, currentLongitude)
+                            : LatLng(widget.wayPoints[0].wayLatitude,
+                                widget.wayPoints[0].wayLongitude),
+                        zoom: wayPointMarkers.isEmpty ? 16.0 : 10.0,
                       ),
                       onTap: (coordinate) {
                         setState(
@@ -172,6 +214,7 @@ class _NavigationScreenState extends State<NavigationScreen>
                       circles: Set.from(circle),
                       onCameraMove: _onCameraMove,
                       polylines: polyline,
+                      markers: wayPointMarkers,
                     ),
                   ),
             Positioned(
@@ -199,6 +242,7 @@ class _NavigationScreenState extends State<NavigationScreen>
               _coordinates[index].latitude, _coordinates[index].longitude));
         }
         setState(() {
+          _createWayPointsMarkers();
           _isRoutePathAvailable = true;
         });
       } else {
@@ -215,7 +259,8 @@ class _NavigationScreenState extends State<NavigationScreen>
 
   @override
   void onGetRouteCoordinatesError() {
-    throw new FetchDataException1();
+    throw new FetchDataException1(
+        "Error_Occured: Unable to fetch Route geo coordinates.");
   }
 }
 
@@ -230,6 +275,7 @@ class _MyFloatingActionButtonState extends State<MyFloatingActionButton> {
   Widget build(BuildContext context) {
     return showFab
         ? FloatingActionButton(
+            heroTag: "navigationStatusButton",
             child: Icon(Icons.arrow_upward),
             backgroundColor: Hexcolor('#9EABE4'),
             onPressed: () {
