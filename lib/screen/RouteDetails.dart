@@ -12,6 +12,7 @@ import 'package:padyatra/screen/SignUp.dart';
 import 'package:padyatra/screen/documents_required.dart';
 import 'package:padyatra/services/api.dart';
 import 'package:padyatra/services/api_constants.dart';
+import 'package:padyatra/services/currentLocation.dart';
 
 class RouteDetailsScreen extends StatefulWidget {
   final searchedRouteName;
@@ -96,10 +97,11 @@ class _DetailsBodyState extends State<DetailsBody>
   }
 
   Future<dynamic> getCurrentWeather() async {
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
-    latitude = position.latitude;
-    longitude = position.longitude;
+    // Position position = await Geolocator()
+    //     .getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+    var coordinate = await CurrentLocation().getLocation();
+    latitude = coordinate.latitude;
+    longitude = coordinate.longitude;
     http.Response response = await http.get(
         'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=3357133e7c49f87feaa30590acaa4824&units=metric');
     var decodedData = jsonDecode(response.body);
@@ -305,10 +307,12 @@ class _DetailsBodyState extends State<DetailsBody>
                             child: TextButton(
                               onPressed: () {
                                 if (widget.userId != null) {
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              NavigationScreen()));
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => NavigationScreen(
+                                          wayPoints: routeDetails.wayPoints),
+                                    ),
+                                  );
                                 } else {
                                   _LoginCheckWidget();
                                 }
@@ -521,7 +525,7 @@ class _DetailsBodyState extends State<DetailsBody>
                   Padding(
                     padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
                     child: Container(
-                      height: displayHeight(context) * 0.28,
+                      // height: displayHeight(context) * 0.28,
                       width: displayWidth(context) * 1,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
