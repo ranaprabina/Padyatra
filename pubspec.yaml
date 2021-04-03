@@ -21,7 +21,7 @@ dependencies:
   google_maps_flutter: ^0.5.3
   toast: ^0.1.5
   fluttertoast: ^7.1.1
-  geolocator: ^3.0.1
+  geofence_flutter: ^1.1.0
   shared_preferences: ^0.5.12+4
 
 
