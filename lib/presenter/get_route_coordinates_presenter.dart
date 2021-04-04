@@ -14,9 +14,9 @@ class GetRouteCoordinatesListPresenter {
     _repository = new Injector().getRouteCoordinatesRepository;
   }
 
-  void loadServerResponseCoordinates() {
+  void loadServerResponseCoordinates(String routeID) {
     _repository
-        .getRouteCoordinates()
+        .getRouteCoordinates(routeID)
         .then((sR) => _viewContract.onGetRouteCoordinatesComplete(sR))
         .catchError((onError) => _viewContract.onGetRouteCoordinatesError());
   }
