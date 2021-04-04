@@ -198,23 +198,22 @@ class MapScreenState extends State<ProfilePage>
                                     left: 25.0,
                                     right: 25.0,
                                     top: 15.0,
-                                    bottom: 15),
+                                    bottom: 10),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
-                                    Container(
-                                      child: Text(
-                                        userName,
+                                    Flexible(
+                                      child: new TextField(
+                                        decoration: InputDecoration(
+                                            hintText: "$userName",
+                                            hintStyle:
+                                                TextStyle(color: Colors.black)),
+                                        enabled: !_status,
+                                        autofocus: !_status,
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
-                              ),
-                              Divider(
-                                color: Colors.grey,
-                                height: 5,
-                                indent: 25,
-                                endIndent: 15,
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
@@ -243,23 +242,22 @@ class MapScreenState extends State<ProfilePage>
                                     left: 25.0,
                                     right: 25.0,
                                     top: 15.0,
-                                    bottom: 15),
+                                    bottom: 10),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
-                                    Container(
-                                      child: Text(
-                                        name,
+                                    Flexible(
+                                      child: new TextField(
+                                        decoration: InputDecoration(
+                                            hintText: "$name",
+                                            hintStyle:
+                                                TextStyle(color: Colors.black)),
+                                        enabled: !_status,
+                                        autofocus: !_status,
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
-                              ),
-                              Divider(
-                                color: Colors.grey,
-                                height: 5,
-                                indent: 25,
-                                endIndent: 15,
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
@@ -288,23 +286,22 @@ class MapScreenState extends State<ProfilePage>
                                     left: 25.0,
                                     right: 25.0,
                                     top: 15.0,
-                                    bottom: 15),
+                                    bottom: 10),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
-                                    Container(
-                                      child: Text(
-                                        email,
+                                    Flexible(
+                                      child: new TextField(
+                                        decoration: InputDecoration(
+                                            hintText: "$email",
+                                            hintStyle:
+                                                TextStyle(color: Colors.black)),
+                                        enabled: !_status,
+                                        autofocus: !_status,
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
-                              ),
-                              Divider(
-                                color: Colors.grey,
-                                height: 5,
-                                indent: 25,
-                                endIndent: 15,
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
