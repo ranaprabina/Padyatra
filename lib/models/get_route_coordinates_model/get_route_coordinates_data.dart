@@ -40,7 +40,7 @@ class RouteCoords {
 }
 
 abstract class GetRouteCoordinatesRepository {
-  Future<List<GetRouteCoordinates>> getRouteCoordinates();
+  Future<List<GetRouteCoordinates>> getRouteCoordinates(String routeID);
 }
 
 class FetchDataException1 implements Exception {

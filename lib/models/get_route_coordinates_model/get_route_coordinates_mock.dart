@@ -3,7 +3,7 @@ import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinate
 
 class MockGetRouteCoordinates implements GetRouteCoordinatesRepository {
   @override
-  Future<List<GetRouteCoordinates>> getRouteCoordinates() {
+  Future<List<GetRouteCoordinates>> getRouteCoordinates(String routeID) {
     return new Future.value(serverResponse);
   }
 }
