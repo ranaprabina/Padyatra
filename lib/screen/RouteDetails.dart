@@ -310,6 +310,7 @@ class _DetailsBodyState extends State<DetailsBody>
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => NavigationScreen(
+                                          routeID: routeDetails.routeId,
                                           wayPoints: routeDetails.wayPoints),
                                     ),
                                   );
