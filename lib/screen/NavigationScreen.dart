@@ -8,12 +8,11 @@ import 'package:padyatra/presenter/get_route_coordinates_presenter.dart';
 import '../control_sizes.dart';
 
 class NavigationScreen extends StatefulWidget {
+  final routeID;
   final List<WayPoints> wayPoints;
 
-  const NavigationScreen({
-    Key key,
-    this.wayPoints,
-  }) : super(key: key);
+  const NavigationScreen({Key key, this.wayPoints, this.routeID})
+      : super(key: key);
   @override
   _NavigationScreenState createState() => _NavigationScreenState();
 }
@@ -79,7 +78,8 @@ class _NavigationScreenState extends State<NavigationScreen>
     _isLoading = true;
     _isRoutePathAvailable = false;
     getCurrentLocation();
-    _getRouteCoordinatesListPresenter.loadServerResponseCoordinates();
+    _getRouteCoordinatesListPresenter
+        .loadServerResponseCoordinates(widget.routeID);
   }
 
   void _createWayPointsMarkers() {
@@ -259,8 +259,13 @@ class _NavigationScreenState extends State<NavigationScreen>
 
   @override
   void onGetRouteCoordinatesError() {
-    throw new FetchDataException1(
-        "Error_Occured: Unable to fetch Route geo coordinates.");
+    _isRoutePathAvailable = false;
+    try {
+      throw new FetchDataException1(
+          "Error_Occured: Unable to fetch Route geo coordinates.");
+    } catch (e) {
+      print(e);
+    }
   }
 }
 
