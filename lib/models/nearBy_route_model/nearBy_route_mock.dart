@@ -16,14 +16,14 @@ var routes = <NearByRoute>[
     image: "Annapurna01.jpg",
     routeLength: "112",
     duration: "12",
-    difficulty: "Hard",
+    category: "Hard",
   ),
   new NearByRoute(
     routeId: "Mardi",
     routeName: "Mardi Himal Trek",
     image: "Mardi03.jpg",
     routeLength: "112",
-    difficulty: "Hard",
+    category: "Hard",
     duration: "12",
   ),
   new NearByRoute(
@@ -31,7 +31,7 @@ var routes = <NearByRoute>[
     routeName: "Manaslu Circuit",
     image: "Manaslu.jpg",
     routeLength: "112",
-    difficulty: "Hard",
+    category: "Hard",
     duration: "12",
   ),
   new NearByRoute(
@@ -39,7 +39,7 @@ var routes = <NearByRoute>[
     routeName: "Poon Hill Trek",
     image: "PoonHill.jpg",
     routeLength: "112",
-    difficulty: "Hard",
+    category: "Hard",
     duration: "12",
   ),
 ];

@@ -7,7 +7,7 @@ class UserInterestRoute {
   String image;
   int length;
   String duration;
-  String difficulty;
+  String category;
 
   UserInterestRoute({
     this.serverResponse,
@@ -16,7 +16,7 @@ class UserInterestRoute {
     this.image,
     this.length,
     this.duration,
-    this.difficulty,
+    this.category,
   });
   UserInterestRoute.fromMap(Map<String, dynamic> map)
       : serverResponse = map['Response'],
@@ -25,7 +25,7 @@ class UserInterestRoute {
         routeName = map['route_name'],
         length = map['route_length'],
         duration = map['duration'],
-        difficulty = map['difficulty'];
+        category = map['category'];
 }
 
 abstract class UserInterestRouteRepository {

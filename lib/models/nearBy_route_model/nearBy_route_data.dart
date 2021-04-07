@@ -5,7 +5,7 @@ class NearByRoute {
   String image;
   String routeLength;
   String duration;
-  String difficulty;
+  String category;
   NearByRoute({
     this.response,
     this.routeId,
@@ -13,7 +13,7 @@ class NearByRoute {
     this.image,
     this.routeLength,
     this.duration,
-    this.difficulty,
+    this.category,
   });
 
   NearByRoute.toMap(Map<String, dynamic> map)
@@ -23,7 +23,7 @@ class NearByRoute {
         image = map['image'],
         routeLength = map['route_length'].toString(),
         duration = map['duration'],
-        difficulty = map['difficulty'];
+        category = map['category'];
 }
 
 abstract class NearByRouteRepository {

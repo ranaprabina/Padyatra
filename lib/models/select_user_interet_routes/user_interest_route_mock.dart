@@ -19,7 +19,7 @@ var routes = <UserInterestRoute>[
     image: "Annapurna01.jpg",
     length: 112,
     duration: "12",
-    difficulty: "Hard",
+    category: "Hard",
   ),
   new UserInterestRoute(
     routeId: "Mardi",
@@ -27,7 +27,7 @@ var routes = <UserInterestRoute>[
     image: "Mardi03.jpg",
     length: 112,
     duration: "12",
-    difficulty: "Moderate",
+    category: "Moderate",
   ),
   new UserInterestRoute(
     routeId: "ABC Trek",
@@ -35,7 +35,7 @@ var routes = <UserInterestRoute>[
     image: "Annapurna01.jpg",
     length: 112,
     duration: "12",
-    difficulty: "Hard",
+    category: "Hard",
   ),
   new UserInterestRoute(
     routeId: "ABC Trek",
@@ -43,6 +43,6 @@ var routes = <UserInterestRoute>[
     image: "Annapurna01.jpg",
     length: 112,
     duration: "12",
-    difficulty: "Hard",
+    category: "Hard",
   ),
 ];

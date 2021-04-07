@@ -6,7 +6,7 @@ class BookmarkedRoute {
   String image;
   String length;
   String duration;
-  String difficulty;
+  String category;
 
   BookmarkedRoute({
     this.serverResponse,
@@ -16,7 +16,7 @@ class BookmarkedRoute {
     this.image,
     this.length,
     this.duration,
-    this.difficulty,
+    this.category,
   });
   BookmarkedRoute.toMap(Map<String, dynamic> map)
       : serverResponse = map['Response'],
@@ -26,7 +26,7 @@ class BookmarkedRoute {
         image = map['image'],
         length = map['route_length'].toString(),
         duration = map['duration'],
-        difficulty = map['difficulty'];
+        category = map['category'];
 }
 
 abstract class BookmarkedRouteRepository {

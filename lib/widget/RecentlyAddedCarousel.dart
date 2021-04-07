@@ -158,7 +158,7 @@ class _RecentlyAddedState extends State<RecentlyAdded>
                                                     0, 4.5, 0, 0),
                                                 child: Text(
                                                   // '${_allTrekkingRoutes[index].difficulty}',
-                                                  recentRoute.difficulty,
+                                                  recentRoute.category,
                                                   style: TextStyle(
                                                     fontSize: 10.0,
                                                     color: Colors.white,

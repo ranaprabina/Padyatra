@@ -174,7 +174,7 @@ class _NearbyRoutesCarouselState extends State<NearbyRoutesCarousel>
                                               padding: EdgeInsets.fromLTRB(
                                                   0, 4.5, 0, 0),
                                               child: Text(
-                                                '${nearByRoute.difficulty}',
+                                                '${nearByRoute.category}',
                                                 style: TextStyle(
                                                   fontSize: 10.0,
                                                   color: Colors.white,

@@ -169,7 +169,7 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
                                                   0, 4.5, 0, 0),
                                               child: Text(
                                                 // '${_allTrekkingRoutes[index].difficulty}',
-                                                route.difficulty,
+                                                route.category,
                                                 style: TextStyle(
                                                   fontSize: 10.0,
                                                   color: Colors.white,

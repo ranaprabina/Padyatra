@@ -14,14 +14,14 @@ var bookmarkedRoutes = <BookmarkedRoute>[
     image: "Annapurna01.jpg",
     length: "112",
     duration: "12",
-    difficulty: "Hard",
+    category: "Hard",
   ),
   new BookmarkedRoute(
     routeId: "Mardi",
     routeName: "Mardi Himal Trek",
     image: "Mardi03.jpg",
     length: "112",
-    difficulty: "Hard",
+    category: "Hard",
     duration: "12",
   ),
   new BookmarkedRoute(
@@ -29,7 +29,7 @@ var bookmarkedRoutes = <BookmarkedRoute>[
     routeName: "Manaslu Circuit",
     image: "Manaslu.jpg",
     length: "112",
-    difficulty: "Hard",
+    category: "Hard",
     duration: "12",
   ),
   new BookmarkedRoute(
@@ -37,7 +37,7 @@ var bookmarkedRoutes = <BookmarkedRoute>[
     routeName: "Poon Hill Trek",
     image: "PoonHill.jpg",
     length: "112",
-    difficulty: "Hard",
+    category: "Hard",
     duration: "12",
   ),
 ];

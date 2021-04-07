@@ -306,7 +306,7 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
                                                       0, 7, 0, 0),
                                                   child: Text(
                                                     // '${_allTrekkingRoutes[index].difficulty}',
-                                                    "${bookmarkedRoute.difficulty}",
+                                                    "${bookmarkedRoute.category}",
 
                                                     style: TextStyle(
                                                       fontSize: 12.0,

@@ -7,7 +7,7 @@ class RouteDetails {
   String routeDescription;
   var length;
   String duration;
-  String difficulty;
+  String category;
   int conservationalPermit;
   int timsPermit;
   int restrictedAreaPermit;
@@ -23,7 +23,7 @@ class RouteDetails {
       this.routeDescription,
       this.length,
       this.duration,
-      this.difficulty,
+      this.category,
       this.conservationalPermit,
       this.timsPermit,
       this.restrictedAreaPermit,
@@ -39,7 +39,7 @@ class RouteDetails {
         routeDescription = map['description'],
         length = map['route_length'],
         duration = map['duration'],
-        difficulty = map['difficulty'],
+        category = map['category'],
         conservationalPermit = map['c_n_permit'],
         timsPermit = map['tims_permit'],
         restrictedAreaPermit = map['r_a_permit'],

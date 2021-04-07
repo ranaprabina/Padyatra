@@ -7,7 +7,7 @@ class RecentlyAddedRoute {
   String image;
   String length;
   String duration;
-  String difficulty;
+  String category;
   String dateTime;
   RecentlyAddedRoute(
       {this.routeId,
@@ -15,7 +15,7 @@ class RecentlyAddedRoute {
       this.image,
       this.length,
       this.duration,
-      this.difficulty,
+      this.category,
       this.dateTime});
   RecentlyAddedRoute.toMap(Map<String, dynamic> map)
       : serverResponse = map['Response'],
@@ -24,7 +24,7 @@ class RecentlyAddedRoute {
         image = map['image'],
         length = map['route_length'].toString(),
         duration = map['duration'],
-        difficulty = map['difficulty'],
+        category = map['category'],
         dateTime = map['route_added_at'];
 }
 
