@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:padyatra/models/user_login_model/user_login_data.dart';
 import 'package:padyatra/presenter/user_login_presenter.dart';
 import 'package:padyatra/screen/HomePage.dart';
+import 'package:padyatra/screen/PasswordResetTokenRequest.dart';
 import 'package:padyatra/screen/SignUp.dart';
 
 class Login extends StatefulWidget {
@@ -182,13 +183,23 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
           ),
           Padding(
               padding: EdgeInsets.only(left: displayWidth(context) * 0.03),
-              child: Text(
-                'Forgot Password ??',
-                style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                    fontFamily: 'Roboto'),
+              child: GestureDetector(
+                onTap: () {
+                  print("forgot password tapped");
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => PasswordResetToken(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'Forgot Password ??',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                      fontFamily: 'Roboto'),
+                ),
               )),
           SizedBox(
             height: displayHeight(context) * 0.03,
@@ -206,13 +217,14 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
                   _userLoginListPresenter.loadServerResponse(email, password);
                 } else {
                   Fluttertoast.showToast(
-                      msg: "Please fill all the fields",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      // timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
+                    msg: "Please fill all the fields",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    // timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
                 }
               },
               shape: RoundedRectangleBorder(
