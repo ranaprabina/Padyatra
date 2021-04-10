@@ -13,6 +13,12 @@ import 'package:padyatra/models/insert_user_interest_routeCategory/insert_user_i
 import 'package:padyatra/models/nearBy_route_model/nearBy_route_data.dart';
 import 'package:padyatra/models/nearBy_route_model/nearBy_route_mock.dart';
 import 'package:padyatra/models/nearBy_route_model/nearBy_route_prod.dart';
+import 'package:padyatra/models/password_reset_model/password_reset_data.dart';
+import 'package:padyatra/models/password_reset_model/password_reset_mock.dart';
+import 'package:padyatra/models/password_reset_model/password_reset_prod.dart';
+import 'package:padyatra/models/password_reset_token_request_model/password_reset_token_request_data.dart';
+import 'package:padyatra/models/password_reset_token_request_model/password_reset_token_request_mock.dart';
+import 'package:padyatra/models/password_reset_token_request_model/password_reset_token_request_prod.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_data.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_mock.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_prod.dart';
@@ -163,6 +169,26 @@ class Injector {
 
       default:
         return new ProdNearByRouteRepository();
+    }
+  }
+
+  PasswordResetTokenRequestRepository get passwordResetTokenRequestRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return MockPasswordResetTokenRequest();
+
+      default:
+        return new ProdPasswordResetTokenRequestRepository();
+    }
+  }
+
+  PasswordResetRepository get passwordResetRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return MockPasswordReset();
+
+      default:
+        return new ProdPasswordResetRepository();
     }
   }
 }
