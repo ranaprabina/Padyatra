@@ -13,6 +13,7 @@ import 'package:padyatra/screen/documents_required.dart';
 import 'package:padyatra/services/api.dart';
 import 'package:padyatra/services/api_constants.dart';
 import 'package:padyatra/services/currentLocation.dart';
+import 'package:padyatra/weatherAPIToken/weatherAPIToken.dart';
 
 class RouteDetailsScreen extends StatefulWidget {
   final searchedRouteName;
@@ -78,7 +79,7 @@ class _DetailsBodyState extends State<DetailsBody>
 
   Future getDestinationWeather() async {
     http.Response response = await http.get(
-        'https://api.openweathermap.org/data/2.5/weather?lat=27.700769&lon=85.300140&appid=3357133e7c49f87feaa30590acaa4824&units=metric');
+        'https://api.openweathermap.org/data/2.5/weather?lat=27.700769&lon=85.300140&appid=${WeatherAPIToken().weatherToken}&units=metric');
     var results = jsonDecode(response.body);
     setState(() {
       this.temp = results['main']['temp'];
@@ -103,7 +104,7 @@ class _DetailsBodyState extends State<DetailsBody>
     latitude = coordinate.latitude;
     longitude = coordinate.longitude;
     http.Response response = await http.get(
-        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=3357133e7c49f87feaa30590acaa4824&units=metric');
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=${WeatherAPIToken().weatherToken}&units=metric');
     var decodedData = jsonDecode(response.body);
     setState(() {
       this.weatherIcon = decodedData['weather'][0]['icon'];
