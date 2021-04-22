@@ -5,7 +5,7 @@ class UserInterestRoute {
   String routeId;
   String routeName;
   String image;
-  int length;
+  String length;
   String duration;
   String category;
 
@@ -23,7 +23,7 @@ class UserInterestRoute {
         image = map['image'],
         routeId = map['route_id'],
         routeName = map['route_name'],
-        length = map['route_length'],
+        length = map['route_length'].toString(),
         duration = map['duration'],
         category = map['category'];
 }
