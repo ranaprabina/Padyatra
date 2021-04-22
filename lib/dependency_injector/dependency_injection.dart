@@ -4,6 +4,9 @@ import 'package:padyatra/models/bookmarked_route_model/bookmarked_route_prod.dar
 import 'package:padyatra/models/completed_route_model/completed_route_data.dart';
 import 'package:padyatra/models/completed_route_model/completed_route_mock.dart';
 import 'package:padyatra/models/completed_route_model/completed_route_prod.dart';
+import 'package:padyatra/models/day_performance_model/day_performance_data.dart';
+import 'package:padyatra/models/day_performance_model/day_performance_mock.dart';
+import 'package:padyatra/models/day_performance_model/day_performance_prod.dart';
 import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinate_prod.dart';
 import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_data.dart';
 import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_mock.dart';
@@ -189,6 +192,16 @@ class Injector {
 
       default:
         return new ProdPasswordResetRepository();
+    }
+  }
+
+  DayPerformanceRepository get dayPerformanceRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return MockDayPerformance();
+
+      default:
+        return new ProdDayPerformanceRepository();
     }
   }
 }
