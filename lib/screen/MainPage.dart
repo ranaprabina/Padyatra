@@ -97,7 +97,7 @@ class _GuestUserState extends State<GuestUser> {
                     elevation: 5.0,
                     onPressed: () {
                       print("login");
-                      Navigator.of(context).push(
+                      Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) => Login()));
                     },
                     // padding: EdgeInsets.all(15.0),
@@ -130,7 +130,7 @@ class _GuestUserState extends State<GuestUser> {
                   child: RaisedButton(
                     elevation: 5.0,
                     onPressed: () {
-                      Navigator.of(context).push(
+                      Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) => SignUp()));
                     },
                     shape: RoundedRectangleBorder(
@@ -159,8 +159,8 @@ class _GuestUserState extends State<GuestUser> {
             child: RaisedButton(
               elevation: 5.0,
               onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => HomePage()));
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => HomePage()));
               },
               padding: EdgeInsets.all(15.0),
               shape: RoundedRectangleBorder(

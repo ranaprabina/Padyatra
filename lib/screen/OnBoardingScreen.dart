@@ -80,8 +80,8 @@ class OnBoardingScreen extends StatelessWidget {
         ),
         onDone: () {
           print("Done clicked");
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => GuestUser()));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => GuestUser()));
         },
         showSkipButton: true,
         showNextButton: true,
@@ -96,8 +96,8 @@ class OnBoardingScreen extends StatelessWidget {
         ),
         onSkip: () {
           print("Skip button clicked");
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => GuestUser()));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => GuestUser()));
         },
         next: const Icon(Icons.arrow_forward),
       ),

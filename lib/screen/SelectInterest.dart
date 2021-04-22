@@ -109,7 +109,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
             Divider(),
             new MaterialButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => HomePage(
                           userId: userId,
                         )));
@@ -173,7 +173,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
             new MaterialButton(
               onPressed: () {
                 finalResponse
-                    ? Navigator.of(context).push(MaterialPageRoute(
+                    ? Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => HomePage(
                               userId: userId,
                             )))
@@ -254,8 +254,9 @@ class _UserSelectInterestState extends State<UserSelectInterest>
                             alignment: Alignment.topRight,
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => HomePage()));
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => HomePage()));
                               },
                               child: Text(
                                 "skip",

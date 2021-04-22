@@ -394,8 +394,9 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                             child: RaisedButton(
                               elevation: 5.0,
                               onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => Login()));
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => Login()));
                               },
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
@@ -496,7 +497,7 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
         var userJson = localStorage.getString('user');
         var user = jsonDecode(userJson);
         userId = user['userId'].toString();
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => UserSelectInterest(
                   userId: userId,
                 )));
