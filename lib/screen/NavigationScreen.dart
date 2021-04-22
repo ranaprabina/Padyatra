@@ -132,11 +132,11 @@ class _NavigationScreenState extends State<NavigationScreen>
   }
 
   bool checkTrekkingCompleted(String latitude, String longitude) {
-    // bool response = GeoFencing().startTrekkingCompletedGeoFencing(
-    //     widget.wayPoints[widget.wayPoints.length - 1].wayLongitude.toString(),
-    //     widget.wayPoints[widget.wayPoints.length - 1].wayLongitude.toString());
+    bool response = GeoFencing().startGeofencing(
+        widget.wayPoints[widget.wayPoints.length - 1].wayLongitude.toString(),
+        widget.wayPoints[widget.wayPoints.length - 1].wayLongitude.toString());
     print("checking trekking completed  or not");
-    bool response = GeoFencing().startGeofencing(latitude, longitude);
+    // bool response = GeoFencing().startGeofencing(latitude, longitude);
     if (response) {
       print("inside trekking completed  or not");
       return true;
@@ -281,7 +281,8 @@ class _NavigationScreenState extends State<NavigationScreen>
         (element) {
           if (!checkInPostState) {
             if (element.wayPointDescription == "Check-in Post") {
-              if (GeoFencing().startGeofencing("28.2176", "83.9827")) {
+              if (GeoFencing().startGeofencing(element.wayLatitude.toString(),
+                  element.wayLongitude.toString())) {
                 print("Entered inside geofencing area\n");
                 setState(() {
                   _isCheckInPostReached = true;
@@ -304,7 +305,8 @@ class _NavigationScreenState extends State<NavigationScreen>
           } else {
             if (!checkOutPostState) {
               if (element.wayPointDescription == "Check-out Post") {
-                if (GeoFencing().startGeofencing("28.2176", "83.9827")) {
+                if (GeoFencing().startGeofencing(element.wayLatitude.toString(),
+                    element.wayLongitude.toString())) {
                   print("Entered inside geofencing area for checkOutPostState");
                   setState(() {
                     _isCheckOutPostReached = true;
