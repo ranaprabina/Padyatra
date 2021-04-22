@@ -252,7 +252,7 @@ class _DetailsBodyState extends State<DetailsBody>
                               onPressed: () async {
                                 var data = {
                                   'route_id': routeDetails.routeId,
-                                  'id': widget.userId
+                                  'u_id': widget.userId
                                 };
                                 setBookmarkStatus(data);
                                 setState(() {
@@ -276,8 +276,8 @@ class _DetailsBodyState extends State<DetailsBody>
                                   : Colors.white,
                               onPressed: () async {
                                 var data = {
-                                  'route_id': routeDetails.routeId,
-                                  'id': widget.userId
+                                  'route_id': routeDetails.routeId.toString(),
+                                  'u_id': widget.userId.toString()
                                 };
                                 setBookmarkStatus(data);
 
@@ -311,6 +311,7 @@ class _DetailsBodyState extends State<DetailsBody>
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => NavigationScreen(
+                                          userID: widget.userId,
                                           routeID: routeDetails.routeId,
                                           wayPoints: routeDetails.wayPoints),
                                     ),
