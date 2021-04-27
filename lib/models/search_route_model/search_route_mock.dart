@@ -4,8 +4,6 @@ import 'dart:async';
 class MockSearchRoute implements SearchRouteRepository {
   @override
   Future<List<SearchRoute>> fetchRoutes() {
-    // TODO: implement fetchRoutes
-    // throw UnimplementedError();
     return new Future.value(routes);
   }
 }

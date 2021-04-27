@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:padyatra/control_sizes.dart';
-import 'package:padyatra/models/TrekkingRoutes.dart';
 import 'package:padyatra/models/nearBy_route_model/nearBy_route_data.dart';
 import 'package:padyatra/presenter/nearBy_route_presenter.dart';
 import 'package:padyatra/screen/RouteDetails.dart';
-import 'package:padyatra/services/api.dart';
 import 'package:padyatra/services/api_constants.dart';
 import 'package:padyatra/services/currentLocation.dart';
 
@@ -18,9 +16,6 @@ class NearbyRoutesCarousel extends StatefulWidget {
 
 class _NearbyRoutesCarouselState extends State<NearbyRoutesCarousel>
     implements NearByRouteListViewContract {
-  final List<TrekkingRoutes> _allTrekkingRoutes =
-      TrekkingRoutes.allTrekkingRoutes();
-
   NearByRouteListPresenter _presenter;
   List<NearByRoute> _nearByRoutes;
   bool _isLoading;

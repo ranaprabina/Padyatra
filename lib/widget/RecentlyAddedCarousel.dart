@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:padyatra/control_sizes.dart';
-import 'package:padyatra/models/TrekkingRoutes.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_data.dart';
 import 'package:padyatra/presenter/recently_added_route_presenter.dart';
 import 'package:padyatra/screen/RouteDetails.dart';
@@ -15,8 +14,6 @@ class RecentlyAdded extends StatefulWidget {
 
 class _RecentlyAddedState extends State<RecentlyAdded>
     implements RecentlyAddedRouteListViewContract {
-  final List<TrekkingRoutes> _allTrekkingRoutes =
-      TrekkingRoutes.allTrekkingRoutes();
   PageController _pageController;
   int prevPage;
   RecentlyAddedRouteListPresenter _presenter;

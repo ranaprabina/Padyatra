@@ -35,7 +35,6 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
   List<BookmarkedRoute> _bookmarkedRoute;
   bool _isLoading;
   bool _isRouteAvailable;
-  bool _isBookmarked;
   bool _isImageLoading;
 
   _RoutesFavoriteState() {
@@ -47,7 +46,6 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
     super.initState();
     userId = widget.userId;
     _isLoading = true;
-    _isBookmarked = true;
     _isImageLoading = true;
     _isRouteAvailable = false;
     _bookmarkedRouteListPresenter.loadBookmarkedRoutes(userId);

@@ -4,7 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:padyatra/control_sizes.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:padyatra/presenter/routes_details_presenter.dart';
 import 'package:padyatra/models/route_details_model/route_details_data.dart';
 import 'package:padyatra/screen/NavigationScreen.dart';
@@ -116,7 +115,6 @@ class _DetailsBodyState extends State<DetailsBody>
   RouteDetailsListPresenter _presenter;
   List<RouteDetails> _routeDetails;
   bool _isLoading;
-  bool _isBookmarkButtonClicked;
   _DetailsBodyState() {
     _presenter = new RouteDetailsListPresenter(this);
   }
@@ -126,7 +124,6 @@ class _DetailsBodyState extends State<DetailsBody>
     _isLoading = true;
     _isImageLoading = true;
     _isWayPointsAvailable = false;
-    _isBookmarkButtonClicked = false;
     _presenter.loadRouteDetails(widget.selectedRoute, widget.userId);
     _isFetchingCurrent = true;
     _isFetchingDestination = true;
@@ -197,15 +194,6 @@ class _DetailsBodyState extends State<DetailsBody>
 
   @override
   Widget build(BuildContext context) {
-    List<String> wayItems = [
-      "Nayapul",
-      "NP Check Point",
-      "Birethanti",
-      "Lamdoni",
-      "Sudame",
-      "Tikhedhunga",
-      "Ulleri"
-    ];
     return _isLoading
         ? new Center(
             child: new CircularProgressIndicator(),

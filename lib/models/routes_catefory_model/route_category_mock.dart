@@ -3,8 +3,6 @@ import 'package:padyatra/models/routes_catefory_model/route_category_data.dart';
 class MockRouteCategory implements RouteCategoryRepository {
   @override
   Future<List<RouteCategory>> fetchRouteCategories() {
-    // TODO: implement fetchRouteCategories
-    // throw UnimplementedError();
     return new Future.value(categories);
   }
 }

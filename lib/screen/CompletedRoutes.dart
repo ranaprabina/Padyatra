@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/control_sizes.dart';
-
-import 'package:padyatra/models/ListCompletedRoutes.dart';
 import 'package:padyatra/models/completed_route_model/completed_route_data.dart';
 import 'package:padyatra/presenter/completed_route_presenter.dart';
 import 'package:padyatra/services/api_constants.dart';
@@ -54,15 +52,13 @@ class _RoutesCompletedState extends State<RoutesCompleted>
     super.initState();
     userId = widget.userId;
     _isLoading = true;
-    bool _isImageLoading = true;
+    _isImageLoading = true;
     _isRouteAvailable = false;
     _completedRouteListPresenter.loadCompletedRoutes(userId);
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<ListCompletedRoutes> _allCompletedRoutes =
-        ListCompletedRoutes.allCompletedRoutes();
     return _isLoading
         ? new Center(
             child: new CircularProgressIndicator(),

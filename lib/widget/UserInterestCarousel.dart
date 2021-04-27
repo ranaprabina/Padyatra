@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:padyatra/control_sizes.dart';
-import 'package:padyatra/models/TrekkingRoutes.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_data.dart';
 import 'package:padyatra/presenter/user_interest_route_presenter.dart';
 import 'package:padyatra/screen/RouteDetails.dart';
@@ -16,8 +15,6 @@ class UserInterestCarousel extends StatefulWidget {
 
 class _UserInterestCarouselState extends State<UserInterestCarousel>
     implements UserInterestRouteListViewContract {
-  final List<TrekkingRoutes> _allTrekkingRoutes =
-      TrekkingRoutes.allTrekkingRoutes();
   String userId;
   PageController _pageController;
   int prevPage;

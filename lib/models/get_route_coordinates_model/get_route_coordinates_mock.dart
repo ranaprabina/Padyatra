@@ -1,4 +1,3 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_data.dart';
 
 class MockGetRouteCoordinates implements GetRouteCoordinatesRepository {

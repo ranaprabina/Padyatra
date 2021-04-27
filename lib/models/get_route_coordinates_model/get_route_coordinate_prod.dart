@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_data.dart';
-import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_mock.dart';
 import 'package:padyatra/services/api.dart';
 
 class ProdGetRouteCoordinatesRepository

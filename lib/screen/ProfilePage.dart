@@ -20,6 +20,10 @@ class MapScreenState extends State<ProfilePage>
   String email;
   bool _isDataLoading = true;
 
+  TextEditingController userNameController = new TextEditingController();
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +44,9 @@ class MapScreenState extends State<ProfilePage>
       print(token);
       setState(() {
         _isDataLoading = false;
+        userNameController.text = userName;
+        nameController.text = name;
+        emailController.text = email;
       });
     } else {
       setState(() {
@@ -204,6 +211,7 @@ class MapScreenState extends State<ProfilePage>
                                   children: <Widget>[
                                     Flexible(
                                       child: new TextField(
+                                        controller: userNameController,
                                         decoration: InputDecoration(
                                             hintText: "$userName",
                                             hintStyle:
@@ -248,6 +256,7 @@ class MapScreenState extends State<ProfilePage>
                                   children: <Widget>[
                                     Flexible(
                                       child: new TextField(
+                                        controller: nameController,
                                         decoration: InputDecoration(
                                             hintText: "$name",
                                             hintStyle:
@@ -292,6 +301,7 @@ class MapScreenState extends State<ProfilePage>
                                   children: <Widget>[
                                     Flexible(
                                       child: new TextField(
+                                        controller: emailController,
                                         decoration: InputDecoration(
                                             hintText: "$email",
                                             hintStyle:

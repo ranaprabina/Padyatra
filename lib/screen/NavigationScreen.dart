@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:location/location.dart';
 import 'package:padyatra/models/day_performance_model/day_performance_data.dart';
 import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_data.dart';

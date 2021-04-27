@@ -1,5 +1,4 @@
 import 'package:padyatra/models/day_performance_model/day_performance_data.dart';
-import 'package:padyatra/models/password_reset_model/password_reset_mock.dart';
 
 class MockDayPerformance implements DayPerformanceRepository {
   @override
