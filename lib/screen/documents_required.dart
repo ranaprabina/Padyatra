@@ -2,22 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/screen/passport.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DocumentRequired extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              // 'Annapurna Base Camp',
-              'PAPER WORKS AND PERMIT',
-              style: TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Hexcolor('#4e718d'),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'PAPER WORKS AND PERMIT',
+            style: TextStyle(color: Colors.white),
           ),
-          body: RequiredDocument()),
-    );
+          backgroundColor: Hexcolor('#4e718d'),
+        ),
+        body: RequiredDocument());
   }
 }
 
@@ -53,9 +51,12 @@ class RequiredDocument extends StatelessWidget {
                     fontFamily: 'Noto Sans',
                   ),
                 ),
+                SizedBox(
+                  height: displayHeight(context) * 0.02,
+                ),
                 Container(
                   height: displayHeight(context) * 0.41,
-                  child: Expanded(child: Passport()),
+                  child: Passport(),
                 ),
                 SizedBox(
                   height: displayHeight(context) * 0.05,
@@ -89,12 +90,28 @@ class RequiredDocument extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 20.0, top: 20),
                   child: Container(
                     alignment: Alignment.bottomRight,
-                    child: RaisedButton(
-                      color: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        String query =
+                            Uri.encodeComponent("Nepal Tourism Board");
+                        String googleMapUrl =
+                            "https://www.google.com/maps/search/?api=1&query=$query";
+                        try {
+                          if (await canLaunch(googleMapUrl)) {
+                            await launch(googleMapUrl);
+                          } else {
+                            throw "cannot launch map";
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
                       child: Text(
                         'visit office',
                         style: TextStyle(
