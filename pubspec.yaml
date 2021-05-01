@@ -23,6 +23,7 @@ dependencies:
   fluttertoast: ^7.1.1
   geofence_flutter: ^1.1.0
   shared_preferences: ^0.5.12+4
+  url_launcher: ^6.0.3
 
 
   cupertino_icons: ^0.1.3
