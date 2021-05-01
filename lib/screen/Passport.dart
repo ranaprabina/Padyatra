@@ -26,7 +26,7 @@ class Passport extends StatelessWidget {
                 text: '${index + 1}. ',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 16,
+                  fontSize: 14,
                   fontFamily: 'Noto Sans',
                 ),
                 children: <TextSpan>[
