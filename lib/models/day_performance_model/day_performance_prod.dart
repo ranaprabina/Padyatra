@@ -14,7 +14,7 @@ class ProdDayPerformanceRepository implements DayPerformanceRepository {
     var data = {
       'u_id': userId,
       'route_id': routeId,
-      'lat_recahed': latitudeReached,
+      'lat_reached': latitudeReached,
       'lng_reached': longitudeReached,
       'trekking_completed': trekkingCompleted
     };
