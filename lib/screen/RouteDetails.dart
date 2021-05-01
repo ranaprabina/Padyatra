@@ -30,20 +30,17 @@ class RouteDetailsScreen extends StatefulWidget {
 class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            // 'Annapurna Base Camp',
-            widget.searchedRouteName,
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Hexcolor('#4e718d'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          widget.searchedRouteName,
+          style: TextStyle(color: Colors.white),
         ),
-        body: DetailsBody(
-          selectedRoute: widget.searchedRouteName,
-          userId: widget.id,
-        ),
+        backgroundColor: Hexcolor('#4e718d'),
+      ),
+      body: DetailsBody(
+        selectedRoute: widget.searchedRouteName,
+        userId: widget.id,
       ),
     );
   }
