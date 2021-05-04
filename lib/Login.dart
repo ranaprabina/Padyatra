@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/control_sizes.dart';
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:padyatra/models/user_login_model/user_login_data.dart';
 import 'package:padyatra/presenter/user_login_presenter.dart';
@@ -290,7 +289,7 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
 
         print(userId);
         if (_isLoginSucess) {
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) => HomePage(userId: userId)));
           Fluttertoast.showToast(
               msg: "Login Sucessful",
