@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
@@ -193,7 +194,9 @@ class _DetailsBodyState extends State<DetailsBody>
   Widget build(BuildContext context) {
     return _isLoading
         ? new Center(
-            child: new CircularProgressIndicator(),
+            child: new SpinKitChasingDots(
+              color: Colors.green,
+            ),
           )
         : SingleChildScrollView(
             child: Container(
