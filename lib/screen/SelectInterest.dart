@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/insert_user_interest_routeCategory/insert_user_interest_routeCategory_data.dart';
@@ -132,79 +133,79 @@ class _UserSelectInterestState extends State<UserSelectInterest>
     );
   }
 
-  Widget _finalConfirmationDialogueBox() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: new Text(
-            "Final Confirmation",
-            style: TextStyle(
-              fontFamily: 'Roboto',
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: new Text(
-            "Let the Adventure Begin....",
-            style: TextStyle(
-              fontFamily: 'Roboto',
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          actions: [
-            new MaterialButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              height: displayHeight(context) * 0.05,
-              minWidth: displayWidth(context) * 0.35,
-              color: Color.fromRGBO(49, 39, 79, 1),
-              // color: Hexcolor('#b0e57c'),
-              child: Text(
-                'cancel',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-            new MaterialButton(
-              onPressed: () {
-                finalResponse
-                    ? Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => HomePage(
-                              userId: userId,
-                            )))
-                    : Navigator.of(context).pop(
-                        Toast.show(
-                          categoryAlreadyInDB
-                              ? insertUserInterestRouteCategory.messsage
-                              : "Error occured during insertion process",
-                          context,
-                          backgroundColor: Colors.red[400],
-                          duration: 3,
-                          gravity: Toast.BOTTOM,
-                        ),
-                      );
-              },
-              height: displayHeight(context) * 0.05,
-              minWidth: displayWidth(context) * 0.35,
-              color: Color.fromRGBO(49, 39, 79, 1),
-              child: Text(
-                'Continue',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15.0,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // Widget _finalConfirmationDialogueBox() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: new Text(
+  //           "Final Confirmation",
+  //           style: TextStyle(
+  //             fontFamily: 'Roboto',
+  //             fontSize: 20,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //         content: new Text(
+  //           "Let the Adventure Begin....",
+  //           style: TextStyle(
+  //             fontFamily: 'Roboto',
+  //             fontSize: 15,
+  //             fontWeight: FontWeight.w500,
+  //           ),
+  //         ),
+  //         actions: [
+  //           new MaterialButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //             height: displayHeight(context) * 0.05,
+  //             minWidth: displayWidth(context) * 0.35,
+  //             color: Color.fromRGBO(49, 39, 79, 1),
+  //             // color: Hexcolor('#b0e57c'),
+  //             child: Text(
+  //               'cancel',
+  //               style: TextStyle(
+  //                 color: Colors.white,
+  //                 fontSize: 15.0,
+  //               ),
+  //             ),
+  //           ),
+  //           new MaterialButton(
+  //             onPressed: () {
+  //               finalResponse
+  //                   ? Navigator.of(context).pushReplacement(MaterialPageRoute(
+  //                       builder: (context) => HomePage(
+  //                             userId: userId,
+  //                           )))
+  //                   : Navigator.of(context).pop(
+  //                       Toast.show(
+  //                         categoryAlreadyInDB
+  //                             ? insertUserInterestRouteCategory.messsage
+  //                             : "Error occured during insertion process",
+  //                         context,
+  //                         backgroundColor: Colors.red[400],
+  //                         duration: 3,
+  //                         gravity: Toast.BOTTOM,
+  //                       ),
+  //                     );
+  //             },
+  //             height: displayHeight(context) * 0.05,
+  //             minWidth: displayWidth(context) * 0.35,
+  //             color: Color.fromRGBO(49, 39, 79, 1),
+  //             child: Text(
+  //               'Continue',
+  //               style: TextStyle(
+  //                 color: Colors.white,
+  //                 fontSize: 15.0,
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   void insertUserInterestCategories() {
     if (!_isCategorySelected || _filters.length == 0) {
@@ -217,12 +218,15 @@ class _UserSelectInterestState extends State<UserSelectInterest>
       });
     } else {
       print("Calling for Loop now");
+      SpinKitChasingDots(
+        color: Colors.green,
+      );
       for (int index = 0; index < _filters.length; index++) {
         print(_filters[index]);
         _inserUserInterestRouteCategoryListPresenter.loadServerResponse(
             _filters[index].toString(), userId);
       }
-      _finalConfirmationDialogueBox();
+      // _finalConfirmationDialogueBox();
     }
   }
 
@@ -233,7 +237,9 @@ class _UserSelectInterestState extends State<UserSelectInterest>
         backgroundColor: Colors.white,
         body: _isLoading
             ? new Center(
-                child: new CircularProgressIndicator(),
+                child: new SpinKitChasingDots(
+                  color: Colors.green,
+                ),
               )
             : SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -409,21 +415,34 @@ class _UserSelectInterestState extends State<UserSelectInterest>
       insertUserInterestRouteCategory = _userInteresInsertionServerResponse[0];
 
       if (insertUserInterestRouteCategory.serverResponseMessage.isNotEmpty) {
-        insertUserInterestRouteCategory.serverResponseMessage ==
-                "New_Insertion_Success"
-            ? finalResponse = true
-            : finalResponse = false;
+        setState(() {
+          insertUserInterestRouteCategory.serverResponseMessage ==
+                  "New_Insertion_Success"
+              ? finalResponse = true
+              : finalResponse = false;
 
-        insertUserInterestRouteCategory.serverResponseMessage ==
-                "Category_Already_Inserted"
-            ? categoryAlreadyInDB = true
-            : categoryAlreadyInDB = false;
-      } else {
-        print("server response is empty or null");
+          insertUserInterestRouteCategory.serverResponseMessage ==
+                  "Category_Already_Inserted"
+              ? categoryAlreadyInDB = true
+              : categoryAlreadyInDB = false;
+        });
       }
-      print("Response From Server is");
-      print(insertUserInterestRouteCategory.serverResponseMessage);
-      print(insertUserInterestRouteCategory.userId);
+      finalResponse
+          ? Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => HomePage(
+                    userId: userId,
+                  )))
+          : Navigator.of(context).pop(
+              Toast.show(
+                categoryAlreadyInDB
+                    ? insertUserInterestRouteCategory.messsage
+                    : "Error occured during insertion process",
+                context,
+                backgroundColor: Colors.red[400],
+                duration: 3,
+                gravity: Toast.BOTTOM,
+              ),
+            );
     });
   }
 
