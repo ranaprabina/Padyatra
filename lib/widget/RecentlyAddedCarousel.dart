@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_data.dart';
 import 'package:padyatra/presenter/recently_added_route_presenter.dart';
@@ -50,7 +51,9 @@ class _RecentlyAddedState extends State<RecentlyAdded>
                     kToolbarHeight) *
                 0.42,
             child: new Center(
-              child: new CircularProgressIndicator(),
+              child: new SpinKitChasingDots(
+                color: Colors.green,
+              ),
             ),
           )
         : Container(

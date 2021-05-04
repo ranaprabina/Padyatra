@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/control_sizes.dart';
@@ -60,8 +61,8 @@ class _RoutesCompletedState extends State<RoutesCompleted>
   @override
   Widget build(BuildContext context) {
     return _isLoading
-        ? new Center(
-            child: new CircularProgressIndicator(),
+        ? new SpinKitChasingDots(
+            color: Colors.green,
           )
         : Container(
             child: Stack(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/control_sizes.dart';
-
 import 'package:padyatra/models/TrekkingRoutes.dart';
 import 'package:padyatra/models/bookmarked_route_model/bookmarked_route_data.dart';
 import 'package:padyatra/presenter/bookmarked_route_presenter.dart';
@@ -57,7 +57,9 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
         TrekkingRoutes.allTrekkingRoutes();
     return _isLoading
         ? new Center(
-            child: new CircularProgressIndicator(),
+            child: new SpinKitChasingDots(
+              color: Colors.green,
+            ),
           )
         : Container(
             child: Stack(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/nearBy_route_model/nearBy_route_data.dart';
 import 'package:padyatra/presenter/nearBy_route_presenter.dart';
@@ -67,7 +68,9 @@ class _NearbyRoutesCarouselState extends State<NearbyRoutesCarousel>
                     kToolbarHeight) *
                 0.42,
             child: new Center(
-              child: new CircularProgressIndicator(),
+              child: new SpinKitChasingDots(
+                color: Colors.green,
+              ),
             ),
           )
         : Container(

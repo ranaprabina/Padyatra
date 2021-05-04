@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_data.dart';
 import 'package:padyatra/presenter/user_interest_route_presenter.dart';
@@ -57,8 +58,8 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
                     MediaQuery.of(context).padding.top -
                     kToolbarHeight) *
                 0.42,
-            child: new Center(
-              child: new CircularProgressIndicator(),
+            child: new SpinKitChasingDots(
+              color: Colors.green,
             ),
           )
         : Container(
