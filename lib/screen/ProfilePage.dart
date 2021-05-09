@@ -1,11 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:padyatra/control_sizes.dart';
+import 'package:padyatra/screen/FavoriteRoutes.dart';
+import 'package:padyatra/screen/ProfileDialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
+  final uploadimage;
+  const ProfilePage({Key key, this.uploadimage}) : super(key: key);
   @override
   MapScreenState createState() => MapScreenState();
 }
@@ -19,15 +24,16 @@ class MapScreenState extends State<ProfilePage>
   String userName;
   String email;
   bool _isDataLoading = true;
+  File uploadimage;
 
   TextEditingController userNameController = new TextEditingController();
   TextEditingController nameController = new TextEditingController();
-  TextEditingController emailController = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
     getData();
+    uploadimage = widget.uploadimage;
   }
 
   getData() async {
@@ -46,7 +52,6 @@ class MapScreenState extends State<ProfilePage>
         _isDataLoading = false;
         userNameController.text = userName;
         nameController.text = name;
-        emailController.text = email;
       });
     } else {
       setState(() {
@@ -91,7 +96,22 @@ class MapScreenState extends State<ProfilePage>
                                               fontSize: 20.0,
                                               fontFamily: 'sans-serif-light',
                                               color: Colors.black)),
-                                    )
+                                    ),
+                                    SizedBox(
+                                      width: displayWidth(context) * 0.5,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FavoriteRoutes()));
+                                      },
+                                      child: Icon(
+                                        Icons.logout,
+                                        size: 30,
+                                      ),
+                                    ),
                                   ],
                                 )),
                             Padding(
@@ -102,17 +122,29 @@ class MapScreenState extends State<ProfilePage>
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    new Container(
-                                        width: 140.0,
-                                        height: 140.0,
-                                        decoration: new BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: new DecorationImage(
-                                            image: new ExactAssetImage(
-                                                'images/hike1.jpg'),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )),
+                                    ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: uploadimage == null
+                                            ? Container(
+                                                width: 140.0,
+                                                height: 140.0,
+                                                decoration: new BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  image: new DecorationImage(
+                                                    image: new ExactAssetImage(
+                                                        'images/hike1.jpg'),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                )) //if there is no image then show the default image
+                                            : ClipRRect(
+                                                child: Image.file(
+                                                  uploadimage,
+                                                  width: 140,
+                                                  height: 140,
+                                                  fit: BoxFit.fitHeight,
+                                                ),
+                                              ))
                                   ],
                                 ),
                                 Padding(
@@ -122,12 +154,55 @@ class MapScreenState extends State<ProfilePage>
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: <Widget>[
-                                        new CircleAvatar(
-                                          backgroundColor: Hexcolor('#4e718d'),
-                                          radius: 25.0,
-                                          child: new Icon(
-                                            Icons.camera_alt,
-                                            color: Colors.white,
+                                        GestureDetector(
+                                          onTap: () {
+                                            showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return StatefulBuilder(
+                                                      builder:
+                                                          (context, setState) {
+                                                    return AlertDialog(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(16),
+                                                      ),
+                                                      elevation: 0.0,
+                                                      title: Align(
+                                                          alignment: Alignment
+                                                              .centerRight,
+                                                          child:
+                                                              GestureDetector(
+                                                                  onTap: () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .pop();
+                                                                  },
+                                                                  child: Icon(Icons
+                                                                      .close))),
+                                                      content: Container(
+                                                        height: displayHeight(
+                                                                context) *
+                                                            0.25,
+                                                        width: 400.0,
+                                                        child: MyDialog(
+                                                            uploadimage:
+                                                                uploadimage),
+                                                      ),
+                                                    );
+                                                  });
+                                                });
+                                          },
+                                          child: new CircleAvatar(
+                                            backgroundColor: Colors.black,
+                                            radius: 25.0,
+                                            child: new Icon(
+                                              Icons.camera_alt,
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         )
                                       ],
@@ -295,23 +370,19 @@ class MapScreenState extends State<ProfilePage>
                                     left: 25.0,
                                     right: 25.0,
                                     top: 15.0,
-                                    bottom: 10),
+                                    bottom: 15),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: <Widget>[
-                                    Flexible(
-                                      child: new TextField(
-                                        controller: emailController,
-                                        decoration: InputDecoration(
-                                            hintText: "$email",
-                                            hintStyle:
-                                                TextStyle(color: Colors.black)),
-                                        enabled: !_status,
-                                        autofocus: !_status,
-                                      ),
-                                    ),
+                                    Container(child: Text('$email'))
                                   ],
                                 ),
+                              ),
+                              Divider(
+                                color: Colors.grey,
+                                height: 5,
+                                indent: 25,
+                                endIndent: 15,
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
