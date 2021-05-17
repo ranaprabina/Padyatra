@@ -9,7 +9,7 @@ class NavigationData {
         localStorage.setBool('checkInPostReached', checkInPostReached);
   }
 
-  Future<bool> checkNavigationData() async {
+  Future<bool> checkInPostReachedData() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var checkInPostReachedState = localStorage.getBool('checkInPostReached');
     print(
@@ -21,7 +21,7 @@ class NavigationData {
     }
   }
 
-  Future<bool> deleteNavigationData() async {
+  Future<bool> deleteCheckInPostReachedData() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var checkInPostReachedState = localStorage.getBool('checkInPostReached');
     print(
