@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' show cos, sqrt, asin;
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -43,27 +44,44 @@ class _NavigationScreenState extends State<NavigationScreen>
   bool _isCheckOutPostReached;
   bool _isTrekkingCompleted;
   String trekkingCompleted;
+  String geofenceRadiusMeter = "100";
   Timer _storeDataTimer;
   Timer _checkWayPointsReachedtimer;
+  GoogleMapController _mapController;
+  Location location = new Location();
+  LatLng _centre;
+  String geoFenceEvent = '';
+  LatLng _lastMapPosition;
+  static double currentLatitude;
+  static double currentLongitude;
+  bool _isLoading;
+  final List<Circle> circle = [];
+  Set<Marker> wayPointMarkers = {};
+  double routeTotalDistance;
+  bool insideGeofence;
+  int calculateRemainigDistanceFromThisPoint;
+  double remainingDistance;
+  bool wayPointsAvailable;
+  List<WayPoints> wayPoint;
 
   _NavigationScreenState() {
     _getRouteCoordinatesListPresenter =
         new GetRouteCoordinatesListPresenter(this);
     _dayPerformanceListPresenter = new DayPerformanceListPresenter(this);
   }
-
-  GoogleMapController _mapController;
-  Location location = new Location();
-  static const LatLng _centre = const LatLng(28.2, 83.98);
-
-  String geoFenceEvent = '';
-
-  LatLng _lastMapPosition = _centre;
-  static double currentLatitude;
-  static double currentLongitude;
-  bool _isLoading;
-  final List<Circle> circle = [];
-  Set<Marker> wayPointMarkers = {};
+  void checkAvailableWayPoints() {
+    if (widget.wayPoints.isNotEmpty) {
+      setState(() {
+        wayPointsAvailable = true;
+        wayPoint = widget.wayPoints;
+      });
+    } else {
+      setState(() {
+        wayPointsAvailable = false;
+        wayPoint = [];
+      });
+    }
+  }
 
   void _createPolyLine(List<LatLng> routeCoordinates) {
     polyline.add(Polyline(
@@ -84,6 +102,8 @@ class _NavigationScreenState extends State<NavigationScreen>
         currentLongitude = currentLocation.longitude;
         if (currentLatitude != null && currentLongitude != null) {
           setState(() {
+            _centre = LatLng(currentLatitude, currentLongitude);
+            _lastMapPosition = _centre;
             _isLoading = false;
           });
         } else {
@@ -93,6 +113,50 @@ class _NavigationScreenState extends State<NavigationScreen>
         }
       },
     );
+  }
+
+  void calculateRemainingDisatance() {
+    for (int i = 0; i < _routeCoordinates.length; i++) {
+      insideGeofence = GeoFencing().startGeofencing(
+          _routeCoordinates[i].latitude.toString(),
+          _routeCoordinates[i].longitude.toString(),
+          "1000");
+      if (insideGeofence) {
+        calculateRemainigDistanceFromThisPoint = i;
+        setState(() {
+          remainingDistance =
+              calculateDistance(calculateRemainigDistanceFromThisPoint);
+          print("remaining distance is : $remainingDistance");
+        });
+        break;
+      } else {
+        GeoFencing().stopGeoFencing();
+        print("Unable to enter goefence and calculate remaining distanve");
+        continue;
+      }
+    }
+  }
+
+  double calculateDistance(int index) {
+    double calculateDistance(lat1, lon1, lat2, lon2) {
+      var p = 0.017453292519943295;
+      var c = cos;
+      var a = 0.5 -
+          c((lat2 - lat1) * p) / 2 +
+          c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+      return 12742 * asin(sqrt(a));
+    }
+
+    double totalDistance = 0;
+    for (var i = index; i < _routeCoordinates.length - 1; i++) {
+      totalDistance += calculateDistance(
+          _routeCoordinates[i].latitude,
+          _routeCoordinates[i].longitude,
+          _routeCoordinates[i + 1].latitude,
+          _routeCoordinates[i + 1].longitude);
+    }
+    print("totalDistance is $totalDistance");
+    return totalDistance;
   }
 
   @override
@@ -105,15 +169,16 @@ class _NavigationScreenState extends State<NavigationScreen>
     _isCheckOutPostReached = false;
     _isTrekkingCompleted = false;
     getCurrentLocation();
+    checkAvailableWayPoints();
     _getRouteCoordinatesListPresenter
         .loadServerResponseCoordinates(widget.routeID);
   }
 
   void _createWayPointsMarkers() {
-    if (widget.wayPoints.isEmpty) {
+    if (!wayPointsAvailable) {
       wayPointMarkers = {};
     } else {
-      widget.wayPoints.forEach((element) {
+      wayPoint.forEach((element) {
         LatLng wayPointsMarkerCoords =
             LatLng(element.wayLatitude, element.wayLongitude);
         print(element.wayPointName);
@@ -132,13 +197,9 @@ class _NavigationScreenState extends State<NavigationScreen>
   }
 
   bool checkTrekkingCompleted(String latitude, String longitude) {
-    bool response = GeoFencing().startGeofencing(
-        widget.wayPoints[widget.wayPoints.length - 1].wayLongitude.toString(),
-        widget.wayPoints[widget.wayPoints.length - 1].wayLongitude.toString());
-    print("checking trekking completed  or not");
-    // bool response = GeoFencing().startGeofencing(latitude, longitude);
+    bool response =
+        GeoFencing().startGeofencing(latitude, longitude, geofenceRadiusMeter);
     if (response) {
-      print("inside trekking completed  or not");
       return true;
     } else {
       return false;
@@ -270,19 +331,19 @@ class _NavigationScreenState extends State<NavigationScreen>
   }
 
   checkWaypointsReached() async {
-    bool checkInPostState = await NavigationData().checkNavigationData();
+    bool checkInPostState = await NavigationData().checkInPostReachedData();
     bool checkOutPostState = await NavigationData().checkOutPostReachedData();
     print(
         "In checkWayPointReached checkInPostState data is : $checkInPostState");
     print(
         "In checkWayPointReached checkOutPostState data is : $checkOutPostState");
-    if (widget.wayPoints.isNotEmpty) {
-      widget.wayPoints.forEach(
+    if (wayPointsAvailable) {
+      wayPoint.forEach(
         (element) {
           if (!checkInPostState) {
             if (element.wayPointDescription == "Check-in Post") {
               if (GeoFencing().startGeofencing(element.wayLatitude.toString(),
-                  element.wayLongitude.toString())) {
+                  element.wayLongitude.toString(), geofenceRadiusMeter)) {
                 print("Entered inside geofencing area\n");
                 setState(() {
                   _isCheckInPostReached = true;
@@ -306,7 +367,7 @@ class _NavigationScreenState extends State<NavigationScreen>
             if (!checkOutPostState) {
               if (element.wayPointDescription == "Check-out Post") {
                 if (GeoFencing().startGeofencing(element.wayLatitude.toString(),
-                    element.wayLongitude.toString())) {
+                    element.wayLongitude.toString(), geofenceRadiusMeter)) {
                   print("Entered inside geofencing area for checkOutPostState");
                   setState(() {
                     _isCheckOutPostReached = true;
@@ -333,8 +394,10 @@ class _NavigationScreenState extends State<NavigationScreen>
         },
       );
       if (checkOutPostState == true && checkInPostState == true) {
-        bool trekCompletedResponse =
-            checkTrekkingCompleted("28.2176", "83.9287");
+        bool trekCompletedResponse = checkTrekkingCompleted(
+          wayPoint[wayPoint.length - 1].wayLongitude.toString(),
+          wayPoint[wayPoint.length - 1].wayLongitude.toString(),
+        );
         print("Trekking Completed Response is : $trekCompletedResponse");
         if (trekCompletedResponse) {
           setState(() {
@@ -518,12 +581,8 @@ class _NavigationScreenState extends State<NavigationScreen>
                             trekkingCompleted);
                       }
                       if (_checkWayPointsReachedtimer.isActive) {
-                        print("print timer in active");
                         print(_checkWayPointsReachedtimer);
                         _checkWayPointsReachedtimer.cancel();
-                      } else {
-                        print("timer is inactive");
-                        print(_checkWayPointsReachedtimer);
                       }
                     });
                   },
@@ -547,9 +606,6 @@ class _NavigationScreenState extends State<NavigationScreen>
                   ),
                   onPressed: () {
                     setState(() {
-                      print("clicked cancel buttom");
-                      // NavigationData().deleteNavigationData();
-                      // NavigationData().deleteCheckOutPostReachedData();
                       Navigator.of(context).pop();
                     });
                   },
@@ -594,7 +650,7 @@ class _NavigationScreenState extends State<NavigationScreen>
   void dispose() {
     listenLocationData.cancel();
     GeoFencing().stopGeoFencing();
-    NavigationData().deleteNavigationData();
+    NavigationData().deleteCheckInPostReachedData();
     NavigationData().deleteCheckOutPostReachedData();
     try {
       if (_checkWayPointsReachedtimer.isActive) {
@@ -612,8 +668,8 @@ class _NavigationScreenState extends State<NavigationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: MyFloatingActionButton(
-          trekkingCompletionStatus: _isTrekkingCompleted),
+      floatingActionButton:
+          MyFloatingActionButton(routeTotalDistance: routeTotalDistance),
       body: Stack(
         children: [
           _isLoading && _isRoutePathAvailable
@@ -630,9 +686,12 @@ class _NavigationScreenState extends State<NavigationScreen>
                     onMapCreated: _onMapCreated,
                     initialCameraPosition: CameraPosition(
                       target: _isRoutePathAvailable
-                          ? LatLng(currentLatitude, currentLongitude)
-                          : LatLng(widget.wayPoints[0].wayLatitude,
-                              widget.wayPoints[0].wayLongitude),
+                          ? LatLng(_routeCoordinates[0].latitude,
+                              _routeCoordinates[0].longitude)
+                          : wayPointsAvailable
+                              ? LatLng(wayPoint[0].wayLatitude,
+                                  wayPoint[0].wayLongitude)
+                              : LatLng(currentLatitude, currentLongitude),
                       zoom: wayPointMarkers.isEmpty ? 16.0 : 10.0,
                     ),
                     onTap: (coordinate) {
@@ -662,13 +721,13 @@ class _NavigationScreenState extends State<NavigationScreen>
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
               ),
               onPressed: () async {
-                if (widget.wayPoints.isNotEmpty) {
+                if (wayPointsAvailable && _isRoutePathAvailable) {
                   _mapController.animateCamera(
                     CameraUpdate.newCameraPosition(
                       CameraPosition(
                         target: LatLng(
-                          widget.wayPoints[0].wayLatitude.toDouble(),
-                          widget.wayPoints[0].wayLongitude.toDouble(),
+                          _routeCoordinates[0].latitude.toDouble(),
+                          _routeCoordinates[0].longitude.toDouble(),
                         ),
                         bearing: 0.0,
                         tilt: 0.0,
@@ -676,8 +735,10 @@ class _NavigationScreenState extends State<NavigationScreen>
                       ),
                     ),
                   );
+
                   //stores initial data when trekking starts
                   storeDayPerformance();
+                  calculateRemainingDisatance();
                   //stores periodically
                   _storeDataTimer = Timer.periodic(
                     Duration(hours: 1),
@@ -697,6 +758,24 @@ class _NavigationScreenState extends State<NavigationScreen>
                       });
                     },
                   );
+                } else {
+                  !_isRoutePathAvailable
+                      ? Fluttertoast.showToast(
+                          msg: "route path not available",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        )
+                      : Fluttertoast.showToast(
+                          msg: "way points not available",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
                 }
                 // await checkWaypointsReached();
               },
@@ -729,6 +808,9 @@ class _NavigationScreenState extends State<NavigationScreen>
         setState(() {
           _createWayPointsMarkers();
           _isRoutePathAvailable = true;
+          //calculates total distance of the route
+          routeTotalDistance = calculateDistance(0).roundToDouble();
+          calculateRemainingDisatance();
         });
       } else {
         setState(() {
@@ -763,7 +845,7 @@ class _NavigationScreenState extends State<NavigationScreen>
     dayPerformance = _dayPerformanceServerResponse[0];
     if (dayPerformance.serverResponse.isNotEmpty &&
         dayPerformance.serverResponse == "Insertion_Success") {
-      NavigationData().deleteNavigationData();
+      NavigationData().deleteCheckInPostReachedData();
       NavigationData().deleteCheckOutPostReachedData();
       Fluttertoast.showToast(
         msg: dayPerformance.message,
@@ -784,7 +866,7 @@ class _NavigationScreenState extends State<NavigationScreen>
         textColor: Colors.white,
         fontSize: 16.0,
       );
-      NavigationData().deleteNavigationData();
+      NavigationData().deleteCheckInPostReachedData();
       NavigationData().deleteCheckOutPostReachedData();
     }
   }
@@ -811,9 +893,9 @@ class _NavigationScreenState extends State<NavigationScreen>
 }
 
 class MyFloatingActionButton extends StatefulWidget {
-  final trekkingCompletionStatus;
+  final routeTotalDistance;
 
-  const MyFloatingActionButton({Key key, this.trekkingCompletionStatus})
+  const MyFloatingActionButton({Key key, this.routeTotalDistance})
       : super(key: key);
   @override
   _MyFloatingActionButtonState createState() => _MyFloatingActionButtonState();
@@ -833,7 +915,7 @@ class _MyFloatingActionButtonState extends State<MyFloatingActionButton> {
   }
 
   checkInPostStatus() async {
-    if (await NavigationData().checkNavigationData()) {
+    if (await NavigationData().checkInPostReachedData()) {
       print("check in status $_checkInPostStatus");
       setState(() {
         _checkInPostStatus = true;
@@ -889,15 +971,13 @@ class _MyFloatingActionButtonState extends State<MyFloatingActionButton> {
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(20),
                               topRight: Radius.circular(20),
-                              // Radius.circular(20),
                             ),
                           ),
                           width: double.infinity,
                           child: BottomSheetWidget(
                             checkInPostStatus: _checkInPostStatus,
                             checkOutPostStatus: _checkOutPostStatus,
-                            trekkingCompletionStatus:
-                                widget.trekkingCompletionStatus,
+                            routeTotalDistance: widget.routeTotalDistance,
                           ),
                         ));
                 showFoatingActionButton(false);
@@ -921,18 +1001,28 @@ class BottomSheetWidget extends StatefulWidget {
   final checkInPostStatus;
   final checkOutPostStatus;
   final trekkingCompletionStatus;
+  final routeTotalDistance;
 
   const BottomSheetWidget(
       {Key key,
       this.checkInPostStatus,
       this.checkOutPostStatus,
-      this.trekkingCompletionStatus})
+      this.trekkingCompletionStatus,
+      this.routeTotalDistance})
       : super(key: key);
   @override
   _BottomSheetWidgetState createState() => _BottomSheetWidgetState();
 }
 
 class _BottomSheetWidgetState extends State<BottomSheetWidget> {
+  var routeTotalDistance;
+
+  @override
+  void initState() {
+    super.initState();
+    routeTotalDistance = widget.routeTotalDistance;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1096,7 +1186,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                 child: Container(
                                     // alignment: Alignment.topLeft,
                                     child: Text(
-                                  'Trekking Completion Status',
+                                  'Route Total Distance',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 25,
@@ -1112,9 +1202,9 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                 child: Container(
                                   height: displayHeight(context) * 0.05,
                                   child: Text(
-                                    widget.trekkingCompletionStatus
-                                        ? "trekking completed"
-                                        : 'ongoing',
+                                    routeTotalDistance != null
+                                        ? "${routeTotalDistance.toInt().toString()} km"
+                                        : "not available",
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.white,
