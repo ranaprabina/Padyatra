@@ -6,11 +6,11 @@ StreamSubscription<GeofenceEvent> geoFenceEventStream;
 String geoFenceEvent;
 
 class GeoFencing {
-  bool startGeofencing(String latitude, String longitude) {
+  bool startGeofencing(String latitude, String longitude, String radiusMeter) {
     Geofence.startGeofenceService(
       pointedLatitude: latitude,
       pointedLongitude: longitude,
-      radiusMeter: "100",
+      radiusMeter: radiusMeter,
       eventPeriodInSeconds: 5,
     );
     if (geoFenceEventStream == null) {
