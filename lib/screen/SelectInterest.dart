@@ -26,8 +26,10 @@ class _UserSelectInterestState extends State<UserSelectInterest>
   String userId;
   int userIdAfterSignUp;
   bool _isLoading;
+  bool _isCategoryAvailable;
   RouteCategoryListPresenter _routeCategoryListPresenter;
   List<RouteCategory> _routeCategory;
+  RouteCategory noCategory;
 
   bool _isCategorySelected;
 
@@ -47,6 +49,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
   void initState() {
     super.initState();
     _isLoading = true;
+    _isCategoryAvailable = false;
     _routeCategoryListPresenter.loadRouteCategoryName();
     _isCategorySelected = false;
     finalResponse = false;
@@ -243,106 +246,171 @@ class _UserSelectInterestState extends State<UserSelectInterest>
               )
             : SingleChildScrollView(
                 scrollDirection: Axis.vertical,
-                child: Column(
-                  children: <Widget>[
-                    // Stack(
-                    //   children: <Widget>[
-                    Stack(
-                      children: [
-                        Container(
-                          child: Image.asset('images/Interest1.jpg'),
-                        ),
-                        Positioned(
-                          top: 20,
-                          // left: 10,
-                          right: 20,
-                          child: Align(
-                            alignment: Alignment.topRight,
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) => HomePage()));
-                              },
-                              child: Text(
-                                "skip",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: "Playfair Daily",
+                child: _isCategoryAvailable
+                    ? Column(
+                        children: <Widget>[
+                          // Stack(
+                          //   children: <Widget>[
+                          Stack(
+                            children: [
+                              Container(
+                                child: Image.asset('images/Interest1.jpg'),
+                              ),
+                              Positioned(
+                                top: 20,
+                                // left: 10,
+                                right: 20,
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  HomePage()));
+                                    },
+                                    child: Text(
+                                      "skip",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: "Playfair Daily",
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Center(
+                            // top: displayHeight(context) * 0.4,
+                            // left: displayWidth(context) * 0.35,
+                            child: Container(
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: "WHAT ARE YOU ",
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20,
+                                          fontFamily: 'Playfair Display',
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: "INTO?",
+                                      style: TextStyle(
+                                          color: Colors.amber,
+                                          fontSize: 50,
+                                          fontFamily: 'Playfair Display',
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                    Center(
-                      // top: displayHeight(context) * 0.4,
-                      // left: displayWidth(context) * 0.35,
-                      child: Container(
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "WHAT ARE YOU ",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontFamily: 'Playfair Display',
-                                    fontWeight: FontWeight.bold),
+                          //   ],
+                          // ),
+                          Divider(
+                            color: Colors.grey,
+                            thickness: 1.5,
+                            indent: MediaQuery.of(context).size.width / 9,
+                            endIndent: MediaQuery.of(context).size.width / 9,
+                          ),
+                          Wrap(
+                            children: interestWidgets.toList(),
+                          ),
+                          SizedBox(
+                            height: displayHeight(context) * 0.03,
+                          ),
+                          MaterialButton(
+                            onPressed: () {
+                              insertUserInterestCategories();
+                            },
+                            height: displayHeight(context) * 0.05,
+                            minWidth: displayWidth(context) * 0.35,
+                            color: Hexcolor('#b0e57c'),
+                            splashColor: Colors.white,
+                            elevation: 5.0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0))),
+                            child: Text(
+                              'Continue',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15.0,
                               ),
-                              TextSpan(
-                                text: "INTO?",
-                                style: TextStyle(
-                                    color: Colors.amber,
-                                    fontSize: 50,
-                                    fontFamily: 'Playfair Display',
-                                    fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(
+                        height: MediaQuery.of(context).size.height,
+                        // margin:
+                        //     const EdgeInsets.only(top: 20, left: 15, right: 15),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              RichText(
+                                // textHeightBehavior: TextHeightBehavior.fromEncoded(≈),
+                                text: TextSpan(children: [
+                                  TextSpan(
+                                    text: 'OPPS !!!!\n',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Oswald',
+                                        fontSize: 45,
+                                        letterSpacing: 2.0),
+                                  ),
+                                  TextSpan(
+                                    text: '😮🤦🏼\n\n',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Oswald',
+                                        fontSize: 30),
+                                  ),
+                                  TextSpan(
+                                    text: noCategory.message,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'JosefinSans Regular',
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ]),
+                              ),
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pushReplacement(MaterialPageRoute(
+                                          builder: (context) => HomePage(
+                                                userId: userId,
+                                              )));
+                                },
+                                height: displayHeight(context) * 0.05,
+                                minWidth: displayWidth(context) * 0.9,
+                                color: Hexcolor('#b0e57c'),
+                                splashColor: Colors.white,
+                                elevation: 5.0,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8.0))),
+                                child: Text(
+                                  'Continue',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15.0,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    //   ],
-                    // ),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 1.5,
-                      indent: MediaQuery.of(context).size.width / 9,
-                      endIndent: MediaQuery.of(context).size.width / 9,
-                    ),
-                    Wrap(
-                      children: interestWidgets.toList(),
-                    ),
-                    SizedBox(
-                      height: displayHeight(context) * 0.03,
-                    ),
-                    MaterialButton(
-                      onPressed: () {
-                        insertUserInterestCategories();
-                      },
-                      height: displayHeight(context) * 0.05,
-                      minWidth: displayWidth(context) * 0.35,
-                      color: Hexcolor('#b0e57c'),
-                      splashColor: Colors.white,
-                      elevation: 5.0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(20.0))),
-                      child: Text(
-                        'Continue',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                      )),
       ),
     );
   }
@@ -387,7 +455,11 @@ class _UserSelectInterestState extends State<UserSelectInterest>
 
   @override
   void onLoadRouteCategoryError() {
-    throw new FetchDataException();
+    setState(() {
+      _isLoading = false;
+      _isCategoryAvailable = false;
+      throw new FetchDataException();
+    });
   }
 
   @override
@@ -395,12 +467,19 @@ class _UserSelectInterestState extends State<UserSelectInterest>
     setState(
       () {
         _routeCategory = items;
+        noCategory = _routeCategory[0];
         _isLoading = false;
-        print("Routes Category");
-        for (int i = 0; i < _routeCategory.length; i++) {
-          final RouteCategory routeCategory = _routeCategory[i];
-          print(routeCategory.categoryName);
-          // _interests.add(routeCategory.categoryName);
+        noCategory.response == "ERROR_OCCURED"
+            ? _isCategoryAvailable = false
+            : _isCategoryAvailable = true;
+        if (_isCategoryAvailable) {
+          for (int i = 0; i < _routeCategory.length; i++) {
+            final RouteCategory routeCategory = _routeCategory[i];
+            print(routeCategory.categoryName);
+            // _interests.add(routeCategory.categoryName);
+          }
+        } else {
+          return;
         }
       },
     );
