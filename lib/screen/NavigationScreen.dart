@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' show cos, sqrt, asin;
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,6 +9,7 @@ import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinate
 import 'package:padyatra/models/route_details_model/route_details_data.dart';
 import 'package:padyatra/presenter/day_performance_presenter.dart';
 import 'package:padyatra/presenter/get_route_coordinates_presenter.dart';
+import 'package:padyatra/services/DistanceCalculation.dart';
 import 'package:padyatra/services/GeoFencing.dart';
 import 'package:padyatra/services/NavgationData.dart';
 import '../control_sizes.dart';
@@ -124,39 +124,18 @@ class _NavigationScreenState extends State<NavigationScreen>
       if (insideGeofence) {
         calculateRemainigDistanceFromThisPoint = i;
         setState(() {
-          remainingDistance =
-              calculateDistance(calculateRemainigDistanceFromThisPoint);
+          remainingDistance = distanceCalculation(
+                  calculateRemainigDistanceFromThisPoint, _routeCoordinates)
+              .roundToDouble();
           print("remaining distance is : $remainingDistance");
         });
         break;
       } else {
         GeoFencing().stopGeoFencing();
-        print("Unable to enter goefence and calculate remaining distanve");
+        print("Unable to enter goefence and calculate remaining distance");
         continue;
       }
     }
-  }
-
-  double calculateDistance(int index) {
-    double calculateDistance(lat1, lon1, lat2, lon2) {
-      var p = 0.017453292519943295;
-      var c = cos;
-      var a = 0.5 -
-          c((lat2 - lat1) * p) / 2 +
-          c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
-      return 12742 * asin(sqrt(a));
-    }
-
-    double totalDistance = 0;
-    for (var i = index; i < _routeCoordinates.length - 1; i++) {
-      totalDistance += calculateDistance(
-          _routeCoordinates[i].latitude,
-          _routeCoordinates[i].longitude,
-          _routeCoordinates[i + 1].latitude,
-          _routeCoordinates[i + 1].longitude);
-    }
-    print("totalDistance is $totalDistance");
-    return totalDistance;
   }
 
   @override
@@ -809,7 +788,9 @@ class _NavigationScreenState extends State<NavigationScreen>
           _createWayPointsMarkers();
           _isRoutePathAvailable = true;
           //calculates total distance of the route
-          routeTotalDistance = calculateDistance(0).roundToDouble();
+          // routeTotalDistance = calculateDistance(0).roundToDouble();
+          routeTotalDistance =
+              distanceCalculation(0, _routeCoordinates).roundToDouble();
           calculateRemainingDisatance();
         });
       } else {
