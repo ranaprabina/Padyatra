@@ -1,11 +1,17 @@
 class RouteCategory {
+  String response;
+  String message;
   String categoryName;
   RouteCategory({
+    this.response,
+    this.message,
     this.categoryName,
   });
 
   RouteCategory.fromMap(Map<String, dynamic> map)
-      : categoryName = map['category_name'];
+      : response = map['Response'],
+        message = map['message'],
+        categoryName = map['category_name'];
 }
 
 abstract class RouteCategoryRepository {
