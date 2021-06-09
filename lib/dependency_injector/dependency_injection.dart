@@ -34,6 +34,9 @@ import 'package:padyatra/models/routes_catefory_model/route_category_prod.dart';
 import 'package:padyatra/models/search_route_model/search_route_data.dart';
 import 'package:padyatra/models/search_route_model/search_route_mock.dart';
 import 'package:padyatra/models/search_route_model/search_route_prod.dart';
+import 'package:padyatra/models/seasonal_route_model/seasonal_route_mock.dart';
+import 'package:padyatra/models/seasonal_route_model/seasonal_route_data.dart';
+import 'package:padyatra/models/seasonal_route_model/seasonal_route_prod.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_data.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_mock.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_prod.dart';
@@ -202,6 +205,16 @@ class Injector {
 
       default:
         return new ProdDayPerformanceRepository();
+    }
+  }
+
+  SeasonalRouteRepository get seasonalRouteRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return MockSeasonalRoute();
+
+      default:
+        return new ProdSeasonalRouteRepository();
     }
   }
 }
