@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/widget/NearbyRoutesCarousel.dart';
-
 import 'package:padyatra/widget/RecentlyAddedCarousel.dart';
 import 'package:padyatra/widget/SearchBar.dart';
+import 'package:padyatra/widget/SeasonName.dart';
 import 'package:padyatra/widget/UserInterestCarousel.dart';
 
 class Explore extends StatefulWidget {
@@ -79,6 +79,7 @@ class _ExploreBodyState extends State<ExploreBody> {
         SliverList(
           delegate: SliverChildListDelegate([
             SearchBar(userId: userId),
+            SeasonName(userId: userId),
             _isUserIdAvailable
                 ? UserInterestCarousel(userId: userId)
                 : Container(),
