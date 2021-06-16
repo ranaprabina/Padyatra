@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:padyatra/models/search_route_model/search_route_data.dart';
 import 'package:padyatra/presenter/search_route_presenter.dart';
 import 'package:padyatra/screen/RouteDetails.dart';
+import 'package:padyatra/services/SearchedRoute.dart';
 
 class SearchBar extends StatefulWidget {
   final userId;
@@ -17,6 +18,7 @@ class _SearchBarState extends State<SearchBar>
   bool _isLoading;
   List routeNameList = [];
   String searchingRoute;
+
   _SearchBarState() {
     _presenter = new SearchRouteListPresenter(this);
   }
@@ -28,10 +30,6 @@ class _SearchBarState extends State<SearchBar>
   }
 
   Widget build(BuildContext context) {
-    //list of items in the list view
-    // final List<String> items = <String>['A', 'B', 'c', 'D', 'E'];
-    // final List<TrekkingRoutes> _allTrekkingRoutes =
-    //     TrekkingRoutes.allTrekkingRoutes();
     return Column(
       children: <Widget>[
         SizedBox(
@@ -74,7 +72,7 @@ class _SearchBarState extends State<SearchBar>
                     showSearch(
                       context: context,
                       delegate: RouteSearch(
-                        recentRouteList: routeNameList,
+                        routeNameList: routeNameList,
                         userId: widget.userId,
                       ),
                     );
@@ -109,17 +107,17 @@ class _SearchBarState extends State<SearchBar>
 
 class RouteSearch extends SearchDelegate<String> {
   List routes = [];
-  List recentRoutes = [
-    "Annapurna Base Camp Trek",
-    "Mardi Himal Trek",
-    "Poon Hill Trek",
-  ];
-
-  String searchingRoute;
+  List<String> lastSearchedRoutes = [];
   String id;
-  RouteSearch({List recentRouteList, userId}) {
-    routes = recentRouteList;
+
+  RouteSearch({List routeNameList, userId}) {
+    routes = routeNameList;
     id = userId;
+    lastSearchedRoute();
+  }
+
+  lastSearchedRoute() async {
+    lastSearchedRoutes = await UserSearchHistory().getSearchHistory();
   }
 
   @override
@@ -133,7 +131,6 @@ class RouteSearch extends SearchDelegate<String> {
         },
       )
     ];
-    // throw UnimplementedError();
   }
 
   @override
@@ -157,7 +154,7 @@ class RouteSearch extends SearchDelegate<String> {
     // throw UnimplementedError();
 
     final suggestionList = query.isEmpty
-        ? recentRoutes
+        ? lastSearchedRoutes
         : routes
             .where(
               (r) => r.toString().toLowerCase().contains(query),
@@ -170,10 +167,8 @@ class RouteSearch extends SearchDelegate<String> {
         return ListTile(
           onTap: () {
             query = suggestionList[index].toString();
-            // print("onTap Tapped");
             close(context, query);
-            print("final searched result is");
-            print(query);
+            UserSearchHistory().storeUserSearchHistory(query);
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => RouteDetailsScreen(
                       searchedRouteName: query,
@@ -200,15 +195,16 @@ class RouteSearch extends SearchDelegate<String> {
   Widget buildSuggestions(BuildContext context) {
     // show when someone searches for something
     // throw UnimplementedError();
+
     final suggestionList = query.isEmpty
-        ? recentRoutes
+        ? lastSearchedRoutes
         : routes
             .where(
               (r) => r.toString().toLowerCase().contains(query),
             )
             .toList();
 
-    return suggestionList.isEmpty
+    return suggestionList == null
         ? Text(
             'No results Found..',
             style: TextStyle(
@@ -221,6 +217,7 @@ class RouteSearch extends SearchDelegate<String> {
               return ListTile(
                 onTap: () {
                   query = suggestionList[index].toString();
+                  UserSearchHistory().storeUserSearchHistory(query);
                   close(context, query);
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => RouteDetailsScreen(
