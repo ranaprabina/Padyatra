@@ -39,7 +39,6 @@ class _NavigationScreenState extends State<NavigationScreen>
   Set<Polyline> polyline = {};
   var listenLocationData;
   bool _isRoutePathAvailable;
-  bool _isNavigationStarted;
   bool _isCheckInPostReached;
   bool _isCheckOutPostReached;
   bool _isTrekkingCompleted;
@@ -50,7 +49,6 @@ class _NavigationScreenState extends State<NavigationScreen>
   GoogleMapController _mapController;
   Location location = new Location();
   LatLng _centre;
-  String geoFenceEvent = '';
   LatLng _lastMapPosition;
   static double currentLatitude;
   static double currentLongitude;
@@ -143,7 +141,6 @@ class _NavigationScreenState extends State<NavigationScreen>
     super.initState();
     _isLoading = true;
     _isRoutePathAvailable = false;
-    _isNavigationStarted = false;
     _isCheckInPostReached = false;
     _isCheckOutPostReached = false;
     _isTrekkingCompleted = false;
