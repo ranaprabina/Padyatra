@@ -10,6 +10,12 @@ class MockDayPerformance implements DayPerformanceRepository {
       String trekkingComplete) {
     return new Future.value(serverResponse);
   }
+
+  @override
+  Future<List<DayPerformance>> getDayPerformance(
+      String routeId, String userId) {
+    return new Future.value(serverResponse1);
+  }
 }
 
 var serverResponse = <DayPerformance>[
@@ -17,4 +23,48 @@ var serverResponse = <DayPerformance>[
     serverResponse: "Insertion_Success",
     message: "today performance was inserted successfully",
   )
+];
+var serverResponse1 = <DayPerformance>[
+  new DayPerformance(
+    dayId: 1,
+    userId: 5,
+    lattitudeReached: 28.34234,
+    longitudeReached: 83.32423,
+    trekkingCompleted: 0,
+  ),
+  new DayPerformance(
+    dayId: 1,
+    userId: 5,
+    lattitudeReached: 28.34234,
+    longitudeReached: 83.32423,
+    trekkingCompleted: 0,
+  ),
+  new DayPerformance(
+    dayId: 1,
+    userId: 5,
+    lattitudeReached: 28.34234,
+    longitudeReached: 83.32423,
+    trekkingCompleted: 0,
+  ),
+  new DayPerformance(
+    dayId: 1,
+    userId: 5,
+    lattitudeReached: 28.34234,
+    longitudeReached: 83.32423,
+    trekkingCompleted: 0,
+  ),
+  new DayPerformance(
+    dayId: 1,
+    userId: 5,
+    lattitudeReached: 28.34234,
+    longitudeReached: 83.32423,
+    trekkingCompleted: 0,
+  ),
+  new DayPerformance(
+    dayId: 1,
+    userId: 5,
+    lattitudeReached: 28.34234,
+    longitudeReached: 83.32423,
+    trekkingCompleted: 1,
+  ),
 ];

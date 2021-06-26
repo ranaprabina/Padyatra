@@ -1,11 +1,37 @@
 class DayPerformance {
   String serverResponse;
   String message;
-  DayPerformance({this.serverResponse, this.message});
+  int dayId;
+  int userId;
+  String routeId;
+  double lattitudeReached;
+  double longitudeReached;
+  int trekkingCompleted;
+  DayPerformance({
+    this.serverResponse,
+    this.message,
+    this.dayId,
+    this.userId,
+    this.routeId,
+    this.lattitudeReached,
+    this.longitudeReached,
+    this.trekkingCompleted,
+  });
 
   DayPerformance.toMap(Map<String, dynamic> map)
       : serverResponse = map['Response'],
-        message = map['message'];
+        message = map['message'],
+        dayId = map['day_id'],
+        userId = map['u_id'],
+        lattitudeReached = map['lat_reached'],
+        longitudeReached = map['lng_reached'];
+
+  DayPerformance.fromMap(Map<String, dynamic> map)
+      : dayId = map['day_id'],
+        userId = map['u_id'],
+        lattitudeReached = map['lat_reached'],
+        longitudeReached = map['lng_reached'],
+        trekkingCompleted = map['trekking_completed'];
 }
 
 abstract class DayPerformanceRepository {
@@ -16,11 +42,13 @@ abstract class DayPerformanceRepository {
     String longitudeReached,
     String trekkingComplete,
   );
+
+  Future<List<DayPerformance>> getDayPerformance(String routeId, String userId);
 }
 
-class FetchDataException1 implements Exception {
+class FetchDataException2 implements Exception {
   final _message;
-  FetchDataException1([this._message]);
+  FetchDataException2([this._message]);
 
   String toString() {
     if (_message == null) return "Exception";
