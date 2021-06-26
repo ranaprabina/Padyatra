@@ -75,7 +75,6 @@ class _SeasonalRoutesCarouselState extends State<SeasonalRoutesCarousel>
                       },
                       child: Card(
                         child: Container(
-                          // margin: EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
                             color: Colors.white,
@@ -104,43 +103,23 @@ class _SeasonalRoutesCarouselState extends State<SeasonalRoutesCarousel>
                                 ),
                               ),
                               Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text(
-                                    seasonalRoute.routeName,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500),
+                                  Container(
+                                    padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                    child: Text(
+                                      seasonalRoute.routeName,
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500),
+                                    ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(left: 15, top: 8),
+                                    padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
                                     child: Row(
                                       children: <Widget>[
-                                        Container(
-                                          width: displayWidth(context) * 0.17,
-                                          child: Column(
-                                            children: <Widget>[
-                                              Container(
-                                                child: Text(
-                                                  'Length',
-                                                  style: TextStyle(
-                                                      fontSize: 11,
-                                                      fontWeight:
-                                                          FontWeight.w100),
-                                                ),
-                                              ),
-                                              Text(
-                                                "${seasonalRoute.length} km",
-                                                style: TextStyle(
-                                                  fontSize: 11,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: displayWidth(context) * 0.09,
-                                        ),
                                         Container(
                                           width: displayWidth(context) * 0.12,
                                           child: Column(
@@ -166,19 +145,15 @@ class _SeasonalRoutesCarouselState extends State<SeasonalRoutesCarousel>
                                       ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: displayHeight(context) * 0.03,
-                                  ),
                                   Container(
-                                    margin: EdgeInsets.only(left: 40),
+                                    margin: EdgeInsets.fromLTRB(8, 0, 0, 0),
                                     width: displayWidth(context) * 0.35,
                                     height: displayHeight(context) * 0.03,
                                     decoration: BoxDecoration(
                                       color: Colors.green,
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                    child: Center(
                                       child: Text(
                                         "${seasonalRoute.category}",
                                         style: TextStyle(
