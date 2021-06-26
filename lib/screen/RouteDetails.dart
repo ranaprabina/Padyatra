@@ -2,14 +2,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:padyatra/control_sizes.dart';
+import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_data.dart';
+import 'package:padyatra/presenter/get_route_coordinates_presenter.dart';
 import 'package:padyatra/presenter/routes_details_presenter.dart';
 import 'package:padyatra/models/route_details_model/route_details_data.dart';
 import 'package:padyatra/screen/NavigationScreen.dart';
 import 'package:padyatra/screen/SignUp.dart';
 import 'package:padyatra/screen/documents_required.dart';
+import 'package:padyatra/services/DistanceCalculation.dart';
 import 'package:padyatra/services/api.dart';
 import 'package:padyatra/services/api_constants.dart';
 import 'package:padyatra/services/currentLocation.dart';
@@ -18,11 +22,13 @@ import 'package:padyatra/weatherAPIToken/weatherAPIToken.dart';
 class RouteDetailsScreen extends StatefulWidget {
   final searchedRouteName;
   final id;
+  final routeID;
 
   const RouteDetailsScreen({
     Key key,
     this.searchedRouteName,
     this.id,
+    this.routeID,
   }) : super(key: key);
   @override
   _RouteDetailsScreenState createState() => _RouteDetailsScreenState();
@@ -42,6 +48,7 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
       body: DetailsBody(
         selectedRoute: widget.searchedRouteName,
         userId: widget.id,
+        routeID: widget.routeID,
       ),
     );
   }
@@ -50,10 +57,12 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
 class DetailsBody extends StatefulWidget {
   final selectedRoute;
   final userId;
+  final routeID;
   const DetailsBody({
     Key key,
     this.selectedRoute,
     this.userId,
+    this.routeID,
   }) : super(key: key);
 
   @override
@@ -61,7 +70,9 @@ class DetailsBody extends StatefulWidget {
 }
 
 class _DetailsBodyState extends State<DetailsBody>
-    implements RouteDetailsListViewContract {
+    implements
+        RouteDetailsListViewContract,
+        GetRouteCoordinatesListViewContract {
   bool _isRouteBookmarked;
   var temp;
   var temperature;
@@ -73,6 +84,11 @@ class _DetailsBodyState extends State<DetailsBody>
   bool _isFetchingDestination;
   bool _isImageLoading;
   bool _isWayPointsAvailable;
+  GetRouteCoordinatesListPresenter _getRouteCoordinatesListPresenter;
+  List<GetRouteCoordinates> _getRouteCoordinatesServerResponse;
+  List<LatLng> _routeCoordinates = [];
+  bool _routeCoordinatesAvailable;
+  double routeTotalDistance;
 
   Future getDestinationWeather() async {
     http.Response response = await http.get(
@@ -115,6 +131,8 @@ class _DetailsBodyState extends State<DetailsBody>
   bool _isLoading;
   _DetailsBodyState() {
     _presenter = new RouteDetailsListPresenter(this);
+    _getRouteCoordinatesListPresenter =
+        new GetRouteCoordinatesListPresenter(this);
   }
   @override
   void initState() {
@@ -122,7 +140,10 @@ class _DetailsBodyState extends State<DetailsBody>
     _isLoading = true;
     _isImageLoading = true;
     _isWayPointsAvailable = false;
+    _routeCoordinatesAvailable = false;
     _presenter.loadRouteDetails(widget.selectedRoute, widget.userId);
+    // _getRouteCoordinatesListPresenter
+    //     .loadServerResponseCoordinates(widget.routeID);
     _isFetchingCurrent = true;
     _isFetchingDestination = true;
     this.getDestinationWeather();
@@ -299,9 +320,12 @@ class _DetailsBodyState extends State<DetailsBody>
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => NavigationScreen(
-                                          userID: widget.userId,
-                                          routeID: routeDetails.routeId,
-                                          wayPoints: routeDetails.wayPoints),
+                                        userID: widget.userId,
+                                        routeID: routeDetails.routeId,
+                                        wayPoints: routeDetails.wayPoints,
+                                        routeTotalDistance: routeTotalDistance,
+                                        routeCoordinates: _routeCoordinates,
+                                      ),
                                     ),
                                   );
                                 } else {
@@ -405,7 +429,9 @@ class _DetailsBodyState extends State<DetailsBody>
                                 Container(
                                   padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                                   child: Text(
-                                    "${routeDetails.length} km",
+                                    routeTotalDistance != null
+                                        ? "${routeTotalDistance.toInt().toString()} km"
+                                        : "not available",
                                     style: TextStyle(fontFamily: 'Noto Sans'),
                                   ),
                                 )
@@ -847,6 +873,48 @@ class _DetailsBodyState extends State<DetailsBody>
       routeDetails.isBookmarked
           ? _isRouteBookmarked = true
           : _isRouteBookmarked = false;
+      _getRouteCoordinatesListPresenter
+          .loadServerResponseCoordinates(routeDetails.routeId);
     });
+  }
+
+  @override
+  void onGetRouteCoordinatesComplete(List<GetRouteCoordinates> items) {
+    setState(() {
+      _getRouteCoordinatesServerResponse = items;
+      var _coordinates =
+          _getRouteCoordinatesServerResponse[0].coordinates.routeCoords;
+
+      if (_routeCoordinates.isEmpty) {
+        for (int index = 0; index < _coordinates.length; index++) {
+          _routeCoordinates.add(LatLng(
+              _coordinates[index].latitude, _coordinates[index].longitude));
+        }
+        setState(() {
+          _routeCoordinatesAvailable = true;
+          routeTotalDistance =
+              distanceCalculation(0, _routeCoordinates).roundToDouble();
+        });
+      } else {
+        setState(() {
+          _routeCoordinatesAvailable = false;
+          _routeCoordinates = [];
+        });
+      }
+    });
+  }
+
+  @override
+  void onGetRouteCoordinatesError() {
+    setState(() {
+      _routeCoordinatesAvailable = false;
+      _routeCoordinates = [];
+    });
+    try {
+      throw new FetchDataException(
+          "Error_Occured: Unable to fetch Route geo coordinates.");
+    } catch (e) {
+      print(e);
+    }
   }
 }
