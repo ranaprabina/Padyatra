@@ -2,9 +2,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserSearchHistory {
   var routeName;
+  List<String> searchedRouteList = [];
+
   storeUserSearchHistory(String routeName) async {
-    List<String> searchedRouteList = await getSearchHistory();
-    if (searchedRouteList == null) {
+    searchedRouteList = await getSearchHistory();
+    if (searchedRouteList.isEmpty) {
       searchedRouteList.add(routeName);
     } else {
       for (int index = 0; index < searchedRouteList.length; index++) {
@@ -27,7 +29,7 @@ class UserSearchHistory {
     if (result != null) {
       return result;
     } else {
-      return null;
+      return [];
     }
   }
 }
