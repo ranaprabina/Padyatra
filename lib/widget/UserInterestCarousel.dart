@@ -151,6 +151,8 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
                                             bottomRight: Radius.circular(10.0)),
                                       ),
                                       child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
                                           Container(
                                             margin: EdgeInsets.only(left: 5),
@@ -162,14 +164,15 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
-                                            child: Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 4.5, 0, 0),
+                                            child: Center(
+                                              // padding: EdgeInsets.fromLTRB(
+                                              //     0, 4.5, 0, 0),
                                               child: Text(
                                                 // '${_allTrekkingRoutes[index].difficulty}',
                                                 route.category,
                                                 style: TextStyle(
                                                   fontSize: 10.0,
+                                                  fontFamily: "Roboto",
                                                   color: Colors.white,
                                                   letterSpacing: 1.2,
                                                 ),
@@ -178,56 +181,26 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
                                             ),
                                           ),
                                           Container(
-                                            width: displayWidth(context) * 0.17,
-                                            child: Column(
-                                              children: <Widget>[
-                                                Container(
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                            0, 10, 0, 0),
-                                                    child: Text(
-                                                      'Length',
-                                                      style: TextStyle(
-                                                          fontSize: 11,
-                                                          fontWeight:
-                                                              FontWeight.w100),
-                                                    ),
-                                                  ),
-                                                ),
+                                            child: Row(
+                                              children: [
                                                 Text(
-                                                  // '${_allTrekkingRoutes[index].length}',
-                                                  "${route.length} km",
+                                                  'Duration',
                                                   style: TextStyle(
-                                                    fontSize: 11,
-                                                  ),
+                                                      fontSize: 11,
+                                                      fontFamily: "Roboto",
+                                                      fontWeight:
+                                                          FontWeight.w100),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            width: displayWidth(context) * 0.12,
-                                            child: Column(
-                                              children: <Widget>[
-                                                Container(
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                            0, 10, 0, 0),
-                                                    child: Text(
-                                                      'Duration',
-                                                      style: TextStyle(
-                                                          fontSize: 11,
-                                                          fontWeight:
-                                                              FontWeight.w100),
-                                                    ),
-                                                  ),
+                                                SizedBox(
+                                                  width: displayWidth(context) *
+                                                      0.01,
                                                 ),
                                                 Text(
                                                   // '${_allTrekkingRoutes[index].duration}',
                                                   "${route.duration} days",
                                                   style: TextStyle(
-                                                    fontSize: 11,
+                                                    fontSize: 13,
+                                                    fontFamily: "Roboto",
                                                   ),
                                                 ),
                                               ],

@@ -5,6 +5,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/completed_route_model/completed_route_data.dart';
 import 'package:padyatra/presenter/completed_route_presenter.dart';
+import 'package:padyatra/screen/CompletedRouteDetails.dart';
+import 'package:padyatra/screen/NavigationScreen.dart';
 import 'package:padyatra/services/api_constants.dart';
 
 class CompletedRoutes extends StatelessWidget {
@@ -132,15 +134,14 @@ class _RoutesCompletedState extends State<RoutesCompleted>
                                     _completedRoute[index];
                                 return GestureDetector(
                                   onTap: () {
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "${completedRoute.routeName} selected",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        // timeInSecForIosWeb: 1,
-                                        backgroundColor: Hexcolor('#24695c'),
-                                        textColor: Colors.white,
-                                        fontSize: 16.0);
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CompletedRouteDetails(
+                                                  completedRoute:
+                                                      completedRoute,
+                                                  userId: userId,
+                                                )));
                                   },
                                   child: Card(
                                     child: Container(
@@ -151,15 +152,6 @@ class _RoutesCompletedState extends State<RoutesCompleted>
                                             borderRadius: BorderRadius.only(
                                                 topLeft: Radius.circular(5),
                                                 bottomLeft: Radius.circular(5)),
-                                            // child: Image(
-                                            //     height: displayHeight(context) *
-                                            //         0.18,
-                                            //     width:
-                                            //         displayWidth(context) * 0.4,
-                                            //     fit: BoxFit.cover,
-                                            //     image: AssetImage("images/" +
-                                            //         _allCompletedRoutes[index]
-                                            //             .image)),
                                             child: Container(
                                               child: _isImageLoading
                                                   ? new Center(
@@ -176,7 +168,7 @@ class _RoutesCompletedState extends State<RoutesCompleted>
                                                           0.18,
                                                       width: displayWidth(
                                                               context) *
-                                                          0.4,
+                                                          0.35,
                                                       gaplessPlayback: true,
                                                     ),
                                             ),
@@ -186,15 +178,17 @@ class _RoutesCompletedState extends State<RoutesCompleted>
                                                 CrossAxisAlignment.start,
                                             children: <Widget>[
                                               Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
+                                                padding: EdgeInsets.fromLTRB(
+                                                    9, 9, 0, 0),
                                                 child: Container(
                                                   child: Text(
                                                     '${completedRoute.routeName}',
                                                     style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w500),
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontFamily: "Roboto",
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -206,11 +200,24 @@ class _RoutesCompletedState extends State<RoutesCompleted>
                                                     children: <Widget>[
                                                       Container(
                                                         child: Text(
-                                                            'Completed in:'),
+                                                          'Completed in : ',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w100,
+                                                              fontFamily:
+                                                                  "Roboto",
+                                                              fontSize: 12),
+                                                        ),
                                                       ),
                                                       Container(
                                                         child: Text(
-                                                            '${completedRoute.totalTrekkedDays} days'),
+                                                          '${completedRoute.totalTrekkedDays} days',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  "Roboto",
+                                                              fontSize: 12),
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -219,21 +226,11 @@ class _RoutesCompletedState extends State<RoutesCompleted>
                                               Padding(
                                                 padding: EdgeInsets.fromLTRB(
                                                     9, 9, 0, 0),
-                                                child: Container(
-                                                  child: Row(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        child: Text(
-                                                            'Distance Covered:'),
-                                                      ),
-                                                      Container(
-                                                        child: Text(
-                                                            '${completedRoute.routeLength} km'),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                child: Icon(
+                                                  Icons.done_outline_rounded,
+                                                  color: Colors.green,
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ],

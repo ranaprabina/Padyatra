@@ -141,6 +141,8 @@ class _RecentlyAddedState extends State<RecentlyAdded>
                                                   Radius.circular(10.0)),
                                         ),
                                         child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
                                           children: <Widget>[
                                             Container(
                                               margin: EdgeInsets.only(left: 5),
@@ -153,9 +155,7 @@ class _RecentlyAddedState extends State<RecentlyAdded>
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                               ),
-                                              child: Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    0, 4.5, 0, 0),
+                                              child: Center(
                                                 child: Text(
                                                   // '${_allTrekkingRoutes[index].difficulty}',
                                                   recentRoute.category,
@@ -169,60 +169,27 @@ class _RecentlyAddedState extends State<RecentlyAdded>
                                               ),
                                             ),
                                             Container(
-                                              width:
-                                                  displayWidth(context) * 0.17,
-                                              child: Column(
-                                                children: <Widget>[
-                                                  Container(
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              0, 10, 0, 0),
-                                                      child: Text(
-                                                        'Length',
-                                                        style: TextStyle(
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w100),
-                                                      ),
-                                                    ),
-                                                  ),
+                                              child: Row(
+                                                children: [
                                                   Text(
-                                                    // '${_allTrekkingRoutes[index].length}',
-                                                    "${recentRoute.length} km",
+                                                    'Duration',
                                                     style: TextStyle(
                                                       fontSize: 11,
+                                                      fontWeight:
+                                                          FontWeight.w100,
+                                                      fontFamily: "Roboto",
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              width:
-                                                  displayWidth(context) * 0.12,
-                                              child: Column(
-                                                children: <Widget>[
-                                                  Container(
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              0, 10, 0, 0),
-                                                      child: Text(
-                                                        'Duration',
-                                                        style: TextStyle(
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w100),
-                                                      ),
-                                                    ),
+                                                  SizedBox(
+                                                    width:
+                                                        displayWidth(context) *
+                                                            0.01,
                                                   ),
                                                   Text(
-                                                    // '${_allTrekkingRoutes[index].duration}',
                                                     "${recentRoute.duration} days",
                                                     style: TextStyle(
-                                                      fontSize: 11,
+                                                      fontSize: 13,
+                                                      fontFamily: "Roboto",
                                                     ),
                                                   ),
                                                 ],

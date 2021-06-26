@@ -177,7 +177,7 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
                                                           0.18,
                                                       width: displayWidth(
                                                               context) *
-                                                          0.4,
+                                                          0.35,
                                                       gaplessPlayback: true,
                                                     ),
                                             ),
@@ -188,110 +188,108 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
                                             children: <Widget>[
                                               Padding(
                                                 padding: EdgeInsets.fromLTRB(
-                                                    15, 8, 0, 0),
+                                                    9, 9, 0, 0),
                                                 child: Text(
                                                   // '${_allTrekkingRoutes[index].name}',
                                                   bookmarkedRoute.routeName,
                                                   style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w500),
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    fontFamily: "Roboto",
+                                                  ),
                                                 ),
                                               ),
+                                              // Container(
+                                              //   margin: EdgeInsets.only(
+                                              //       left: 15, top: 8),
+                                              //   child: Row(
+                                              //     children: <Widget>[
+                                              // Container(
+                                              //   width: displayWidth(
+                                              //           context) *
+                                              //       0.17,
+                                              //   child: Column(
+                                              //     children: <Widget>[
+                                              //       Container(
+                                              //         child: Padding(
+                                              //           padding:
+                                              //               EdgeInsets
+                                              //                   .fromLTRB(
+                                              //                       0,
+                                              //                       10,
+                                              //                       0,
+                                              //                       0),
+                                              //           child: Text(
+                                              //             'Length',
+                                              //             style: TextStyle(
+                                              //                 fontSize:
+                                              //                     11,
+                                              //                 fontWeight:
+                                              //                     FontWeight
+                                              //                         .w100),
+                                              //           ),
+                                              //         ),
+                                              //       ),
+                                              //       Text(
+                                              //         // '${_allTrekkingRoutes[index].length}',
+                                              //         "${bookmarkedRoute.length} km",
+
+                                              //         style: TextStyle(
+                                              //           fontSize: 11,
+                                              //         ),
+                                              //       ),
+                                              //     ],
+                                              //   ),
+                                              // ),
+                                              // SizedBox(
+                                              //   width: displayWidth(
+                                              //           context) *
+                                              //       0.09,
+                                              // ),
                                               Container(
-                                                margin: EdgeInsets.only(
-                                                    left: 15, top: 8),
+                                                // width: displayWidth(
+                                                //         context) *
+                                                //     0.12,
+                                                padding: EdgeInsets.fromLTRB(
+                                                    9, 9, 0, 0),
                                                 child: Row(
                                                   children: <Widget>[
-                                                    Container(
-                                                      width: displayWidth(
-                                                              context) *
-                                                          0.17,
-                                                      child: Column(
-                                                        children: <Widget>[
-                                                          Container(
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                          0,
-                                                                          10,
-                                                                          0,
-                                                                          0),
-                                                              child: Text(
-                                                                'Length',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        11,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w100),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            // '${_allTrekkingRoutes[index].length}',
-                                                            "${bookmarkedRoute.length} km",
-
-                                                            style: TextStyle(
-                                                              fontSize: 11,
-                                                            ),
-                                                          ),
-                                                        ],
+                                                    Text(
+                                                      'Duration : ',
+                                                      style: TextStyle(
+                                                        fontFamily: "Noto Sans",
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w100,
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      width: displayWidth(
+                                                      height: displayHeight(
                                                               context) *
-                                                          0.09,
+                                                          0.005,
                                                     ),
-                                                    Container(
-                                                      width: displayWidth(
-                                                              context) *
-                                                          0.12,
-                                                      child: Column(
-                                                        children: <Widget>[
-                                                          Container(
-                                                            child: Padding(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                          0,
-                                                                          10,
-                                                                          0,
-                                                                          0),
-                                                              child: Text(
-                                                                'Duration',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        11,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w100),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            // '${_allTrekkingRoutes[index].duration}',
-                                                            "${bookmarkedRoute.duration} days",
+                                                    Text(
+                                                      // '${_allTrekkingRoutes[index].duration}',
+                                                      "${bookmarkedRoute.duration} days",
 
-                                                            style: TextStyle(
-                                                              fontSize: 11,
-                                                            ),
-                                                          ),
-                                                        ],
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontFamily: "Noto Sans",
                                                       ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
+                                              //     ],
+                                              //   ),
+                                              // ),
                                               SizedBox(
                                                 height: displayHeight(context) *
                                                     0.03,
                                               ),
                                               Container(
                                                 margin:
-                                                    EdgeInsets.only(left: 40),
+                                                    EdgeInsets.only(left: 10),
                                                 width: displayWidth(context) *
                                                     0.35,
                                                 height: displayHeight(context) *
@@ -301,9 +299,9 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
                                                   borderRadius:
                                                       BorderRadius.circular(20),
                                                 ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      0, 7, 0, 0),
+                                                child: Center(
+                                                  // padding: EdgeInsets.fromLTRB(
+                                                  //     0, 7, 0, 0),
                                                   child: Text(
                                                     // '${_allTrekkingRoutes[index].difficulty}',
                                                     "${bookmarkedRoute.category}",
@@ -311,6 +309,7 @@ class _RoutesFavoriteState extends State<RoutesFavorite>
                                                     style: TextStyle(
                                                       fontSize: 12.0,
                                                       color: Colors.white,
+                                                      fontFamily: "Noto Sans",
                                                       letterSpacing: 1.2,
                                                     ),
                                                     textAlign: TextAlign.center,
