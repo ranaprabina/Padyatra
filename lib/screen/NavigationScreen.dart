@@ -5,10 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:padyatra/models/day_performance_model/day_performance_data.dart';
-import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_data.dart';
 import 'package:padyatra/models/route_details_model/route_details_data.dart';
 import 'package:padyatra/presenter/day_performance_presenter.dart';
-import 'package:padyatra/presenter/get_route_coordinates_presenter.dart';
 import 'package:padyatra/services/DistanceCalculation.dart';
 import 'package:padyatra/services/GeoFencing.dart';
 import 'package:padyatra/services/NavgationData.dart';
@@ -18,20 +16,23 @@ class NavigationScreen extends StatefulWidget {
   final userID;
   final routeID;
   final List<WayPoints> wayPoints;
+  final routeTotalDistance;
+  final routeCoordinates;
 
-  const NavigationScreen({Key key, this.wayPoints, this.routeID, this.userID})
-      : super(key: key);
+  const NavigationScreen({
+    Key key,
+    this.wayPoints,
+    this.routeID,
+    this.userID,
+    this.routeTotalDistance,
+    this.routeCoordinates,
+  }) : super(key: key);
   @override
   _NavigationScreenState createState() => _NavigationScreenState();
 }
 
 class _NavigationScreenState extends State<NavigationScreen>
-    implements
-        GetRouteCoordinatesListViewContract,
-        DayPerformanceListViewContract {
-  GetRouteCoordinates getRouteCoordinates;
-  GetRouteCoordinatesListPresenter _getRouteCoordinatesListPresenter;
-  List<GetRouteCoordinates> _getRouteCoordinatesServerResponse;
+    implements DayPerformanceListViewContract {
   DayPerformance dayPerformance;
   DayPerformanceListPresenter _dayPerformanceListPresenter;
   List<DayPerformance> _dayPerformanceServerResponse;
@@ -63,8 +64,6 @@ class _NavigationScreenState extends State<NavigationScreen>
   List<WayPoints> wayPoint;
 
   _NavigationScreenState() {
-    _getRouteCoordinatesListPresenter =
-        new GetRouteCoordinatesListPresenter(this);
     _dayPerformanceListPresenter = new DayPerformanceListPresenter(this);
   }
   void checkAvailableWayPoints() {
@@ -113,29 +112,6 @@ class _NavigationScreenState extends State<NavigationScreen>
     );
   }
 
-  void calculateRemainingDisatance() {
-    for (int i = 0; i < _routeCoordinates.length; i++) {
-      insideGeofence = GeoFencing().startGeofencing(
-          _routeCoordinates[i].latitude.toString(),
-          _routeCoordinates[i].longitude.toString(),
-          "1000");
-      if (insideGeofence) {
-        calculateRemainigDistanceFromThisPoint = i;
-        setState(() {
-          remainingDistance = distanceCalculation(
-                  calculateRemainigDistanceFromThisPoint, _routeCoordinates)
-              .roundToDouble();
-          print("remaining distance is : $remainingDistance");
-        });
-        break;
-      } else {
-        GeoFencing().stopGeoFencing();
-        print("Unable to enter goefence and calculate remaining distance");
-        continue;
-      }
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -144,10 +120,23 @@ class _NavigationScreenState extends State<NavigationScreen>
     _isCheckInPostReached = false;
     _isCheckOutPostReached = false;
     _isTrekkingCompleted = false;
+    _routeCoordinates = widget.routeCoordinates;
+    drawRoutePath();
     getCurrentLocation();
     checkAvailableWayPoints();
-    _getRouteCoordinatesListPresenter
-        .loadServerResponseCoordinates(widget.routeID);
+    _createWayPointsMarkers();
+  }
+
+  void drawRoutePath() {
+    setState(() {
+      _routeCoordinates.isNotEmpty && _routeCoordinates != null
+          ? _isRoutePathAvailable = true
+          : _isRoutePathAvailable = false;
+
+      _isRoutePathAvailable
+          ? _createPolyLine(_routeCoordinates)
+          : _createPolyLine(_routeCoordinates);
+    });
   }
 
   void _createWayPointsMarkers() {
@@ -207,8 +196,9 @@ class _NavigationScreenState extends State<NavigationScreen>
         circle.add(
           Circle(
             circleId: CircleId('currentLocation'),
-            radius: 30,
+            radius: 10,
             zIndex: 1,
+            strokeWidth: 3,
             visible: true,
             strokeColor: Colors.blue,
             center: LatLng(currentLatitude, currentLongitude),
@@ -226,8 +216,9 @@ class _NavigationScreenState extends State<NavigationScreen>
         circle.add(
           Circle(
             circleId: CircleId('currentLocation'),
-            radius: 20,
+            radius: 100,
             visible: true,
+            strokeWidth: 5,
             zIndex: 1,
             strokeColor: Colors.blue,
             center: LatLng(currentLatitude, currentLongitude),
@@ -644,8 +635,9 @@ class _NavigationScreenState extends State<NavigationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton:
-          MyFloatingActionButton(routeTotalDistance: routeTotalDistance),
+      floatingActionButton: MyFloatingActionButton(
+          routeTotalDistance: widget.routeTotalDistance,
+          routeCoordinates: _routeCoordinates),
       body: Stack(
         children: [
           _isLoading && _isRoutePathAvailable
@@ -668,7 +660,7 @@ class _NavigationScreenState extends State<NavigationScreen>
                               ? LatLng(wayPoint[0].wayLatitude,
                                   wayPoint[0].wayLongitude)
                               : LatLng(currentLatitude, currentLongitude),
-                      zoom: wayPointMarkers.isEmpty ? 16.0 : 10.0,
+                      zoom: wayPointMarkers.isEmpty ? 10.0 : 12.0,
                     ),
                     onTap: (coordinate) {
                       setState(
@@ -714,7 +706,7 @@ class _NavigationScreenState extends State<NavigationScreen>
 
                   //stores initial data when trekking starts
                   storeDayPerformance();
-                  calculateRemainingDisatance();
+
                   //stores periodically
                   _storeDataTimer = Timer.periodic(
                     Duration(hours: 1),
@@ -770,61 +762,13 @@ class _NavigationScreenState extends State<NavigationScreen>
   }
 
   @override
-  void onGetRouteCoordinatesComplete(List<GetRouteCoordinates> items) {
-    setState(() {
-      _getRouteCoordinatesServerResponse = items;
-      var _coordinates =
-          _getRouteCoordinatesServerResponse[0].coordinates.routeCoords;
-
-      if (_routeCoordinates.isEmpty) {
-        for (int index = 0; index < _coordinates.length; index++) {
-          _routeCoordinates.add(LatLng(
-              _coordinates[index].latitude, _coordinates[index].longitude));
-        }
-        setState(() {
-          _createWayPointsMarkers();
-          _isRoutePathAvailable = true;
-          //calculates total distance of the route
-          // routeTotalDistance = calculateDistance(0).roundToDouble();
-          routeTotalDistance =
-              distanceCalculation(0, _routeCoordinates).roundToDouble();
-          calculateRemainingDisatance();
-        });
-      } else {
-        setState(() {
-          _isRoutePathAvailable = false;
-          _routeCoordinates = [];
-        });
-      }
-      _isRoutePathAvailable
-          ? _createPolyLine(_routeCoordinates)
-          : _createPolyLine(_routeCoordinates);
-    });
-  }
-
-  @override
-  void onGetRouteCoordinatesError() {
-    setState(() {
-      _createWayPointsMarkers();
-      _isRoutePathAvailable = false;
-      _routeCoordinates = [];
-    });
-    try {
-      throw new FetchDataException(
-          "Error_Occured: Unable to fetch Route geo coordinates.");
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  @override
   void onStoreComplete(List<DayPerformance> itens) {
     _dayPerformanceServerResponse = itens;
     dayPerformance = _dayPerformanceServerResponse[0];
     if (dayPerformance.serverResponse.isNotEmpty &&
         dayPerformance.serverResponse == "Insertion_Success") {
-      NavigationData().deleteCheckInPostReachedData();
-      NavigationData().deleteCheckOutPostReachedData();
+      // NavigationData().deleteCheckInPostReachedData();
+      // NavigationData().deleteCheckOutPostReachedData();
       Fluttertoast.showToast(
         msg: dayPerformance.message,
         toastLength: Toast.LENGTH_SHORT,
@@ -844,8 +788,8 @@ class _NavigationScreenState extends State<NavigationScreen>
         textColor: Colors.white,
         fontSize: 16.0,
       );
-      NavigationData().deleteCheckInPostReachedData();
-      NavigationData().deleteCheckOutPostReachedData();
+      // NavigationData().deleteCheckInPostReachedData();
+      // NavigationData().deleteCheckOutPostReachedData();
     }
   }
 
@@ -868,12 +812,20 @@ class _NavigationScreenState extends State<NavigationScreen>
       print(e);
     }
   }
+
+  @override
+  void onLoadComplete(List<DayPerformance> items) {}
+
+  @override
+  void onLoadError() {}
 }
 
 class MyFloatingActionButton extends StatefulWidget {
   final routeTotalDistance;
+  final routeCoordinates;
 
-  const MyFloatingActionButton({Key key, this.routeTotalDistance})
+  const MyFloatingActionButton(
+      {Key key, this.routeTotalDistance, this.routeCoordinates})
       : super(key: key);
   @override
   _MyFloatingActionButtonState createState() => _MyFloatingActionButtonState();
@@ -956,6 +908,7 @@ class _MyFloatingActionButtonState extends State<MyFloatingActionButton> {
                             checkInPostStatus: _checkInPostStatus,
                             checkOutPostStatus: _checkOutPostStatus,
                             routeTotalDistance: widget.routeTotalDistance,
+                            routeCoordinates: widget.routeCoordinates,
                           ),
                         ));
                 showFoatingActionButton(false);
@@ -980,13 +933,15 @@ class BottomSheetWidget extends StatefulWidget {
   final checkOutPostStatus;
   final trekkingCompletionStatus;
   final routeTotalDistance;
+  final routeCoordinates;
 
   const BottomSheetWidget(
       {Key key,
       this.checkInPostStatus,
       this.checkOutPostStatus,
       this.trekkingCompletionStatus,
-      this.routeTotalDistance})
+      this.routeTotalDistance,
+      this.routeCoordinates})
       : super(key: key);
   @override
   _BottomSheetWidgetState createState() => _BottomSheetWidgetState();
@@ -994,21 +949,61 @@ class BottomSheetWidget extends StatefulWidget {
 
 class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   var routeTotalDistance;
+  var routeCoordinates;
+  bool insideGeofence;
+  double remainingDistance;
+  int calculateRemainigDistanceFromThisPoint;
 
   @override
   void initState() {
     super.initState();
     routeTotalDistance = widget.routeTotalDistance;
+    routeCoordinates = widget.routeCoordinates;
+    calculateRemainingDisatance();
+  }
+
+  void calculateRemainingDisatance() {
+    if (routeTotalDistance != null) {
+      for (int i = 0; i < routeCoordinates.length; i++) {
+        insideGeofence = GeoFencing().startGeofencing(
+            routeCoordinates[i].latitude.toString(),
+            routeCoordinates[i].longitude.toString(),
+            "100");
+        if (insideGeofence) {
+          calculateRemainigDistanceFromThisPoint = i;
+          setState(() {
+            remainingDistance = distanceCalculation(
+                    calculateRemainigDistanceFromThisPoint, routeCoordinates)
+                .roundToDouble();
+            print("remaining distance is : $remainingDistance");
+          });
+          break;
+        } else {
+          GeoFencing().stopGeoFencing();
+          print("Unable to enter goefence and calculate remaining distance");
+          continue;
+        }
+      }
+    } else {
+      setState(() {
+        routeTotalDistance = null;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 0, left: 15, right: 15),
-      child: Column(
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Container(
+        margin: const EdgeInsets.only(top: 0, left: 15, right: 15),
+        child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(
+              height: displayHeight(context) * 0.02,
+            ),
             Container(
               child: Column(
                 children: <Widget>[
@@ -1206,59 +1201,86 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                             ],
                           ),
                         ),
-                        // SizedBox(width: displayWidth(context) * 0.09),
-                        // Container(
-                        //   height: displayHeight(context) * 0.5,
-                        //   width: displayWidth(context) * 0.4,
-                        //   decoration: BoxDecoration(
-                        //       color: Colors.green[900],
-                        //       borderRadius:
-                        //           BorderRadius.all(Radius.circular(20))),
-                        //   child: Column(
-                        //     children: <Widget>[
-                        //       Padding(
-                        //         padding:
-                        //             const EdgeInsets.only(left: 8.0, top: 8.0),
-                        //         child: Container(
-                        //             alignment: Alignment.topLeft,
-                        //             child: Text(
-                        //               'est duration',
-                        //               style: TextStyle(color: Colors.white),
-                        //             )),
-                        //       ),
-                        //       SizedBox(
-                        //         height: displayHeight(context) * 0.01,
-                        //       ),
-                        //       Padding(
-                        //         padding: const EdgeInsets.only(left: 8.0),
-                        //         child: Container(
-                        //           height: displayHeight(context) * 0.05,
-                        //           child: Text(
-                        //             'total time taken to reach final destination',
-                        //             style: TextStyle(
-                        //                 fontSize: 10, color: Colors.white),
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       Padding(
-                        //         padding: const EdgeInsets.only(right: 8.0),
-                        //         child: Container(
-                        //             alignment: Alignment.bottomRight,
-                        //             child: Text(
-                        //               '2 days',
-                        //               style: TextStyle(color: Colors.white),
-                        //             )),
-                        //       )
-                        //     ],
-                        //   ),
-                        // ),
+                        SizedBox(height: displayHeight(context) * 0.02),
+                        Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: displayHeight(context) * 0.2,
+                                // width: displayWidth(context) * 0.4,
+                                decoration: BoxDecoration(
+                                    color: Colors.green[900],
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 8.0, top: 8.0),
+                                      child: Container(
+                                          // alignment: Alignment.topLeft,
+                                          child: Text(
+                                        'Distance remaining to cover',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 25,
+                                          fontFamily: "Oswald",
+                                        ),
+                                      )),
+                                    ),
+                                    SizedBox(
+                                      height: displayHeight(context) * 0.01,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Container(
+                                        height: displayHeight(context) * 0.05,
+                                        child: Text(
+                                          remainingDistance != null
+                                              ? "${remainingDistance.toInt().toString()} km"
+                                              : "not available",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                            fontFamily: "Noto Sans",
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: Container(
+                                          alignment: Alignment.bottomRight,
+                                          child: Text(
+                                            "${DateTime.now().year} - ${DateTime.now().month} - ${DateTime.now().day}",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: "Oswald",
+                                            ),
+                                          )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
-            )
-          ]),
+            ),
+            SizedBox(
+              height: displayHeight(context) * 0.02,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
