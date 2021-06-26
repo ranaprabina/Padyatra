@@ -83,6 +83,7 @@ class _SeasonNameState extends State<SeasonName> {
                   label: Text(seasonName[index],
                       style: TextStyle(
                         color: Colors.white,
+                        fontFamily: "Roboto",
                       )),
                   selected: _filters.contains(seasonName[index]),
                   selectedColor: _isSelected ? Colors.green : Colors.black54,
