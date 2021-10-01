@@ -6,6 +6,7 @@ import 'package:padyatra/Login.dart';
 
 import 'package:padyatra/screen/HomePage.dart';
 import 'package:padyatra/screen/SignUp.dart';
+import 'package:padyatra/services/sharedPreferences.dart';
 
 class GuestUser extends StatefulWidget {
   @override
@@ -13,9 +14,17 @@ class GuestUser extends StatefulWidget {
 }
 
 class _GuestUserState extends State<GuestUser> {
+  bool _isAppAlreadyOpened;
   @override
   void initState() {
     super.initState();
+    _isAppAlreadyOpened = true;
+    try {
+      print("storing app opened status to true");
+      HoldAppOpenedStatus().holdAppOpenedStatus(_isAppAlreadyOpened);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:padyatra/dependency_injector/dependency_injection.dart';
 import 'package:padyatra/screen/HomePage.dart';
+import 'package:padyatra/screen/MainPage.dart';
 import 'package:padyatra/screen/SplashScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,11 +18,29 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _isUserLoggedIn = false;
+  bool _isAppAlreadyOpened = false;
   String userId;
   @override
   void initState() {
     _checkIfUserIsLoggedIn();
+    _checkAppOpenedStatus();
     super.initState();
+  }
+
+  void _checkAppOpenedStatus() async {
+    SharedPreferences locaStorage1 = await SharedPreferences.getInstance();
+    var status = locaStorage1.getBool('status');
+    print("app opened status is :");
+    print(status);
+    if (status == true) {
+      setState(() {
+        _isAppAlreadyOpened = true;
+      });
+    } else {
+      setState(() {
+        _isAppAlreadyOpened = false;
+      });
+    }
   }
 
   void _checkIfUserIsLoggedIn() async {
@@ -46,7 +65,9 @@ class _MyAppState extends State<MyApp> {
           ? HomePage(
               userId: userId,
             )
-          : SplashScreen(),
+          : _isAppAlreadyOpened
+              ? GuestUser()
+              : SplashScreen(),
       routes: {},
     );
   }

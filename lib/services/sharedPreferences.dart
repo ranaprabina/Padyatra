@@ -10,3 +10,26 @@ class HoldUserData {
     this.user = localStorage.setString('user', user);
   }
 }
+
+class HoldAppOpenedStatus {
+  var status;
+  holdAppOpenedStatus(bool status) async {
+    SharedPreferences localStorage1 = await SharedPreferences.getInstance();
+    this.status = localStorage1.setBool("status", status);
+  }
+}
+
+class DeleteUserData {
+  deleteUserData() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    localStorage.remove('token');
+    localStorage.remove('user');
+  }
+}
+
+class DeleteAppOpenedStatus {
+  deleteAppOpenedStatus() async {
+    SharedPreferences localStorage1 = await SharedPreferences.getInstance();
+    localStorage1.remove('status');
+  }
+}
