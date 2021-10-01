@@ -591,8 +591,8 @@ class _NavigationScreenState extends State<NavigationScreen>
               ],
             ),
             Positioned(
-              top: MediaQuery.of(context).size.height / 5,
-              left: MediaQuery.of(context).size.width - 250,
+              top: displayHeight(context) / 5,
+              left: displayWidth(context) - 250,
               child: Container(
                 height: 100,
                 width: 100,
