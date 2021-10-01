@@ -1,44 +1,118 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:padyatra/control_sizes.dart';
+import 'package:padyatra/models/profile_photo_upload_model/profile_photo_fetch_data.dart';
+import 'package:padyatra/presenter/profile_photo_fetch_presenter.dart';
 import 'package:padyatra/screen/FavoriteRoutes.dart';
+import 'package:padyatra/screen/MainPage.dart';
 import 'package:padyatra/screen/ProfileDialog.dart';
+import 'package:padyatra/services/api.dart';
+import 'package:padyatra/services/api_constants.dart';
+import 'package:padyatra/services/sharedPreferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
-  final uploadimage;
-  const ProfilePage({Key key, this.uploadimage}) : super(key: key);
+  const ProfilePage({Key key}) : super(key: key);
   @override
-  MapScreenState createState() => MapScreenState();
+  _MapScreenState createState() => _MapScreenState();
 }
 
-class MapScreenState extends State<ProfilePage>
-    with SingleTickerProviderStateMixin {
+class _MapScreenState extends State<ProfilePage>
+    with SingleTickerProviderStateMixin
+    implements ProfilePhotoListViewContract {
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
   int userId;
   String name;
   String userName;
   String email;
+  var token;
   bool _isDataLoading = true;
   File uploadimage;
 
   TextEditingController userNameController = new TextEditingController();
   TextEditingController nameController = new TextEditingController();
+  ProfilePhotoListPresenter _profilePhotoListPresenter;
+  ProfilePhoto profilePhoto;
+  List<ProfilePhoto> _profilePhoto;
+  bool _isProfilePhotoLoading;
 
+  _MapScreenState() {
+    _profilePhotoListPresenter = new ProfilePhotoListPresenter(this);
+  }
   @override
   void initState() {
     super.initState();
+    _isProfilePhotoLoading = true;
     getData();
-    uploadimage = widget.uploadimage;
+  }
+
+  Future<void> logout(String email) async {
+    var data = {
+      'email': email,
+    };
+    var response = await ApiCall().postData(data, "logout");
+    final responseBody = jsonDecode(response.body);
+    final List responseBody1 = responseBody['serverResponse'];
+
+    final statusCode = response.statusCode;
+    if (statusCode == 200) {
+      Fluttertoast.showToast(
+          msg: "logged out",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      DeleteUserData().deleteUserData();
+      DeleteAppOpenedStatus().deleteAppOpenedStatus();
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => GuestUser()));
+    } else {
+      Fluttertoast.showToast(
+          msg: "failed",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
+
+  Future<void> uploadProfilePhoto(
+      var profilePhotoPath, String rememberToken) async {
+    var response = await ApiCall().postMultipartRequest(
+        profilePhotoPath, rememberToken, 'updateUserDetails');
+
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+          msg: "photo uploaded",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      setState(() {
+        _profilePhotoListPresenter.loadServerResponse(rememberToken);
+      });
+    } else {
+      Fluttertoast.showToast(
+          msg: "unable to upload photo",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 
   getData() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var token = localStorage.getString('token');
+    token = localStorage.getString('token');
     if (token != null) {
       var userJson = localStorage.getString('user');
       var user = jsonDecode(userJson);
@@ -52,6 +126,7 @@ class MapScreenState extends State<ProfilePage>
         _isDataLoading = false;
         userNameController.text = userName;
         nameController.text = name;
+        _profilePhotoListPresenter.loadServerResponse(token);
       });
     } else {
       setState(() {
@@ -64,7 +139,9 @@ class MapScreenState extends State<ProfilePage>
   Widget build(BuildContext context) {
     return _isDataLoading
         ? new Center(
-            child: new CircularProgressIndicator(),
+            child: new CircularProgressIndicator(
+              backgroundColor: Colors.amber,
+            ),
           )
         : Scaffold(
             body: Container(
@@ -102,10 +179,11 @@ class MapScreenState extends State<ProfilePage>
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    FavoriteRoutes()));
+                                        // Navigator.of(context).push(
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) =>
+                                        //             FavoriteRoutes()));
+                                        logout(email);
                                       },
                                       child: Icon(
                                         Icons.logout,
@@ -125,24 +203,28 @@ class MapScreenState extends State<ProfilePage>
                                     ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(100),
-                                        child: uploadimage == null
+                                        child: _isProfilePhotoLoading
                                             ? Container(
                                                 width: 140.0,
                                                 height: 140.0,
                                                 decoration: new BoxDecoration(
                                                   shape: BoxShape.circle,
-                                                  image: new DecorationImage(
-                                                    image: new ExactAssetImage(
-                                                        'images/hike1.jpg'),
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                                  // image: new DecorationImage(
+                                                  //   image: new ExactAssetImage(
+                                                  //       // TODO : here we will replace with the image file coming form network i.e database
+                                                  //       'images/hike1.jpg'
+                                                  //       // ApiConstants().imageBaseUrl +
+                                                  //       ),
+                                                  //   fit: BoxFit.cover,
+                                                  // ),
                                                 )) //if there is no image then show the default image
                                             : ClipRRect(
-                                                child: Image.file(
-                                                  uploadimage,
+                                                child: Image.network(
+                                                  ApiConstants().imageBaseUrl +
+                                                      "${profilePhoto.profilePhotoPath}",
                                                   width: 140,
                                                   height: 140,
-                                                  fit: BoxFit.fitHeight,
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ))
                                   ],
@@ -157,44 +239,56 @@ class MapScreenState extends State<ProfilePage>
                                         GestureDetector(
                                           onTap: () {
                                             showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return StatefulBuilder(
-                                                      builder:
-                                                          (context, setState) {
-                                                    return AlertDialog(
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16),
-                                                      ),
-                                                      elevation: 0.0,
-                                                      title: Align(
-                                                          alignment: Alignment
-                                                              .centerRight,
-                                                          child:
-                                                              GestureDetector(
-                                                                  onTap: () {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                  },
-                                                                  child: Icon(Icons
-                                                                      .close))),
-                                                      content: Container(
-                                                        height: displayHeight(
-                                                                context) *
-                                                            0.25,
-                                                        width: 400.0,
-                                                        child: MyDialog(
-                                                            uploadimage:
-                                                                uploadimage),
-                                                      ),
-                                                    );
-                                                  });
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return StatefulBuilder(builder:
+                                                    (context, setState) {
+                                                  return AlertDialog(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              16),
+                                                    ),
+                                                    elevation: 0.0,
+                                                    title: Align(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        child: GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child: Icon(
+                                                                Icons.close))),
+                                                    content: Container(
+                                                      height: displayHeight(
+                                                              context) *
+                                                          0.25,
+                                                      width: 400.0,
+                                                      child: MyDialog(
+                                                          uploadimage:
+                                                              uploadimage,
+                                                          photoPathUrl: ApiConstants()
+                                                                  .imageBaseUrl +
+                                                              "${profilePhoto.profilePhotoPath}"),
+                                                    ),
+                                                  );
                                                 });
+                                              },
+                                            ).then((valueFromDialog) {
+                                              if (valueFromDialog != null) {
+                                                setState(() {
+                                                  uploadimage = valueFromDialog;
+                                                  uploadProfilePhoto(
+                                                      uploadimage.path, token);
+                                                });
+                                              } else {
+                                                print(
+                                                    "value from dialog is null");
+                                              }
+                                            });
                                           },
                                           child: new CircleAvatar(
                                             backgroundColor: Colors.black,
@@ -534,5 +628,29 @@ class MapScreenState extends State<ProfilePage>
         });
       },
     );
+  }
+
+  @override
+  void onProfilePhotoUploadComplete(List<ProfilePhoto> items) {
+    setState(() {
+      _profilePhoto = items;
+      profilePhoto = _profilePhoto[0];
+      if (profilePhoto.serverResponsMessage == "success") {
+        setState(() {
+          _isProfilePhotoLoading = false;
+        });
+      } else {
+        setState(() {
+          _isProfilePhotoLoading = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void onProfilePhotoUploadError() {
+    setState(() {
+      _isProfilePhotoLoading = true;
+    });
   }
 }
