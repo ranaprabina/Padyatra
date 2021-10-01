@@ -22,6 +22,9 @@ import 'package:padyatra/models/password_reset_model/password_reset_prod.dart';
 import 'package:padyatra/models/password_reset_token_request_model/password_reset_token_request_data.dart';
 import 'package:padyatra/models/password_reset_token_request_model/password_reset_token_request_mock.dart';
 import 'package:padyatra/models/password_reset_token_request_model/password_reset_token_request_prod.dart';
+import 'package:padyatra/models/profile_photo_fetch_model/profile_photo_fetch_data.dart';
+import 'package:padyatra/models/profile_photo_fetch_model/profile_photo_fetch_mock.dart';
+import 'package:padyatra/models/profile_photo_fetch_model/profile_photo_fetch_prod.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_data.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_mock.dart';
 import 'package:padyatra/models/recently_added_routes/recently_added_route_prod.dart';
@@ -215,6 +218,16 @@ class Injector {
 
       default:
         return new ProdSeasonalRouteRepository();
+    }
+  }
+
+  ProfilePhotoRepository get profilePhotoRepository {
+    switch (_flavor) {
+      case Flavor.MOCK:
+        return MockProfilePhoto();
+
+      default:
+        return new ProdProfilePhotoRepository();
     }
   }
 }
