@@ -192,7 +192,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen>
           textColor: Colors.white,
           fontSize: 16.0,
         );
-        Navigator.of(context).push(
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => Login(),
           ),
