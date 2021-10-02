@@ -66,8 +66,8 @@ class _PasswordResetScreenState extends State<PasswordResetScreen>
                   obscureText: _hidePassword,
                   controller: passwordController,
                   decoration: InputDecoration(
-                    labelText: "password",
-                    hintText: "Enter password",
+                    labelText: "New password",
+                    hintText: "Enter new password",
                     hintStyle: TextStyle(color: Colors.black54, fontSize: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -87,7 +87,6 @@ class _PasswordResetScreenState extends State<PasswordResetScreen>
                               onPressed: () {
                                 setState(() {
                                   _hidePassword = false;
-                                  print("password is visible");
                                 });
                               },
                             )
@@ -99,7 +98,6 @@ class _PasswordResetScreenState extends State<PasswordResetScreen>
                               onPressed: () {
                                 setState(() {
                                   _hidePassword = true;
-                                  print("password is hidden");
                                 });
                               },
                             ),
@@ -163,6 +161,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen>
                     ),
                     child: Text(
                       "change password",
+                      style: TextStyle(fontSize: 17),
                     ),
                   ),
                 ),

@@ -94,16 +94,12 @@ class _PasswordResetTokenState extends State<PasswordResetToken>
                             textColor: Colors.white,
                             fontSize: 16.0);
                   },
-                  child: Container(
-                    margin: EdgeInsets.only(
-                      top: displayHeight(context) * 0.02,
-                    ),
-                    child: Text(
-                      "request",
-                    ),
+                  child: Text(
+                    "request",
+                    style: TextStyle(fontSize: 20),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
