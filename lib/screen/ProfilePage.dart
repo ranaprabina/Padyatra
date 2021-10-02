@@ -5,7 +5,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:padyatra/control_sizes.dart';
+import 'package:padyatra/models/logout_model/logout_data.dart';
 import 'package:padyatra/models/profile_photo_fetch_model/profile_photo_fetch_data.dart';
+import 'package:padyatra/presenter/logout_presenter.dart';
 import 'package:padyatra/presenter/profile_photo_fetch_presenter.dart';
 import 'package:padyatra/screen/MainPage.dart';
 import 'package:padyatra/screen/ProfileDialog.dart';
@@ -22,7 +24,7 @@ class ProfilePage extends StatefulWidget {
 
 class _MapScreenState extends State<ProfilePage>
     with SingleTickerProviderStateMixin
-    implements ProfilePhotoListViewContract {
+    implements ProfilePhotoListViewContract, LogoutListViewContract {
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
   int userId;
@@ -39,18 +41,24 @@ class _MapScreenState extends State<ProfilePage>
   ProfilePhoto profilePhoto;
   List<ProfilePhoto> _profilePhoto;
   bool _isProfilePhotoLoading;
+  LogoutListPresenter _logoutListPresenter;
+  Logout logout;
+  List<Logout> _logout;
+  bool _isLogoutSuccess;
 
   _MapScreenState() {
     _profilePhotoListPresenter = new ProfilePhotoListPresenter(this);
+    _logoutListPresenter = new LogoutListPresenter(this);
   }
   @override
   void initState() {
     super.initState();
     _isProfilePhotoLoading = true;
+    _isLogoutSuccess = false;
     getData();
   }
 
-  Future<void> logout(String email) async {
+  Future<void> _logOut(String email) async {
     var data = {
       'email': email,
     };
@@ -182,7 +190,9 @@ class _MapScreenState extends State<ProfilePage>
                                         //     MaterialPageRoute(
                                         //         builder: (context) =>
                                         //             FavoriteRoutes()));
-                                        logout(email);
+                                        // logout(email);
+                                        _logoutListPresenter
+                                            .loadServerResponse(email);
                                       },
                                       child: Icon(
                                         Icons.logout,
@@ -650,6 +660,42 @@ class _MapScreenState extends State<ProfilePage>
   void onProfilePhotoUploadError() {
     setState(() {
       _isProfilePhotoLoading = true;
+    });
+  }
+
+  @override
+  void onLogoutComplete(List<Logout> items) {
+    setState(() {
+      _logout = items;
+      logout = _logout[0];
+      if (logout.serverResponsMessage == "logout_success") {
+        Fluttertoast.showToast(
+            msg: "logged out",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        DeleteUserData().deleteUserData();
+        DeleteAppOpenedStatus().deleteAppOpenedStatus();
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => GuestUser()));
+      } else {
+        Fluttertoast.showToast(
+            msg: "failed",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    });
+  }
+
+  @override
+  void onLogoutError() {
+    setState(() {
+      _isLogoutSuccess = false;
     });
   }
 }
