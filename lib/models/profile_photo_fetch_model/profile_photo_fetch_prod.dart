@@ -10,7 +10,9 @@ class ProdProfilePhotoRepository implements ProfilePhotoRepository {
     var response = await ApiCall().postData(data, "imagePath");
     final responseBody = jsonDecode(response.body);
     final List responseBody1 = responseBody['serverResponse'];
+    print(responseBody1);
     final statusCode = response.statusCode;
+    print(statusCode);
 
     if (statusCode != 200 && responseBody == null) {
       throw new FetchDataException1(
