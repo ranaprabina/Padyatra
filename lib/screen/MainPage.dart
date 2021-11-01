@@ -113,7 +113,7 @@ class _GuestUserState extends State<GuestUser> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    color: Hexcolor('#9EABE4'),
+                    color: HexColor('#9EABE4'),
                     splashColor: Colors.green,
                     child: Text(
                       "login",
@@ -145,7 +145,7 @@ class _GuestUserState extends State<GuestUser> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    color: Hexcolor('#9EABE4'),
+                    color: HexColor('#9EABE4'),
                     splashColor: Colors.green,
                     child: Text(
                       "signup",
@@ -177,7 +177,7 @@ class _GuestUserState extends State<GuestUser> {
               ),
               // color: Color.fromRGBO(49, 39, 79, 1),
               // color: Hexcolor('#cff2de'),
-              color: Hexcolor('#24695c'),
+              color: HexColor('#24695c'),
 
               // color: Hexcolor('#efedff'),
               // hoverElevation: 10.0,

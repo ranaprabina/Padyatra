@@ -74,7 +74,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen>
                     ),
                     prefixIcon: Icon(
                       Icons.perm_identity,
-                      color: Hexcolor('#24695c'),
+                      color: HexColor('#24695c'),
                     ),
                     suffixIcon: Padding(
                       padding: const EdgeInsetsDirectional.only(end: 8),
@@ -83,7 +83,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen>
                               icon: Icon(
                                 Icons.visibility_off,
                               ),
-                              color: Hexcolor('#24695c'),
+                              color: HexColor('#24695c'),
                               onPressed: () {
                                 setState(() {
                                   _hidePassword = false;
@@ -125,7 +125,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen>
                     ),
                     prefixIcon: Icon(
                       Icons.perm_identity,
-                      color: Hexcolor('#24695c'),
+                      color: HexColor('#24695c'),
                     ),
                   ),
                 ),

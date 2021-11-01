@@ -87,7 +87,7 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                               TextSpan(
                                 text: "पदयात्रा",
                                 style: TextStyle(
-                                    color: Hexcolor('#24695c'),
+                                    color: HexColor('#24695c'),
                                     fontFamily: "Oswald",
                                     fontSize: 30),
                               )
@@ -149,7 +149,7 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                             ),
                             prefixIcon: Icon(
                               Icons.perm_identity,
-                              color: Hexcolor('#24695c'),
+                              color: HexColor('#24695c'),
                               // color: Hexcolor('#e1c5c1'),
                               // color: Colors.teal,
                             ),
@@ -202,7 +202,7 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                             prefixIcon: Icon(
                               Icons.email_outlined,
                               // color: Colors.teal,
-                              color: Hexcolor('#24695c'),
+                              color: HexColor('#24695c'),
                             ),
                           ),
                         ),
@@ -227,7 +227,7 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                             prefixIcon: Icon(
                               Icons.lock_open_outlined,
                               // color: Colors.teal,
-                              color: Hexcolor('#24695c'),
+                              color: HexColor('#24695c'),
                             ),
                             suffixIcon: Padding(
                               padding: const EdgeInsetsDirectional.only(end: 8),
@@ -236,7 +236,7 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                                       icon: Icon(
                                         Icons.visibility_off,
                                       ),
-                                      color: Hexcolor('#24695c'),
+                                      color: HexColor('#24695c'),
                                       onPressed: () {
                                         setState(() {
                                           _hidePassword = false;
@@ -276,7 +276,7 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                             hintStyle: TextStyle(color: Colors.grey),
                             prefixIcon: Icon(
                               Icons.lock_open_outlined,
-                              color: Hexcolor('#24695c'),
+                              color: HexColor('#24695c'),
                             ),
                             suffixIcon: Padding(
                               padding: const EdgeInsetsDirectional.only(end: 8),
@@ -285,7 +285,7 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                                       icon: Icon(
                                         Icons.visibility_off,
                                       ),
-                                      color: Hexcolor('#24695c'),
+                                      color: HexColor('#24695c'),
                                       onPressed: () {
                                         setState(() {
                                           _hidePassword = false;
@@ -402,7 +402,7 @@ class _SignUpState extends State<SignUp> implements UserSignUpListViewContract {
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               // color: Hexcolor('#9EABE4'),
-                              color: Hexcolor('#24695c'),
+                              color: HexColor('#24695c'),
 
                               splashColor: Colors.green,
                               child: Text(

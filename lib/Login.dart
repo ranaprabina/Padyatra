@@ -112,7 +112,7 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
                         ),
                         prefixIcon: Icon(
                           Icons.perm_identity,
-                          color: Hexcolor('#24695c'),
+                          color: HexColor('#24695c'),
                         ),
                       ),
                     ),
@@ -140,7 +140,7 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
                         ),
                         prefixIcon: Icon(
                           Icons.lock_open_outlined,
-                          color: Hexcolor('#24695c'),
+                          color: HexColor('#24695c'),
                         ),
                         suffixIcon: Padding(
                           padding: const EdgeInsetsDirectional.only(end: 8),
@@ -149,7 +149,7 @@ class _LoginState extends State<Login> implements UserLoginListViewContract {
                                   icon: Icon(
                                     Icons.visibility_off,
                                   ),
-                                  color: Hexcolor('#24695c'),
+                                  color: HexColor('#24695c'),
                                   onPressed: () {
                                     setState(() {
                                       _hidePassword = false;

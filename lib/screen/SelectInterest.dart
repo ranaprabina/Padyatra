@@ -331,7 +331,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
                             },
                             height: displayHeight(context) * 0.05,
                             minWidth: displayWidth(context) * 0.35,
-                            color: Hexcolor('#b0e57c'),
+                            color: HexColor('#b0e57c'),
                             splashColor: Colors.white,
                             elevation: 5.0,
                             shape: RoundedRectangleBorder(
@@ -393,7 +393,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
                                 },
                                 height: displayHeight(context) * 0.05,
                                 minWidth: displayWidth(context) * 0.9,
-                                color: Hexcolor('#b0e57c'),
+                                color: HexColor('#b0e57c'),
                                 splashColor: Colors.white,
                                 elevation: 5.0,
                                 shape: RoundedRectangleBorder(
@@ -429,7 +429,7 @@ class _UserSelectInterestState extends State<UserSelectInterest>
           ),
           label: Text(interest.categoryName),
           selected: _filters.contains(interest.categoryName),
-          selectedColor: Hexcolor('#93d8f8'),
+          selectedColor: HexColor('#93d8f8'),
           backgroundColor: Colors.grey[300],
           onSelected: (bool selected) {
             setState(

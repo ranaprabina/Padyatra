@@ -66,7 +66,7 @@ class _PasswordResetTokenState extends State<PasswordResetToken>
                     ),
                     prefixIcon: Icon(
                       Icons.perm_identity,
-                      color: Hexcolor('#24695c'),
+                      color: HexColor('#24695c'),
                     ),
                   ),
                 ),

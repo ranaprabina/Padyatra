@@ -30,7 +30,7 @@ class _ExploreState extends State<Explore> {
         title: Text(
           'पदयात्रा',
           style: TextStyle(
-            color: Hexcolor('#4e718d'),
+            color: HexColor('#4e718d'),
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
           ),
@@ -83,15 +83,15 @@ class _ExploreBodyState extends State<ExploreBody> {
             _isUserIdAvailable
                 ? UserInterestCarousel(userId: userId)
                 : Container(),
-            const Divider(
-              color: Colors.grey,
-              height: 5,
-            ),
+            // const Divider(
+            //   color: Colors.grey,
+            //   height: 5,
+            // ),
             RecentlyAdded(userId: userId),
-            const Divider(
-              color: Colors.grey,
-              height: 5,
-            ),
+            // const Divider(
+            //   color: Colors.grey,
+            //   height: 5,
+            // ),
             NearbyRoutesCarousel(userId: userId)
 
             ///add more as you wish
