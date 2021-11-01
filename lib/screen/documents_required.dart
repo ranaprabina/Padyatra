@@ -13,7 +13,7 @@ class DocumentRequired extends StatelessWidget {
             'PAPER WORKS AND PERMIT',
             style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Hexcolor('#4e718d'),
+          backgroundColor: HexColor('#4e718d'),
         ),
         body: RequiredDocument());
   }
