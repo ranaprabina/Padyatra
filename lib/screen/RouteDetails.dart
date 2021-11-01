@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
+import 'package:padyatra/Animation.dart';
 import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/get_route_coordinates_model/get_route_coordinates_data.dart';
 import 'package:padyatra/presenter/get_route_coordinates_presenter.dart';
@@ -43,7 +44,7 @@ class _RouteDetailsScreenState extends State<RouteDetailsScreen> {
           widget.searchedRouteName,
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Hexcolor('#4e718d'),
+        backgroundColor: HexColor('#4e718d'),
       ),
       body: DetailsBody(
         selectedRoute: widget.searchedRouteName,
@@ -215,626 +216,674 @@ class _DetailsBodyState extends State<DetailsBody>
   Widget build(BuildContext context) {
     return _isLoading
         ? new Center(
-            child: new SpinKitChasingDots(
-              color: Colors.green,
-            ),
+            child: new Container(),
           )
         : SingleChildScrollView(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    // height: (displayHeight(context) -
-                    //         MediaQuery.of(context).padding.top -
-                    //         kToolbarHeight) *
-                    //     0.28,
-                    width: double.infinity,
-                    child: Stack(children: <Widget>[
-                      // Image(
-                      //   image: AssetImage('images/AC2.png'),
-                      //   fit: BoxFit.fill,
-                      // ),
+            child: FadeAnimation1(
+              1.4,
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    FadeAnimation1(
+                      1.4,
                       Container(
-                        // width: MediaQuery.of(context).size.width,
-                        // height: 400,
-                        child: _isImageLoading
-                            ? new Center(
-                                child: new CircularProgressIndicator(),
-                              )
-                            : Image.network(
-                                ApiConstants().imageBaseUrl +
-                                    "${routeDetails.image}",
-                                fit: BoxFit.cover,
-                                height: displayHeight(context) * 0.35,
-                                width: displayWidth(context),
-                                gaplessPlayback: true,
-                              ),
-                      ),
-                      _isRouteBookmarked
-                          ? IconButton(
-                              icon: Icon(Icons.favorite),
-                              iconSize: 35,
-                              color: _isRouteBookmarked
-                                  ? Colors.amber
-                                  : Colors.white,
-                              onPressed: () async {
-                                var data = {
-                                  'route_id': routeDetails.routeId,
-                                  'u_id': widget.userId
-                                };
-                                setBookmarkStatus(data);
-                                setState(() {
-                                  _isRouteBookmarked = false;
-                                  Fluttertoast.showToast(
-                                      msg: "Removed from bookmark",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      // timeInSecForIosWeb: 1,
-                                      backgroundColor: Hexcolor('#24695c'),
-                                      textColor: Colors.white,
-                                      fontSize: 16.0);
-                                });
-                              },
-                            )
-                          : IconButton(
-                              icon: Icon(Icons.favorite),
-                              iconSize: 35,
-                              color: _isRouteBookmarked
-                                  ? Colors.amber
-                                  : Colors.white,
-                              onPressed: () async {
-                                var data = {
-                                  'route_id': routeDetails.routeId.toString(),
-                                  'u_id': widget.userId.toString()
-                                };
-                                setBookmarkStatus(data);
+                        // height: (displayHeight(context) -
+                        //         MediaQuery.of(context).padding.top -
+                        //         kToolbarHeight) *
+                        //     0.28,
+                        width: double.infinity,
+                        child: Stack(children: <Widget>[
+                          // Image(
+                          //   image: AssetImage('images/AC2.png'),
+                          //   fit: BoxFit.fill,
+                          // ),
+                          Container(
+                            // width: MediaQuery.of(context).size.width,
+                            // height: 400,
+                            child: _isImageLoading
+                                ? new Center(
+                                    child: new Container(),
+                                  )
+                                : Image.network(
+                                    ApiConstants().imageBaseUrl +
+                                        "${routeDetails.image}",
+                                    fit: BoxFit.cover,
+                                    height: displayHeight(context) * 0.35,
+                                    width: displayWidth(context),
+                                    gaplessPlayback: true,
+                                  ),
+                          ),
+                          _isRouteBookmarked
+                              ? IconButton(
+                                  icon: Icon(Icons.favorite),
+                                  iconSize: 35,
+                                  color: _isRouteBookmarked
+                                      ? Colors.amber
+                                      : Colors.white,
+                                  onPressed: () async {
+                                    var data = {
+                                      'route_id': routeDetails.routeId,
+                                      'u_id': widget.userId
+                                    };
+                                    setBookmarkStatus(data);
+                                    setState(() {
+                                      _isRouteBookmarked = false;
+                                      Fluttertoast.showToast(
+                                          msg: "Removed from bookmark",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          // timeInSecForIosWeb: 1,
+                                          backgroundColor: HexColor('#24695c'),
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+                                    });
+                                  },
+                                )
+                              : IconButton(
+                                  icon: Icon(Icons.favorite),
+                                  iconSize: 35,
+                                  color: _isRouteBookmarked
+                                      ? Colors.amber
+                                      : Colors.white,
+                                  onPressed: () async {
+                                    var data = {
+                                      'route_id':
+                                          routeDetails.routeId.toString(),
+                                      'u_id': widget.userId.toString()
+                                    };
+                                    setBookmarkStatus(data);
 
-                                setState(() {
-                                  _isRouteBookmarked = true;
-                                  Fluttertoast.showToast(
-                                      msg: "Added to bookmark",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      // timeInSecForIosWeb: 1,
-                                      backgroundColor: Hexcolor('#24695c'),
-                                      textColor: Colors.white,
-                                      fontSize: 16.0);
-                                });
-                              },
-                            ),
-                      Positioned(
-                        bottom: 15,
-                        right: 15,
-                        child: Container(
-                          height: 40,
-                          width: 100,
-                          decoration: BoxDecoration(
-                              color: Colors.green,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(7, 0, 0, 0),
-                            child: TextButton(
-                              onPressed: () {
-                                if (widget.userId != null) {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => NavigationScreen(
-                                        userID: widget.userId,
-                                        routeID: routeDetails.routeId,
-                                        wayPoints: routeDetails.wayPoints,
-                                        routeTotalDistance: routeTotalDistance,
-                                        routeCoordinates: _routeCoordinates,
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  _LoginCheckWidget();
-                                }
-                              },
-                              child: Text(
-                                'navigate',
-                                style: TextStyle(
-                                  color: Colors.white,
+                                    setState(() {
+                                      _isRouteBookmarked = true;
+                                      Fluttertoast.showToast(
+                                          msg: "Added to bookmark",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          // timeInSecForIosWeb: 1,
+                                          backgroundColor: HexColor('#24695c'),
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+                                    });
+                                  },
                                 ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ]),
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    padding: EdgeInsets.fromLTRB(9, 10, 0, 0),
-                    child: Text(
-                      'DESCRIPTION',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          fontFamily: 'Oswald'),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(9, 3, 9, 0),
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      routeDetails.routeDescription,
-                      style: TextStyle(fontFamily: 'Noto Sans'),
-                      // "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
-                    child: Container(
-                      height: displayHeight(context) * 0.09,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          // SizedBox(
-                          //   width: 20,
-                          // ),
-                          Container(
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                  child: Text(
-                                    'Duration',
-                                    style: TextStyle(fontFamily: 'Oswald'),
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                  child: Text(
-                                    "${routeDetails.duration} days",
-                                    style: TextStyle(
-                                      fontFamily: 'Noto Sans',
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          // SizedBox(
-                          //   width: displayWidth(context) * 0.17,
-                          // ),
-                          Container(
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                  child: Text(
-                                    'Length',
-                                    style: TextStyle(fontFamily: 'Oswald'),
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                  child: Text(
-                                    routeTotalDistance != null
-                                        ? "${routeTotalDistance.toInt().toString()} km"
-                                        : "not available",
-                                    style: TextStyle(fontFamily: 'Noto Sans'),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          // SizedBox(
-                          //   width: displayWidth(context) * 0.17,
-                          // ),
-                          Container(
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                  child: Text(
-                                    'Altitude',
-                                    style: TextStyle(fontFamily: 'Oswald'),
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                  child: Text(
-                                    "${routeDetails.altitude} m",
-                                    style: TextStyle(fontFamily: 'Noto Sans'),
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    child: Text(
-                      'Current Weather',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'Oswald',
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                child: Text('Current Location'),
-                              ),
-                              Container(
-                                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                child: _isFetchingCurrent
-                                    ? new Center(
-                                        child: new CircularProgressIndicator(),
-                                      )
-                                    : Image(
-                                        image: NetworkImage(
-                                          'http://openweathermap.org/img/w/$weatherIcon.png',
+                          Positioned(
+                            bottom: 15,
+                            right: 15,
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(7, 0, 0, 0),
+                                child: TextButton(
+                                  onPressed: () {
+                                    if (widget.userId != null) {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              NavigationScreen(
+                                            userID: widget.userId,
+                                            routeID: routeDetails.routeId,
+                                            wayPoints: routeDetails.wayPoints,
+                                            routeTotalDistance:
+                                                routeTotalDistance,
+                                            routeCoordinates: _routeCoordinates,
+                                          ),
                                         ),
-                                      ),
+                                      );
+                                    } else {
+                                      _LoginCheckWidget();
+                                    }
+                                  },
+                                  child: Text(
+                                    'navigate',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ),
+                    ),
+                    FadeAnimation1(
+                      1.4,
+                      Container(
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        padding: EdgeInsets.fromLTRB(9, 10, 0, 0),
+                        child: Text(
+                          'DESCRIPTION',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              fontFamily: 'Oswald'),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ),
+                    FadeAnimation1(
+                      1.4,
+                      Container(
+                        padding: EdgeInsets.fromLTRB(9, 3, 9, 0),
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          routeDetails.routeDescription,
+                          style: TextStyle(fontFamily: 'Noto Sans'),
+                          // "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    FadeAnimation1(
+                      1.4,
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                        child: Container(
+                          height: displayHeight(context) * 0.09,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
                               ),
                             ],
                           ),
-                        ),
-                        SizedBox(
-                          width: displayWidth(context) * 0.4,
-                        ),
-                        Container(
-                          child: Column(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
+                              // SizedBox(
+                              //   width: 20,
+                              // ),
                               Container(
-                                padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                child: Text('Destination'),
-                              ),
-                              Container(
-                                child: _isFetchingDestination
-                                    ? new Center(
-                                        child: new CircularProgressIndicator(),
-                                      )
-                                    : Image(
-                                        image: NetworkImage(
-                                          'http://openweathermap.org/img/w/$condition.png',
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                      child: Text(
+                                        'Duration',
+                                        style: TextStyle(fontFamily: 'Oswald'),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                      child: Text(
+                                        "${routeDetails.duration} days",
+                                        style: TextStyle(
+                                          fontFamily: 'Noto Sans',
                                         ),
                                       ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              // SizedBox(
+                              //   width: displayWidth(context) * 0.17,
+                              // ),
+                              Container(
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                      child: Text(
+                                        'Length',
+                                        style: TextStyle(fontFamily: 'Oswald'),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                      child: Text(
+                                        routeTotalDistance != null
+                                            ? "${routeTotalDistance.toInt().toString()} km"
+                                            : "not available",
+                                        style:
+                                            TextStyle(fontFamily: 'Noto Sans'),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              // SizedBox(
+                              //   width: displayWidth(context) * 0.17,
+                              // ),
+                              Container(
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                      child: Text(
+                                        'Altitude',
+                                        style: TextStyle(fontFamily: 'Oswald'),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                      child: Text(
+                                        "${routeDetails.altitude} m",
+                                        style:
+                                            TextStyle(fontFamily: 'Noto Sans'),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               )
                             ],
                           ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: displayHeight(context) * 0.02,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
-                    child: Container(
-                      // height: displayHeight(context) * 0.28,
-                      width: displayWidth(context) * 1,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
+                        ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    FadeAnimation1(
+                      1.4,
+                      Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.topLeft,
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
-                              'paper works and permits',
+                              'Current Weather',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontFamily: 'Oswald',
                               ),
                             ),
                           ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 8.0, bottom: 4),
-                            child: RichText(
-                              text: TextSpan(
-                                  text:
-                                      'Conservational and National Park Permit: ',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Noto Sans',
-                                  ),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text:
-                                          routeDetails.conservationalPermit == 1
-                                              ? 'required'
-                                              : 'not required',
-                                      style: TextStyle(
-                                        color:
-                                            routeDetails.conservationalPermit ==
-                                                    1
-                                                ? Colors.red
-                                                : Colors.teal,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
-                                  ]),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 8.0, bottom: 4),
-                            child: RichText(
-                              text: TextSpan(
-                                  text:
-                                      'Trekkers Information Management System(TIMS) Card: ',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Noto Sans',
-                                  ),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: routeDetails.timsPermit == 1
-                                          ? 'required'
-                                          : 'not required',
-                                      style: TextStyle(
-                                        color: routeDetails.timsPermit == 1
-                                            ? Colors.red
-                                            : Colors.teal,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
-                                  ]),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: RichText(
-                              text: TextSpan(
-                                  text: 'Restricted area entry Permit: ',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'Noto Sans',
-                                  ),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text:
-                                          routeDetails.restrictedAreaPermit == 1
-                                              ? 'required'
-                                              : 'not required',
-                                      style: TextStyle(
-                                        color:
-                                            routeDetails.restrictedAreaPermit ==
-                                                    1
-                                                ? Colors.red
-                                                : Colors.teal,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
-                                  ]),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0, top: 13),
-                            child: Text(
-                              'View more about required documents for permits.',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontFamily: 'Noto Sans',
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 30, top: 10),
-                            child: Container(
-                              alignment: Alignment.bottomRight,
-                              child: RaisedButton(
-                                color: Colors.green,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 10,
                                 ),
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          DocumentRequired()));
-                                },
-                                child: Text(
-                                  'view more',
-                                  style: TextStyle(
-                                    color: Colors.white,
+                                Container(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                        child: Text('Current Location'),
+                                      ),
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                        child: _isFetchingCurrent
+                                            ? new Center(
+                                                child:
+                                                    new CircularProgressIndicator(),
+                                              )
+                                            : Image(
+                                                image: NetworkImage(
+                                                  'http://openweathermap.org/img/w/$weatherIcon.png',
+                                                ),
+                                              ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
+                                SizedBox(
+                                  width: displayWidth(context) * 0.4,
+                                ),
+                                Container(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                        child: Text('Destination'),
+                                      ),
+                                      Container(
+                                        child: _isFetchingDestination
+                                            ? new Center(
+                                                child:
+                                                    new CircularProgressIndicator(),
+                                              )
+                                            : Image(
+                                                image: NetworkImage(
+                                                  'http://openweathermap.org/img/w/$condition.png',
+                                                ),
+                                              ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: displayHeight(context) * 0.02,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
-                    child: Container(
-                      height: displayHeight(context) * 0.07,
-                      width: displayWidth(context) * 1,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: Container(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 20.0, left: 15),
-                              child: Text(
-                                'WayPoints',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontFamily: 'Oswald',
-                                ),
+                    SizedBox(
+                      height: displayHeight(context) * 0.02,
+                    ),
+                    FadeAnimation1(
+                      1.4,
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                        child: Container(
+                          // height: displayHeight(context) * 0.28,
+                          width: displayWidth(context) * 1,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
                               ),
-                            ),
-                            SizedBox(
-                              width: displayWidth(context) * 0.32,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 6.0),
-                              child: RaisedButton(
-                                color: Colors.green,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                ),
-                                onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                          ),
-                                          elevation: 0.0,
-                                          title: Text(
-                                            'WayPoints',
-                                            style: TextStyle(
-                                              fontFamily: 'Oswald',
-                                            ),
-                                          ),
-                                          content: Container(
-                                            height:
-                                                displayHeight(context) * 0.15,
-                                            width: 400.0,
-                                            child: _isWayPointsAvailable
-                                                ? ListView.builder(
-                                                    itemCount: routeDetails
-                                                        .wayPoints.length,
-                                                    itemBuilder:
-                                                        (BuildContext ctxt,
-                                                            int index) {
-                                                      return new RichText(
-                                                        text: TextSpan(
-                                                            text:
-                                                                '${index + 1}. ',
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  'Noto Sans',
-                                                            ),
-                                                            children: <
-                                                                TextSpan>[
-                                                              TextSpan(
-                                                                  text: routeDetails
-                                                                      .wayPoints[
-                                                                          index]
-                                                                      .wayPointName,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontFamily:
-                                                                        'Noto Sans',
-                                                                  ))
-                                                            ]),
-                                                      );
-                                                    })
-                                                : Center(
-                                                    child: RichText(
-                                                        text: TextSpan(
-                                                      text:
-                                                          'Way points not available',
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontFamily: 'Oswald',
-                                                      ),
-                                                    )),
-                                                  ),
-                                          ),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          18.0),
-                                                ),
-                                                color: Colors.green,
-                                                child: Text('close'))
-                                          ],
-                                        );
-                                      });
-                                },
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'view waypoints',
+                                  'paper works and permits',
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontFamily: 'Oswald',
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8.0, bottom: 4),
+                                child: RichText(
+                                  text: TextSpan(
+                                      text:
+                                          'Conservational and National Park Permit: ',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Noto Sans',
+                                      ),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: routeDetails
+                                                      .conservationalPermit ==
+                                                  1
+                                              ? 'required'
+                                              : 'not required',
+                                          style: TextStyle(
+                                            color: routeDetails
+                                                        .conservationalPermit ==
+                                                    1
+                                                ? Colors.red
+                                                : Colors.teal,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        )
+                                      ]),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8.0, bottom: 4),
+                                child: RichText(
+                                  text: TextSpan(
+                                      text:
+                                          'Trekkers Information Management System(TIMS) Card: ',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Noto Sans',
+                                      ),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: routeDetails.timsPermit == 1
+                                              ? 'required'
+                                              : 'not required',
+                                          style: TextStyle(
+                                            color: routeDetails.timsPermit == 1
+                                                ? Colors.red
+                                                : Colors.teal,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        )
+                                      ]),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: RichText(
+                                  text: TextSpan(
+                                      text: 'Restricted area entry Permit: ',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Noto Sans',
+                                      ),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: routeDetails
+                                                      .restrictedAreaPermit ==
+                                                  1
+                                              ? 'required'
+                                              : 'not required',
+                                          style: TextStyle(
+                                            color: routeDetails
+                                                        .restrictedAreaPermit ==
+                                                    1
+                                                ? Colors.red
+                                                : Colors.teal,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        )
+                                      ]),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8.0, top: 13),
+                                child: Text(
+                                  'View more about required documents for permits.',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontFamily: 'Noto Sans',
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 30, top: 10),
+                                child: Container(
+                                  alignment: Alignment.bottomRight,
+                                  child: RaisedButton(
+                                    color: Colors.green,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DocumentRequired()));
+                                    },
+                                    child: Text(
+                                      'view more',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: displayHeight(context) * 0.04,
-                  )
-                ],
+                    SizedBox(
+                      height: displayHeight(context) * 0.02,
+                    ),
+                    FadeAnimation1(
+                      1.4,
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                        child: Container(
+                          height: displayHeight(context) * 0.07,
+                          width: displayWidth(context) * 1,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Container(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 20.0, left: 15),
+                                  child: Text(
+                                    'WayPoints',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontFamily: 'Oswald',
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: displayWidth(context) * 0.32,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 6.0),
+                                  child: RaisedButton(
+                                    color: Colors.green,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                    ),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                              ),
+                                              elevation: 0.0,
+                                              title: Text(
+                                                'WayPoints',
+                                                style: TextStyle(
+                                                  fontFamily: 'Oswald',
+                                                ),
+                                              ),
+                                              content: Container(
+                                                height: displayHeight(context) *
+                                                    0.15,
+                                                width: 400.0,
+                                                child: _isWayPointsAvailable
+                                                    ? ListView.builder(
+                                                        itemCount: routeDetails
+                                                            .wayPoints.length,
+                                                        itemBuilder:
+                                                            (BuildContext ctxt,
+                                                                int index) {
+                                                          return new RichText(
+                                                            text: TextSpan(
+                                                                text:
+                                                                    '${index + 1}. ',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 14,
+                                                                  fontFamily:
+                                                                      'Noto Sans',
+                                                                ),
+                                                                children: <
+                                                                    TextSpan>[
+                                                                  TextSpan(
+                                                                      text: routeDetails
+                                                                          .wayPoints[
+                                                                              index]
+                                                                          .wayPointName,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontFamily:
+                                                                            'Noto Sans',
+                                                                      ))
+                                                                ]),
+                                                          );
+                                                        })
+                                                    : Center(
+                                                        child: RichText(
+                                                            text: TextSpan(
+                                                          text:
+                                                              'Way points not available',
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 16,
+                                                            fontFamily:
+                                                                'Oswald',
+                                                          ),
+                                                        )),
+                                                      ),
+                                              ),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              18.0),
+                                                    ),
+                                                    color: Colors.green,
+                                                    child: Text('close'))
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: Text(
+                                      'view waypoints',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: displayHeight(context) * 0.04,
+                    )
+                  ],
+                ),
               ),
             ),
           );
