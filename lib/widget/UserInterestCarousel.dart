@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:padyatra/Animation.dart';
 import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/models/select_user_interet_routes/user_interest_route_data.dart';
 import 'package:padyatra/presenter/user_interest_route_presenter.dart';
@@ -53,180 +53,184 @@ class _UserInterestCarouselState extends State<UserInterestCarousel>
   @override
   Widget build(BuildContext context) {
     return _isLoading
-        ? Container(
-            height: (displayHeight(context) -
-                    MediaQuery.of(context).padding.top -
-                    kToolbarHeight) *
-                0.42,
-            child: new SpinKitChasingDots(
-              color: Colors.green,
-            ),
-          )
-        : Container(
-            child: _isRouteAvailable
-                ? Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              'You might like this',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 20,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: (displayHeight(context) -
-                                MediaQuery.of(context).padding.top -
-                                kToolbarHeight) *
-                            0.42,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _userRoutes.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final UserInterestRoute route = _userRoutes[index];
-                            return GestureDetector(
-                              onTap: () {
-                                print("Route number $index clicked");
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => RouteDetailsScreen(
-                                      searchedRouteName: route.routeName,
-                                      id: userId,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(10.0),
-                                width: displayWidth(context) * 0.52,
-                                child: Column(
-                                  children: <Widget>[
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10)),
-                                      child: Container(
-                                        // height:
-                                        //     displayHeight(context) * 0.25,
-                                        // width:
-                                        //     displayWidth(context) * 0.52,
-
-                                        child: _isImageLoading
-                                            ? new Center(
-                                                child:
-                                                    new CircularProgressIndicator(),
-                                              )
-                                            : Image.network(
-                                                ApiConstants().imageBaseUrl +
-                                                    "${route.image}",
-                                                fit: BoxFit.cover,
-                                                height: displayHeight(context) *
-                                                    0.25,
-                                                width: displayWidth(context) *
-                                                    0.52,
-                                                gaplessPlayback: true,
-                                              ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: displayHeight(context) * 0.06,
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.black26,
-                                              offset: Offset(6.0, 1.0),
-                                              blurRadius: 10.0),
-                                        ],
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(10.0),
-                                            bottomRight: Radius.circular(10.0)),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: <Widget>[
-                                          Container(
-                                            margin: EdgeInsets.only(left: 5),
-                                            width: displayWidth(context) * 0.18,
-                                            height:
-                                                displayHeight(context) * 0.023,
-                                            decoration: BoxDecoration(
-                                              color: Colors.green,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Center(
-                                              // padding: EdgeInsets.fromLTRB(
-                                              //     0, 4.5, 0, 0),
-                                              child: Text(
-                                                // '${_allTrekkingRoutes[index].difficulty}',
-                                                route.category,
-                                                style: TextStyle(
-                                                  fontSize: 10.0,
-                                                  fontFamily: "Roboto",
-                                                  color: Colors.white,
-                                                  letterSpacing: 1.2,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  'Duration',
-                                                  style: TextStyle(
-                                                      fontSize: 11,
-                                                      fontFamily: "Roboto",
-                                                      fontWeight:
-                                                          FontWeight.w100),
-                                                ),
-                                                SizedBox(
-                                                  width: displayWidth(context) *
-                                                      0.01,
-                                                ),
-                                                Text(
-                                                  // '${_allTrekkingRoutes[index].duration}',
-                                                  "${route.duration} days",
-                                                  style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontFamily: "Roboto",
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                      child: Container(
-                                        child: Text(
-                                            // '${_allTrekkingRoutes[index].name}'
-                                            route.routeName),
-                                      ),
-                                    ),
-                                  ],
+        ? Container()
+        : FadeAnimation1(
+            1.4,
+            Container(
+              child: _isRouteAvailable
+                  ? Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                'You might like this',
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 20,
                                 ),
                               ),
-                            );
-                          },
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  )
-                : Container(),
+                        Container(
+                          height: (displayHeight(context) -
+                                  MediaQuery.of(context).padding.top -
+                                  kToolbarHeight) *
+                              0.42,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _userRoutes.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final UserInterestRoute route =
+                                  _userRoutes[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  print("Route number $index clicked");
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => RouteDetailsScreen(
+                                        searchedRouteName: route.routeName,
+                                        id: userId,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(10.0),
+                                  width: displayWidth(context) * 0.52,
+                                  child: Column(
+                                    children: <Widget>[
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                        child: Container(
+                                          // height:
+                                          //     displayHeight(context) * 0.25,
+                                          // width:
+                                          //     displayWidth(context) * 0.52,
+
+                                          child: _isImageLoading
+                                              ? new Center(
+                                                  child: new Container(),
+                                                )
+                                              : Image.network(
+                                                  ApiConstants().imageBaseUrl +
+                                                      "${route.image}",
+                                                  fit: BoxFit.cover,
+                                                  height:
+                                                      displayHeight(context) *
+                                                          0.25,
+                                                  width: displayWidth(context) *
+                                                      0.52,
+                                                  gaplessPlayback: true,
+                                                ),
+                                        ),
+                                      ),
+                                      Container(
+                                        height: displayHeight(context) * 0.06,
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Colors.black26,
+                                                offset: Offset(6.0, 1.0),
+                                                blurRadius: 10.0),
+                                          ],
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(10.0),
+                                              bottomRight:
+                                                  Radius.circular(10.0)),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: <Widget>[
+                                            Container(
+                                              margin: EdgeInsets.only(left: 5),
+                                              width:
+                                                  displayWidth(context) * 0.18,
+                                              height: displayHeight(context) *
+                                                  0.023,
+                                              decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Center(
+                                                // padding: EdgeInsets.fromLTRB(
+                                                //     0, 4.5, 0, 0),
+                                                child: Text(
+                                                  // '${_allTrekkingRoutes[index].difficulty}',
+                                                  route.category,
+                                                  style: TextStyle(
+                                                    fontSize: 10.0,
+                                                    fontFamily: "Roboto",
+                                                    color: Colors.white,
+                                                    letterSpacing: 1.2,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    'Duration',
+                                                    style: TextStyle(
+                                                        fontSize: 11,
+                                                        fontFamily: "Roboto",
+                                                        fontWeight:
+                                                            FontWeight.w100),
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        displayWidth(context) *
+                                                            0.01,
+                                                  ),
+                                                  Text(
+                                                    // '${_allTrekkingRoutes[index].duration}',
+                                                    "${route.duration} days",
+                                                    style: TextStyle(
+                                                      fontSize: 13,
+                                                      fontFamily: "Roboto",
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                        child: Container(
+                                          child: Text(
+                                              // '${_allTrekkingRoutes[index].name}'
+                                              route.routeName),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const Divider(
+                          color: Colors.grey,
+                          height: 5,
+                        ),
+                      ],
+                    )
+                  : Container(),
+            ),
           );
   }
 

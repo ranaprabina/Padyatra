@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:padyatra/Animation.dart';
 import 'package:padyatra/models/search_route_model/search_route_data.dart';
 import 'package:padyatra/presenter/search_route_presenter.dart';
 import 'package:padyatra/screen/RouteDetails.dart';
@@ -35,51 +36,54 @@ class _SearchBarState extends State<SearchBar>
         SizedBox(
           height: 10.0,
         ),
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 10),
+        FadeAnimation1(
+          1.4,
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 10),
 
-          // Search Bar
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                fillColor: Colors.grey.shade200,
-                filled: true,
-                contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                // labelText: "Enter Trekking Route or Trial",
-                hintText: "Enter Trekking Route or Trial",
-                suffixIcon: Padding(
-                  padding: const EdgeInsetsDirectional.only(end: 0),
-                  child: IconButton(
-                    icon: Icon(Icons.search),
-                    color: Colors.black,
-                    onPressed: () {
-                      print("Search Button clicked");
+            // Search Bar
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  fillColor: Colors.grey.shade200,
+                  filled: true,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                  // labelText: "Enter Trekking Route or Trial",
+                  hintText: "Enter Trekking Route or Trial",
+                  suffixIcon: Padding(
+                    padding: const EdgeInsetsDirectional.only(end: 0),
+                    child: IconButton(
+                      icon: Icon(Icons.search),
+                      color: Colors.black,
+                      onPressed: () {
+                        print("Search Button clicked");
+                      },
+                    ),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  setState(
+                    () {
+                      print("Search box tapped");
+                      showSearch(
+                        context: context,
+                        delegate: RouteSearch(
+                          routeNameList: routeNameList,
+                          userId: widget.userId,
+                        ),
+                      );
                     },
-                  ),
-                ),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10.0),
-                  ),
-                ),
+                  );
+                },
+                readOnly: true,
               ),
-              onTap: () {
-                setState(
-                  () {
-                    print("Search box tapped");
-                    showSearch(
-                      context: context,
-                      delegate: RouteSearch(
-                        routeNameList: routeNameList,
-                        userId: widget.userId,
-                      ),
-                    );
-                  },
-                );
-              },
-              readOnly: true,
             ),
           ),
         ),

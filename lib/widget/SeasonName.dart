@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:padyatra/Animation.dart';
 import 'package:padyatra/control_sizes.dart';
 import 'package:padyatra/widget/SeasonalRoutesCarousel.dart';
 
@@ -68,52 +69,55 @@ class _SeasonNameState extends State<SeasonName> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          height: (displayHeight(context) -
-                  MediaQuery.of(context).padding.top -
-                  kTextTabBarHeight) *
-              0.07,
-          child: ListView.builder(
-            itemCount: seasonName.length,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                margin: EdgeInsets.symmetric(horizontal: 15),
-                child: FilterChip(
-                  label: Text(seasonName[index],
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: "Roboto",
-                      )),
-                  selected: _filters.contains(seasonName[index]),
-                  selectedColor: _isSelected ? Colors.green : Colors.black54,
-                  checkmarkColor: Colors.white,
-                  backgroundColor: Colors.black54,
-                  onSelected: (bool selected) {
-                    setState(() {
-                      _isSelected = selected;
-
-                      if (selected) {
-                        if (_filters.isEmpty) {
-                          _filters.add(seasonName[index]);
-                          buildSeasonalRoutesList(seasonName[index]);
-                        } else {
-                          _filters.clear();
-                          _filters.add(seasonName[index]);
-                          buildSeasonalRoutesList(seasonName[index]);
-                        }
-                      } else {
+        FadeAnimation1(
+          1.4,
+          Container(
+            height: (displayHeight(context) -
+                    MediaQuery.of(context).padding.top -
+                    kTextTabBarHeight) *
+                0.07,
+            child: ListView.builder(
+              itemCount: seasonName.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  child: FilterChip(
+                    label: Text(seasonName[index],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: "Roboto",
+                        )),
+                    selected: _filters.contains(seasonName[index]),
+                    selectedColor: _isSelected ? Colors.green : Colors.black54,
+                    checkmarkColor: Colors.white,
+                    backgroundColor: Colors.black54,
+                    onSelected: (bool selected) {
+                      setState(() {
                         _isSelected = selected;
-                        buttomSheetController.close();
-                        _filters.removeWhere((String name) {
-                          return name == seasonName[index];
-                        });
-                      }
-                    });
-                  },
-                ),
-              );
-            },
+
+                        if (selected) {
+                          if (_filters.isEmpty) {
+                            _filters.add(seasonName[index]);
+                            buildSeasonalRoutesList(seasonName[index]);
+                          } else {
+                            _filters.clear();
+                            _filters.add(seasonName[index]);
+                            buildSeasonalRoutesList(seasonName[index]);
+                          }
+                        } else {
+                          _isSelected = selected;
+                          buttomSheetController.close();
+                          _filters.removeWhere((String name) {
+                            return name == seasonName[index];
+                          });
+                        }
+                      });
+                    },
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ],
