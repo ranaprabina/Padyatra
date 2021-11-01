@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:padyatra/services/api_constants.dart';
 
 import '../control_sizes.dart';
 
@@ -39,23 +40,28 @@ class _MyDialogState extends State<MyDialog> {
     return Column(
       children: <Widget>[
         Container(
-          child: uploadimage == null
-              ? Container(
-                  height: 140,
-                  // child: Image.asset('images/hike1.jpg'),
-                  child: ClipRRect(
-                    child: Image.network(widget.photoPathUrl),
-                  ),
-                )
-              : Container(
-                  child: Image.file(
-                    uploadimage,
-                    width: 140,
+            child: uploadimage == null && widget.photoPathUrl != null
+                ? Container(
                     height: 140,
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
-        ),
+                    // child: Image.asset('images/hike1.jpg'),
+                    child: ClipRRect(
+                      child: Image.network(
+                          ApiConstants().imageBaseUrl + widget.photoPathUrl),
+                    ),
+                  )
+                : uploadimage != null
+                    ? Container(
+                        child: Image.file(
+                          uploadimage,
+                          width: 140,
+                          height: 140,
+                          fit: BoxFit.fitHeight,
+                        ),
+                      )
+                    : Container(
+                        width: 140,
+                        height: 140,
+                      )),
         SizedBox(
           height: displayHeight(context) * 0.03,
         ),
