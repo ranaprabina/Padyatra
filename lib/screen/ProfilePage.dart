@@ -220,18 +220,20 @@ class _MapScreenState extends State<ProfilePage>
                               0.5,
                               Padding(
                                   padding:
-                                      EdgeInsets.only(left: 20.0, top: 20.0),
+                                      EdgeInsets.only(left: 0.0, top: 20.0),
                                   child: new Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
-                                      new Icon(
-                                        Icons.arrow_back_ios,
-                                        color: Colors.black,
-                                        size: 22.0,
-                                      ),
+                                      // new Icon(
+                                      //   Icons.arrow_back_ios,
+                                      //   color: Colors.black,
+                                      //   size: 22.0,
+                                      // ),
                                       Padding(
-                                        padding: EdgeInsets.only(left: 25.0),
+                                        padding: EdgeInsets.only(left: 0.0),
                                         child: new Text('PROFILE',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,

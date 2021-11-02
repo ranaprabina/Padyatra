@@ -156,7 +156,6 @@ class RouteSearch extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     // show some results based on the selection
     // throw UnimplementedError();
-
     final suggestionList = query.isEmpty
         ? lastSearchedRoutes
         : routes
@@ -165,34 +164,75 @@ class RouteSearch extends SearchDelegate<String> {
             )
             .toList();
 
-    return ListView.builder(
-      itemCount: suggestionList.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          onTap: () {
-            query = suggestionList[index].toString();
-            close(context, query);
-            UserSearchHistory().storeUserSearchHistory(query);
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => RouteDetailsScreen(
-                      searchedRouteName: query,
-                      id: id,
-                    )));
-          },
-          leading: Icon(Icons.directions_walk),
-          title: RichText(
-            text: TextSpan(
-              text: suggestionList[index].toString(),
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
+    return suggestionList.isEmpty
+        ? Container(
+            child: Center(
+              child: RichText(
+                // textHeightBehavior: TextHeightBehavior.fromEncoded(≈),
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: 'OPPS !!!!\n',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Oswald',
+                        fontSize: 45,
+                        letterSpacing: 2.0),
+                  ),
+                  TextSpan(
+                    text: "no routes found",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'JosefinSans Regular',
+                      fontSize: 20,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '\n\n😮🤦🏼\n\n',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Oswald',
+                        fontSize: 30),
+                  ),
+                ]),
               ),
             ),
-          ),
-        );
-      },
-    );
+          )
+        // Center(
+        //     child: Text(
+        //       'No routes Found..',
+        //       style: TextStyle(
+        //         fontSize: 20,
+        //       ),
+        //     ),
+        //   )
+        : ListView.builder(
+            itemCount: suggestionList.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                onTap: () {
+                  query = suggestionList[index].toString();
+                  close(context, query);
+                  UserSearchHistory().storeUserSearchHistory(query);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => RouteDetailsScreen(
+                            searchedRouteName: query,
+                            id: id,
+                          )));
+                },
+                leading: Icon(Icons.directions_walk),
+                title: RichText(
+                  text: TextSpan(
+                    text: suggestionList[index].toString(),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
   }
 
   @override
@@ -209,10 +249,12 @@ class RouteSearch extends SearchDelegate<String> {
             .toList();
 
     return suggestionList == null
-        ? Text(
-            'No results Found..',
-            style: TextStyle(
-              fontSize: 20,
+        ? Center(
+            child: Text(
+              'searching......',
+              style: TextStyle(
+                fontSize: 20,
+              ),
             ),
           )
         : ListView.builder(
