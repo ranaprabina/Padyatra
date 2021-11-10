@@ -1,16 +1,20 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:padyatra/Animation.dart';
 import 'package:padyatra/control_sizes.dart';
+import 'package:padyatra/main.dart';
 import 'package:padyatra/models/logout_model/logout_data.dart';
 import 'package:padyatra/models/profile_photo_fetch_model/profile_photo_fetch_data.dart';
 import 'package:padyatra/presenter/logout_presenter.dart';
 import 'package:padyatra/presenter/profile_photo_fetch_presenter.dart';
 import 'package:padyatra/screen/MainPage.dart';
+import 'package:padyatra/screen/NoConnection.dart';
 import 'package:padyatra/screen/ProfileDialog.dart';
 import 'package:padyatra/services/api.dart';
 import 'package:padyatra/services/api_constants.dart';
@@ -51,6 +55,10 @@ class _MapScreenState extends State<ProfilePage>
   Logout logout;
   List<Logout> _logout;
   bool _isLogoutSuccess;
+  bool hasConnection;
+  var connectivityResult;
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   _MapScreenState() {
     _profilePhotoListPresenter = new ProfilePhotoListPresenter(this);
@@ -62,7 +70,58 @@ class _MapScreenState extends State<ProfilePage>
     _isProfilePhotoLoading = true;
     _isLogoutSuccess = false;
     _hidePassword = true;
-    getData();
+    // getData();
+    checkConnection();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(updateConnectionStatus);
+  }
+
+  checkConnection() async {
+    connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        // ignore: unrelated_type_equality_checks
+        connectivityResult == ConnectivityResult.wifi) {
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          setState(() {
+            hasConnection = true;
+            getData();
+          });
+        } else {
+          setState(() {
+            hasConnection = false;
+          });
+        }
+      } on SocketException catch (_) {
+        setState(() {
+          hasConnection = false;
+        });
+      }
+    } else {
+      setState(() {
+        hasConnection = false;
+      });
+    }
+  }
+
+  updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+        // case ConnectivityResult.none:
+        setState(() {
+          print("connection status changed to true");
+          hasConnection = true;
+        });
+        break;
+      default:
+        setState(() {
+          print("connection status changed to false");
+          hasConnection = false;
+        });
+        break;
+    }
   }
 
   Future<void> uploadProfilePhoto(
@@ -200,581 +259,542 @@ class _MapScreenState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    return _isDataLoading
-        ? new Center(
-            child: new Container(),
+    return hasConnection == false
+        ? NoConnectionScreen(
+            screenName: MyApp(),
+            method: "pushReplacement",
           )
-        : Scaffold(
-            body: Container(
-              color: Colors.white,
-              child: ListView(
-                children: <Widget>[
-                  Column(
+        : _isDataLoading
+            ? new Center(
+                child: Container(),
+              )
+            : Scaffold(
+                body: Container(
+                  color: Colors.white,
+                  child: ListView(
                     children: <Widget>[
-                      Container(
-                        height: displayHeight(context) * 0.29,
-                        color: Colors.white,
-                        child: new Column(
-                          children: <Widget>[
-                            FadeAnimation1(
-                              0.5,
-                              Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 0.0, top: 20.0),
-                                  child: new Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      // new Icon(
-                                      //   Icons.arrow_back_ios,
-                                      //   color: Colors.black,
-                                      //   size: 22.0,
-                                      // ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 0.0),
-                                        child: new Text('PROFILE',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20.0,
-                                                fontFamily: 'sans-serif-light',
-                                                color: Colors.black)),
-                                      ),
-                                      SizedBox(
-                                        width: displayWidth(context) * 0.5,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          // Navigator.of(context).push(
-                                          //     MaterialPageRoute(
-                                          //         builder: (context) =>
-                                          //             FavoriteRoutes()));
-                                          // logout(email);
-                                          _logoutListPresenter
-                                              .loadServerResponse(email);
-                                        },
-                                        child: Icon(
-                                          Icons.logout,
-                                          size: 30,
-                                        ),
-                                      ),
-                                    ],
-                                  )),
-                            ),
-                            FadeAnimation1(
-                              1,
-                              Padding(
-                                padding: EdgeInsets.only(top: 20.0),
-                                child:
-                                    new Stack(fit: StackFit.loose, children: <
-                                        Widget>[
-                                  new Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          child: _isProfilePhotoLoading
-                                              ? Container(
-                                                  width: 140.0,
-                                                  height: 140.0,
-                                                  decoration: new BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    // image: new DecorationImage(
-                                                    //   image: new ExactAssetImage(
-                                                    //       // TODO : here we will replace with the image file coming form network i.e database
-                                                    //       'images/hike1.jpg'
-                                                    //       // ApiConstants().imageBaseUrl +
-                                                    //       ),
-                                                    //   fit: BoxFit.cover,
-                                                    // ),
-                                                  )) //if there is no image then show the default image
-                                              : ClipRRect(
-                                                  child: Image.network(
-                                                    ApiConstants()
-                                                            .imageBaseUrl +
-                                                        "${profilePhoto.profilePhotoPath}",
-                                                    width: 140,
-                                                    height: 140,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ))
-                                    ],
-                                  ),
+                      Column(
+                        children: <Widget>[
+                          Container(
+                            height: displayHeight(context) * 0.29,
+                            color: Colors.white,
+                            child: new Column(
+                              children: <Widget>[
+                                FadeAnimation1(
+                                  0.5,
                                   Padding(
-                                      padding: EdgeInsets.only(
-                                          top: 90.0, right: 100.0),
+                                      padding:
+                                          EdgeInsets.only(left: 0.0, top: 20.0),
                                       child: new Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                            MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
+                                          // new Icon(
+                                          //   Icons.arrow_back_ios,
+                                          //   color: Colors.black,
+                                          //   size: 22.0,
+                                          // ),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 0.0),
+                                            child: new Text('PROFILE',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20.0,
+                                                    fontFamily:
+                                                        'sans-serif-light',
+                                                    color: Colors.black)),
+                                          ),
+                                          SizedBox(
+                                            width: displayWidth(context) * 0.5,
+                                          ),
                                           GestureDetector(
                                             onTap: () {
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return StatefulBuilder(
-                                                      builder:
-                                                          (context, setState) {
-                                                    return AlertDialog(
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(16),
-                                                      ),
-                                                      elevation: 0.0,
-                                                      title: Align(
-                                                          alignment: Alignment
-                                                              .centerRight,
-                                                          child:
-                                                              GestureDetector(
-                                                                  onTap: () {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                  },
-                                                                  child: Icon(Icons
-                                                                      .close))),
-                                                      content: Container(
-                                                        height: displayHeight(
-                                                                context) *
-                                                            0.25,
-                                                        width: 400.0,
-                                                        child: MyDialog(
-                                                            uploadimage:
-                                                                uploadimage,
-                                                            photoPathUrl:
-                                                                profilePhoto
-                                                                    .profilePhotoPath),
-                                                      ),
-                                                    );
-                                                  });
-                                                },
-                                              ).then((valueFromDialog) {
-                                                if (valueFromDialog != null) {
-                                                  setState(() {
-                                                    uploadimage =
-                                                        valueFromDialog;
-                                                    uploadProfilePhoto(
-                                                        uploadimage.path,
-                                                        token);
-                                                  });
-                                                } else {
-                                                  print(
-                                                      "value from dialog is null");
-                                                }
-                                              });
+                                              // Navigator.of(context).push(
+                                              //     MaterialPageRoute(
+                                              //         builder: (context) =>
+                                              //             FavoriteRoutes()));
+                                              // logout(email);
+                                              _logoutListPresenter
+                                                  .loadServerResponse(email);
                                             },
-                                            child: new CircleAvatar(
-                                              backgroundColor: Colors.black,
-                                              radius: 25.0,
-                                              child: new Icon(
-                                                Icons.camera_alt,
-                                                color: Colors.white,
-                                              ),
+                                            child: Icon(
+                                              Icons.logout,
+                                              size: 30,
                                             ),
-                                          )
+                                          ),
                                         ],
                                       )),
-                                ]),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        color: Color(0xffFFFFFF),
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 25.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              FadeAnimation1(
-                                1.4,
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25, right: 25, top: 25),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Text(
-                                            'Personal Information',
-                                            style: TextStyle(
-                                                fontSize: 18.0,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          _status
-                                              ? _getEditIcon()
-                                              : new Container(),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
                                 ),
-                              ),
-                              FadeAnimation1(
-                                1.5,
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
+                                FadeAnimation1(
+                                  1,
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 20.0),
+                                    child: new Stack(
+                                        fit: StackFit.loose,
                                         children: <Widget>[
-                                          Text(
-                                            'Name',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              FadeAnimation1(
-                                1.5,
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0,
-                                      right: 25.0,
-                                      top: 15.0,
-                                      bottom: 10),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: new TextField(
-                                          controller: userNameController,
-                                          decoration: InputDecoration(
-                                              // hintText: "$userName",
-                                              hintStyle: TextStyle(
-                                                  color: Colors.black)),
-                                          enabled: !_status,
-                                          autofocus: !_status,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              FadeAnimation1(
-                                1.6,
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Text(
-                                            'Password',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              FadeAnimation1(
-                                1.6,
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0,
-                                      right: 25.0,
-                                      top: 15.0,
-                                      bottom: 10),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: new TextField(
-                                          obscureText: _hidePassword,
-                                          controller: oldPasswordController,
-                                          decoration: InputDecoration(
-                                            hintText: "enter old password",
-                                            hintStyle:
-                                                TextStyle(color: Colors.black),
-                                            suffixIcon: Padding(
-                                              padding:
-                                                  const EdgeInsetsDirectional
-                                                      .only(end: 8),
-                                              child: _hidePassword == true
-                                                  ? IconButton(
-                                                      icon: Icon(
-                                                        Icons.visibility_off,
-                                                      ),
-                                                      color:
-                                                          HexColor('#24695c'),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _hidePassword = false;
-                                                        });
-                                                      },
-                                                    )
-                                                  : IconButton(
-                                                      icon: Icon(
-                                                        Icons.visibility,
-                                                      ),
-                                                      color: Colors.blue,
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _hidePassword = true;
-                                                        });
-                                                      },
-                                                    ),
-                                            ),
+                                          new Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100),
+                                                  child: _isProfilePhotoLoading
+                                                      ? Container(
+                                                          width: 140.0,
+                                                          height: 140.0,
+                                                          decoration:
+                                                              new BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
+                                                            // image: new DecorationImage(
+                                                            //   image: new ExactAssetImage(
+                                                            //       // TODO : here we will replace with the image file coming form network i.e database
+                                                            //       'images/hike1.jpg'
+                                                            //       // ApiConstants().imageBaseUrl +
+                                                            //       ),
+                                                            //   fit: BoxFit.cover,
+                                                            // ),
+                                                          )) //if there is no image then show the default image
+                                                      : ClipRRect(
+                                                          child: Image.network(
+                                                            ApiConstants()
+                                                                    .imageBaseUrl +
+                                                                "${profilePhoto.profilePhotoPath}",
+                                                            width: 140,
+                                                            height: 140,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ))
+                                            ],
                                           ),
-                                          enabled: !_status,
-                                          autofocus: !_status,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              FadeAnimation1(
-                                1.6,
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Text(
-                                            'New Password',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              FadeAnimation1(
-                                1.6,
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0,
-                                      right: 25.0,
-                                      top: 15.0,
-                                      bottom: 10),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: new TextField(
-                                          obscureText: _hidePassword,
-                                          controller: passwordController,
-                                          decoration: InputDecoration(
-                                            hintText: "enter new password",
-                                            hintStyle:
-                                                TextStyle(color: Colors.black),
-                                            suffixIcon: Padding(
-                                              padding:
-                                                  const EdgeInsetsDirectional
-                                                      .only(end: 8),
-                                              child: _hidePassword == true
-                                                  ? IconButton(
-                                                      icon: Icon(
-                                                        Icons.visibility_off,
+                                          Padding(
+                                              padding: EdgeInsets.only(
+                                                  top: 90.0, right: 100.0),
+                                              child: new Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return StatefulBuilder(
+                                                              builder: (context,
+                                                                  setState) {
+                                                            return AlertDialog(
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            16),
+                                                              ),
+                                                              elevation: 0.0,
+                                                              title: Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .centerRight,
+                                                                  child:
+                                                                      GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            Navigator.of(context).pop();
+                                                                          },
+                                                                          child:
+                                                                              Icon(Icons.close))),
+                                                              content:
+                                                                  Container(
+                                                                height: displayHeight(
+                                                                        context) *
+                                                                    0.25,
+                                                                width: 400.0,
+                                                                child: MyDialog(
+                                                                    uploadimage:
+                                                                        uploadimage,
+                                                                    photoPathUrl:
+                                                                        profilePhoto
+                                                                            .profilePhotoPath),
+                                                              ),
+                                                            );
+                                                          });
+                                                        },
+                                                      ).then((valueFromDialog) {
+                                                        if (valueFromDialog !=
+                                                            null) {
+                                                          setState(() {
+                                                            uploadimage =
+                                                                valueFromDialog;
+                                                            uploadProfilePhoto(
+                                                                uploadimage
+                                                                    .path,
+                                                                token);
+                                                          });
+                                                        } else {
+                                                          print(
+                                                              "value from dialog is null");
+                                                        }
+                                                      });
+                                                    },
+                                                    child: new CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.black,
+                                                      radius: 25.0,
+                                                      child: new Icon(
+                                                        Icons.camera_alt,
+                                                        color: Colors.white,
                                                       ),
-                                                      color:
-                                                          HexColor('#24695c'),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _hidePassword = false;
-                                                        });
-                                                      },
-                                                    )
-                                                  : IconButton(
-                                                      icon: Icon(
-                                                        Icons.visibility,
-                                                      ),
-                                                      color: Colors.blue,
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _hidePassword = true;
-                                                        });
-                                                      },
                                                     ),
-                                            ),
-                                          ),
-                                          enabled: !_status,
-                                          autofocus: !_status,
-                                        ),
-                                      ),
-                                    ],
+                                                  )
+                                                ],
+                                              )),
+                                        ]),
                                   ),
-                                ),
-                              ),
-                              FadeAnimation1(
-                                1.7,
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          Text(
-                                            'Email ID',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              FadeAnimation1(
-                                1.7,
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0,
-                                      right: 25.0,
-                                      top: 15.0,
-                                      bottom: 15),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Container(child: Text('$email'))
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              FadeAnimation1(
-                                1.7,
-                                Divider(
-                                  color: Colors.grey,
-                                  height: 5,
-                                  indent: 25,
-                                  endIndent: 15,
-                                ),
-                              ),
-                              // FAnimation(
-                              //   1.8,
-                              //   Padding(
-                              //     padding: EdgeInsets.only(
-                              //         left: 25.0, right: 25.0, top: 25.0),
-                              //     child: Row(
-                              //       mainAxisSize: MainAxisSize.max,
-                              //       mainAxisAlignment: MainAxisAlignment.start,
-                              //       children: <Widget>[
-                              //         Expanded(
-                              //           child: Container(
-                              //             child: new Text(
-                              //               'Phone Code',
-                              //               style: TextStyle(
-                              //                   fontSize: 16.0,
-                              //                   fontWeight: FontWeight.bold),
-                              //             ),
-                              //           ),
-                              //           flex: 2,
-                              //         ),
-                              //         Expanded(
-                              //           child: Container(
-                              //             child: new Text(
-                              //               'Mobile',
-                              //               style: TextStyle(
-                              //                   fontSize: 16.0,
-                              //                   fontWeight: FontWeight.bold),
-                              //             ),
-                              //           ),
-                              //           flex: 2,
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   ),
-                              // ),
-                              // FAnimation(
-                              //   1.8,
-                              //   Padding(
-                              //     padding: EdgeInsets.only(
-                              //         left: 25.0, right: 25.0, top: 2.0),
-                              //     child: Row(
-                              //       mainAxisSize: MainAxisSize.max,
-                              //       mainAxisAlignment: MainAxisAlignment.start,
-                              //       children: <Widget>[
-                              //         Flexible(
-                              //           child: Padding(
-                              //             padding: EdgeInsets.only(right: 10.0),
-                              //             child: new TextField(
-                              //               decoration: const InputDecoration(
-                              //                   hintText: "Enter Phone Code"),
-                              //               enabled: !_status,
-                              //             ),
-                              //           ),
-                              //           flex: 2,
-                              //         ),
-                              //         Flexible(
-                              //           child: new TextField(
-                              //             decoration: const InputDecoration(
-                              //                 hintText: "Enter Mobile"),
-                              //             enabled: !_status,
-                              //           ),
-                              //           flex: 2,
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   ),
-                              // ),
-                              !_status ? _getActionButtons() : new Container(),
-                            ],
+                                )
+                              ],
+                            ),
                           ),
-                        ),
+                          Container(
+                            color: Color(0xffFFFFFF),
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 25.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  FadeAnimation1(
+                                    1.4,
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25, right: 25, top: 25),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                'Personal Information',
+                                                style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                            ],
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              _status
+                                                  ? _getEditIcon()
+                                                  : new Container(),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  FadeAnimation1(
+                                    1.5,
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 25.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                'Name',
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  FadeAnimation1(
+                                    1.5,
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0,
+                                          right: 25.0,
+                                          top: 15.0,
+                                          bottom: 10),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: new TextField(
+                                              controller: userNameController,
+                                              decoration: InputDecoration(
+                                                  // hintText: "$userName",
+                                                  hintStyle: TextStyle(
+                                                      color: Colors.black)),
+                                              enabled: !_status,
+                                              autofocus: !_status,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  FadeAnimation1(
+                                    1.6,
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 25.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                'Password',
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  FadeAnimation1(
+                                    1.6,
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0,
+                                          right: 25.0,
+                                          top: 15.0,
+                                          bottom: 10),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: new TextField(
+                                              obscureText: _hidePassword,
+                                              controller: oldPasswordController,
+                                              decoration: InputDecoration(
+                                                hintText: "enter old password",
+                                                hintStyle: TextStyle(
+                                                    color: Colors.black),
+                                                suffixIcon: Padding(
+                                                  padding:
+                                                      const EdgeInsetsDirectional
+                                                          .only(end: 8),
+                                                  child: _hidePassword == true
+                                                      ? IconButton(
+                                                          icon: Icon(
+                                                            Icons
+                                                                .visibility_off,
+                                                          ),
+                                                          color: HexColor(
+                                                              '#24695c'),
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              _hidePassword =
+                                                                  false;
+                                                            });
+                                                          },
+                                                        )
+                                                      : IconButton(
+                                                          icon: Icon(
+                                                            Icons.visibility,
+                                                          ),
+                                                          color: Colors.blue,
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              _hidePassword =
+                                                                  true;
+                                                            });
+                                                          },
+                                                        ),
+                                                ),
+                                              ),
+                                              enabled: !_status,
+                                              autofocus: !_status,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  FadeAnimation1(
+                                    1.6,
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 25.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                'New Password',
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  FadeAnimation1(
+                                    1.6,
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0,
+                                          right: 25.0,
+                                          top: 15.0,
+                                          bottom: 10),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: new TextField(
+                                              obscureText: _hidePassword,
+                                              controller: passwordController,
+                                              decoration: InputDecoration(
+                                                hintText: "enter new password",
+                                                hintStyle: TextStyle(
+                                                    color: Colors.black),
+                                                suffixIcon: Padding(
+                                                  padding:
+                                                      const EdgeInsetsDirectional
+                                                          .only(end: 8),
+                                                  child: _hidePassword == true
+                                                      ? IconButton(
+                                                          icon: Icon(
+                                                            Icons
+                                                                .visibility_off,
+                                                          ),
+                                                          color: HexColor(
+                                                              '#24695c'),
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              _hidePassword =
+                                                                  false;
+                                                            });
+                                                          },
+                                                        )
+                                                      : IconButton(
+                                                          icon: Icon(
+                                                            Icons.visibility,
+                                                          ),
+                                                          color: Colors.blue,
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              _hidePassword =
+                                                                  true;
+                                                            });
+                                                          },
+                                                        ),
+                                                ),
+                                              ),
+                                              enabled: !_status,
+                                              autofocus: !_status,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  FadeAnimation1(
+                                    1.7,
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0, right: 25.0, top: 25.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Text(
+                                                'Email ID',
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  FadeAnimation1(
+                                    1.7,
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 25.0,
+                                          right: 25.0,
+                                          top: 15.0,
+                                          bottom: 15),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: <Widget>[
+                                          Container(child: Text('$email'))
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  FadeAnimation1(
+                                    1.7,
+                                    Divider(
+                                      color: Colors.grey,
+                                      height: 5,
+                                      indent: 25,
+                                      endIndent: 15,
+                                    ),
+                                  ),
+                                  !_status
+                                      ? _getActionButtons()
+                                      : new Container(),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
                       )
                     ],
-                  )
-                ],
-              ),
-            ),
-          );
+                  ),
+                ),
+              );
   }
 
   @override
