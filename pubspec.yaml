@@ -28,6 +28,7 @@ dependencies:
   image_picker: 
   cupertino_icons: 
   http: 
+  connectivity: ^3.0.6
 
 dev_dependencies:
   flutter_test:
