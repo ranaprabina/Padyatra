@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,6 +9,7 @@ import 'package:location/location.dart';
 import 'package:padyatra/models/day_performance_model/day_performance_data.dart';
 import 'package:padyatra/models/route_details_model/route_details_data.dart';
 import 'package:padyatra/presenter/day_performance_presenter.dart';
+import 'package:padyatra/screen/NoConnection.dart';
 import 'package:padyatra/services/DistanceCalculation.dart';
 import 'package:padyatra/services/GeoFencing.dart';
 import 'package:padyatra/services/NavgationData.dart';
@@ -62,6 +65,38 @@ class _NavigationScreenState extends State<NavigationScreen>
   double remainingDistance;
   bool wayPointsAvailable;
   List<WayPoints> wayPoint;
+  bool hasConnection;
+  var connectivityResult;
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  checkConnection() async {
+    connectivityResult = await (_connectivity.checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        // ignore: unrelated_type_equality_checks
+        connectivityResult == ConnectivityResult.wifi) {
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+          setState(() {
+            hasConnection = true;
+          });
+        } else {
+          setState(() {
+            hasConnection = false;
+          });
+        }
+      } on SocketException catch (_) {
+        setState(() {
+          hasConnection = false;
+        });
+      }
+    } else {
+      setState(() {
+        hasConnection = false;
+      });
+    }
+  }
 
   _NavigationScreenState() {
     _dayPerformanceListPresenter = new DayPerformanceListPresenter(this);
@@ -112,6 +147,25 @@ class _NavigationScreenState extends State<NavigationScreen>
     );
   }
 
+  updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+        // case ConnectivityResult.none:
+        setState(() {
+          print("connection status changed to true");
+          hasConnection = true;
+        });
+        break;
+      default:
+        setState(() {
+          print("connection status changed to false");
+          hasConnection = false;
+        });
+        break;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -121,10 +175,13 @@ class _NavigationScreenState extends State<NavigationScreen>
     _isCheckOutPostReached = false;
     _isTrekkingCompleted = false;
     _routeCoordinates = widget.routeCoordinates;
+    checkConnection();
     drawRoutePath();
     getCurrentLocation();
     checkAvailableWayPoints();
     _createWayPointsMarkers();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(updateConnectionStatus);
   }
 
   void drawRoutePath() {
@@ -172,13 +229,19 @@ class _NavigationScreenState extends State<NavigationScreen>
   }
 
   storeDayPerformance() {
-    _isTrekkingCompleted ? trekkingCompleted = "1" : trekkingCompleted = "0";
-    _dayPerformanceListPresenter.sendDayPerformance(
-        widget.userID,
-        widget.routeID,
-        currentLatitude.toString(),
-        currentLongitude.toString(),
-        trekkingCompleted);
+    if (hasConnection) {
+      _isTrekkingCompleted ? trekkingCompleted = "1" : trekkingCompleted = "0";
+      _dayPerformanceListPresenter.sendDayPerformance(
+          widget.userID,
+          widget.routeID,
+          currentLatitude.toString(),
+          currentLongitude.toString(),
+          trekkingCompleted);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("no internet connection"),
+      ));
+    }
   }
 
   static final CameraPosition _currentPostion = CameraPosition(
@@ -540,12 +603,18 @@ class _NavigationScreenState extends State<NavigationScreen>
                         _isTrekkingCompleted
                             ? trekkingCompleted = "1"
                             : trekkingCompleted = "0";
-                        _dayPerformanceListPresenter.sendDayPerformance(
-                            widget.userID,
-                            widget.routeID,
-                            currentLatitude.toString(),
-                            currentLatitude.toString(),
-                            trekkingCompleted);
+                        if (hasConnection) {
+                          _dayPerformanceListPresenter.sendDayPerformance(
+                              widget.userID,
+                              widget.routeID,
+                              currentLatitude.toString(),
+                              currentLatitude.toString(),
+                              trekkingCompleted);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("no internet connection"),
+                          ));
+                        }
                       }
                       if (_checkWayPointsReachedtimer.isActive) {
                         print(_checkWayPointsReachedtimer);
@@ -620,6 +689,7 @@ class _NavigationScreenState extends State<NavigationScreen>
     NavigationData().deleteCheckInPostReachedData();
     NavigationData().deleteCheckOutPostReachedData();
     try {
+      _connectivitySubscription.cancel();
       if (_checkWayPointsReachedtimer.isActive) {
         _checkWayPointsReachedtimer.cancel();
       }
@@ -634,131 +704,143 @@ class _NavigationScreenState extends State<NavigationScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: MyFloatingActionButton(
-          routeTotalDistance: widget.routeTotalDistance,
-          routeCoordinates: _routeCoordinates),
-      body: Stack(
-        children: [
-          _isLoading && _isRoutePathAvailable
-              ? Center(
-                  child: SpinKitChasingDots(
-                    color: Colors.green,
-                  ),
-                )
-              : Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: GoogleMap(
-                    zoomControlsEnabled: false,
-                    onMapCreated: _onMapCreated,
-                    initialCameraPosition: CameraPosition(
-                      target: _isRoutePathAvailable
-                          ? LatLng(_routeCoordinates[0].latitude,
-                              _routeCoordinates[0].longitude)
-                          : wayPointsAvailable
-                              ? LatLng(wayPoint[0].wayLatitude,
-                                  wayPoint[0].wayLongitude)
-                              : LatLng(currentLatitude, currentLongitude),
-                      zoom: wayPointMarkers.isEmpty ? 10.0 : 12.0,
+    return hasConnection == false
+        ? NoConnectionScreen(
+            screenName: NavigationScreen(
+              userID: widget.userID,
+              routeID: widget.routeID,
+              wayPoints: widget.wayPoints,
+              routeTotalDistance: widget.routeTotalDistance,
+              routeCoordinates: _routeCoordinates,
+            ),
+            method: "pushReplacement",
+          )
+        : Scaffold(
+            floatingActionButton: MyFloatingActionButton(
+                routeTotalDistance: widget.routeTotalDistance,
+                routeCoordinates: _routeCoordinates),
+            body: Stack(
+              children: [
+                _isLoading && _isRoutePathAvailable
+                    ? Center(
+                        child: SpinKitChasingDots(
+                          color: Colors.green,
+                        ),
+                      )
+                    : Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: GoogleMap(
+                          zoomControlsEnabled: false,
+                          onMapCreated: _onMapCreated,
+                          initialCameraPosition: CameraPosition(
+                            target: _isRoutePathAvailable
+                                ? LatLng(_routeCoordinates[0].latitude,
+                                    _routeCoordinates[0].longitude)
+                                : wayPointsAvailable
+                                    ? LatLng(wayPoint[0].wayLatitude,
+                                        wayPoint[0].wayLongitude)
+                                    : LatLng(currentLatitude, currentLongitude),
+                            zoom: wayPointMarkers.isEmpty ? 10.0 : 12.0,
+                          ),
+                          onTap: (coordinate) {
+                            setState(
+                              () {
+                                _mapController.animateCamera(
+                                    CameraUpdate.newLatLng(coordinate));
+                                print(coordinate);
+                              },
+                            );
+                          },
+                          mapType: MapType.normal,
+                          tiltGesturesEnabled: true,
+                          compassEnabled: true,
+                          myLocationButtonEnabled: true,
+                          circles: Set.from(circle),
+                          onCameraMove: _onCameraMove,
+                          polylines: polyline,
+                          markers: wayPointMarkers,
+                        ),
+                      ),
+                Positioned(
+                  bottom: MediaQuery.of(context).size.height / 25,
+                  right: MediaQuery.of(context).size.width - 140,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.green),
                     ),
-                    onTap: (coordinate) {
-                      setState(
-                        () {
-                          _mapController.animateCamera(
-                              CameraUpdate.newLatLng(coordinate));
-                          print(coordinate);
-                        },
-                      );
+                    onPressed: () async {
+                      if (wayPointsAvailable && _isRoutePathAvailable) {
+                        _mapController.animateCamera(
+                          CameraUpdate.newCameraPosition(
+                            CameraPosition(
+                              target: LatLng(
+                                _routeCoordinates[0].latitude.toDouble(),
+                                _routeCoordinates[0].longitude.toDouble(),
+                              ),
+                              bearing: 0.0,
+                              tilt: 0.0,
+                              zoom: 25,
+                            ),
+                          ),
+                        );
+
+                        //stores initial data when trekking starts
+                        storeDayPerformance();
+
+                        //stores periodically
+                        _storeDataTimer = Timer.periodic(
+                          Duration(hours: 1),
+                          (timer) {
+                            setState(() {
+                              storeDayPerformance();
+                            });
+                          },
+                        );
+
+                        checkWaypointsReached();
+                        _checkWayPointsReachedtimer = Timer.periodic(
+                          Duration(hours: 1),
+                          (timer) {
+                            setState(() {
+                              checkWaypointsReached();
+                            });
+                          },
+                        );
+                      } else {
+                        !_isRoutePathAvailable
+                            ? Fluttertoast.showToast(
+                                msg: "route path not available",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0,
+                              )
+                            : Fluttertoast.showToast(
+                                msg: "way points not available",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0,
+                              );
+                      }
+                      // await checkWaypointsReached();
                     },
-                    mapType: MapType.normal,
-                    tiltGesturesEnabled: true,
-                    compassEnabled: true,
-                    myLocationButtonEnabled: true,
-                    circles: Set.from(circle),
-                    onCameraMove: _onCameraMove,
-                    polylines: polyline,
-                    markers: wayPointMarkers,
+                    child: Text("start navigation"),
                   ),
                 ),
-          Positioned(
-            bottom: MediaQuery.of(context).size.height / 25,
-            right: MediaQuery.of(context).size.width - 140,
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-              ),
-              onPressed: () async {
-                if (wayPointsAvailable && _isRoutePathAvailable) {
-                  _mapController.animateCamera(
-                    CameraUpdate.newCameraPosition(
-                      CameraPosition(
-                        target: LatLng(
-                          _routeCoordinates[0].latitude.toDouble(),
-                          _routeCoordinates[0].longitude.toDouble(),
-                        ),
-                        bearing: 0.0,
-                        tilt: 0.0,
-                        zoom: 25,
-                      ),
-                    ),
-                  );
-
-                  //stores initial data when trekking starts
-                  storeDayPerformance();
-
-                  //stores periodically
-                  _storeDataTimer = Timer.periodic(
-                    Duration(hours: 1),
-                    (timer) {
-                      setState(() {
-                        storeDayPerformance();
-                      });
-                    },
-                  );
-
-                  checkWaypointsReached();
-                  _checkWayPointsReachedtimer = Timer.periodic(
-                    Duration(hours: 1),
-                    (timer) {
-                      setState(() {
-                        checkWaypointsReached();
-                      });
-                    },
-                  );
-                } else {
-                  !_isRoutePathAvailable
-                      ? Fluttertoast.showToast(
-                          msg: "route path not available",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
-                        )
-                      : Fluttertoast.showToast(
-                          msg: "way points not available",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
-                        );
-                }
-                // await checkWaypointsReached();
-              },
-              child: Text("start navigation"),
+                Positioned(
+                  bottom: MediaQuery.of(context).size.height / 19,
+                  left: MediaQuery.of(context).size.width - 90,
+                  child: currentLocationButton(
+                      _gotoCurrentLocation, Icons.location_searching),
+                ),
+              ],
             ),
-          ),
-          Positioned(
-            bottom: MediaQuery.of(context).size.height / 19,
-            left: MediaQuery.of(context).size.width - 90,
-            child: currentLocationButton(
-                _gotoCurrentLocation, Icons.location_searching),
-          ),
-        ],
-      ),
-    );
+          );
   }
 
   @override
