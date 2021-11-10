@@ -49,6 +49,7 @@ flutter:
     - images/Interest1.jpg
     - images/hike1.jpg
     - images/journey-concept.jpg
+    - images/No_Connection.png
 
 
   fonts:
